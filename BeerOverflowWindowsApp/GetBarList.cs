@@ -32,9 +32,9 @@ namespace BeerOverflowWindowsApp
                 var result = await GetBarDataAsync(latitudeBox.Text, longitudeBox.Text, radiusTextBox.Text);
                 DisplayData(result);
             }
-            catch
+            catch (Exception exception)
             {
-                MessageBox.Show("Something went wrong");
+                MessageBox.Show("Something went wrong with the message: " + exception.Message);
             }
         }
 
@@ -48,9 +48,9 @@ namespace BeerOverflowWindowsApp
                     var response = await client.GetStringAsync(string.Format(GoogleAPILink, latitude, longitude, radius));
                     result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
                 }
-                catch
+                catch (Exception exception)
                 {
-                    MessageBox.Show("Something went wrong");
+                    throw exception;
                 }
                 return result;
             }
