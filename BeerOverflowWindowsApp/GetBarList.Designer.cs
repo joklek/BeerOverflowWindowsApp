@@ -1,6 +1,6 @@
 ﻿namespace BeerOverflowWindowsApp
 {
-    partial class Form1
+    partial class GetBarList
     {
         /// <summary>
         /// Required designer variable.

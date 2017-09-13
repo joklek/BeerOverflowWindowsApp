@@ -13,9 +13,9 @@ using static TestProject.DataModels.GeodataDataModel;
 
 namespace BeerOverflowWindowsApp
 {
-    public partial class Form1 : Form
+    public partial class GetBarList : Form
     {
-        public Form1()
+        public GetBarList()
         {
             InitializeComponent();
             latitudeBox.Text = "54.684815";
