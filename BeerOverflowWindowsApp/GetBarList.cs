@@ -25,6 +25,7 @@ namespace BeerOverflowWindowsApp
 
         private void Go_Click(object sender, EventArgs e)
         {
+            resultTextBox.Clear();
             try
             {
                 GetBarDataAsync(latitudeBox.Text, longitudeBox.Text, radiusTextBox.Text);
