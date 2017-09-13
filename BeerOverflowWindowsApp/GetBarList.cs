@@ -15,6 +15,8 @@ namespace BeerOverflowWindowsApp
 {
     public partial class GetBarList : Form
     {
+        const string GoogleAPILink = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={0},{1}&radius={2}&type=bar&key=AIzaSyBqe4VYJPO86ui1aOtmpxapqwI3ET0ZaMY";
+
         public GetBarList()
         {
             InitializeComponent();
@@ -43,7 +45,7 @@ namespace BeerOverflowWindowsApp
                 PlacesApiQueryResponse result = null;
                 try
                 {
-                    var response = await client.GetStringAsync(string.Format("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={0},{1}&radius={2}&type=bar&key=AIzaSyBqe4VYJPO86ui1aOtmpxapqwI3ET0ZaMY", latitude, longitude, radius));
+                    var response = await client.GetStringAsync(string.Format(GoogleAPILink, latitude, longitude, radius));
                     result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
                 }
                 catch
