@@ -23,12 +23,12 @@ namespace BeerOverflowWindowsApp
             radiusTextBox.Text = "500";
         }
 
-        private void Go_Click(object sender, EventArgs e)
+        private async void Go_ClickAsync(object sender, EventArgs e)
         {
             resultTextBox.Clear();
             try
             {
-                GetBarDataAsync(latitudeBox.Text, longitudeBox.Text, radiusTextBox.Text);
+                await GetBarDataAsync(latitudeBox.Text, longitudeBox.Text, radiusTextBox.Text);
             }
             catch
             {
