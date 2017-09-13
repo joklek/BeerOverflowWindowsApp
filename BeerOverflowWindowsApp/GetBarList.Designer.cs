@@ -104,7 +104,7 @@
             this.Go.UseVisualStyleBackColor = true;
             this.Go.Click += new System.EventHandler(this.Go_Click);
             // 
-            // Form1
+            // GetBarList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -117,8 +117,8 @@
             this.Controls.Add(this.longitudeLabel);
             this.Controls.Add(this.longitudeBox);
             this.Controls.Add(this.Go);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "GetBarList";
+            this.Text = "GetBarData";
             this.ResumeLayout(false);
             this.PerformLayout();
 
