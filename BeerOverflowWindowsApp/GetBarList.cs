@@ -25,25 +25,33 @@ namespace BeerOverflowWindowsApp
 
         private async void Go_ClickAsync(object sender, EventArgs e)
         {
-            resultTextBox.Clear();
             try
             {
-                await GetBarDataAsync(latitudeBox.Text, longitudeBox.Text, radiusTextBox.Text);
+                var result = await GetBarDataAsync(latitudeBox.Text, longitudeBox.Text, radiusTextBox.Text);
+                DisplayData(result);
             }
             catch
             {
                 MessageBox.Show("Something went wrong");
             }
         }
-        private async Task GetBarDataAsync(string latitude, string longitude, string radius)
+
+        private async Task<PlacesApiQueryResponse> GetBarDataAsync(string latitude, string longitude, string radius)
         {
             using (var client = new HttpClient())
             {
-                var response = await client.GetStringAsync(string.Format("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={0},{1}&radius={2}&type=bar&key=AIzaSyBqe4VYJPO86ui1aOtmpxapqwI3ET0ZaMY", latitude, longitude, radius));
-                var result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
-                DisplayData(result);
+                PlacesApiQueryResponse result = null;
+                try
+                {
+                    var response = await client.GetStringAsync(string.Format("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={0},{1}&radius={2}&type=bar&key=AIzaSyBqe4VYJPO86ui1aOtmpxapqwI3ET0ZaMY", latitude, longitude, radius));
+                    result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
+                }
+                catch
+                {
+                    MessageBox.Show("Something went wrong");
+                }
+                return result;
             }
-
         }
 
         public void DisplayData(PlacesApiQueryResponse resultData)
