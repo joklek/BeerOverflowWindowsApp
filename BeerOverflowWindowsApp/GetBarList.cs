@@ -56,6 +56,7 @@ namespace BeerOverflowWindowsApp
 
         public void DisplayData(PlacesApiQueryResponse resultData)
         {
+            resultTextBox.Clear();
             foreach (var result in resultData.results)
             {
                 resultTextBox.AppendText(result.name);
