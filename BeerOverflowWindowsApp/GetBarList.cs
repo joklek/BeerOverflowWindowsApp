@@ -3,7 +3,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static TestProject.DataModels.GeodataDataModel;
+using static DataModels.GeodataDataModel;
 
 namespace BeerOverflowWindowsApp
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TestProject.DataModels
+namespace DataModels
 {
     public class GeodataDataModel
     {
