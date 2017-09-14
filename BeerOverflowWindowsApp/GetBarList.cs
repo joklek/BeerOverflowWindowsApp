@@ -56,12 +56,13 @@ namespace BeerOverflowWindowsApp
             }
         }
 
+        // Clears the display first, then adds text to display
         public void DisplayData(PlacesApiQueryResponse resultData)
         {
             resultTextBox.Clear();
-            foreach (var result in resultData.results)
+            foreach (var result in resultData.Results)
             {
-                resultTextBox.AppendText(result.name);
+                resultTextBox.AppendText(result.Name);
                 resultTextBox.AppendText(Environment.NewLine);
             }
         }
