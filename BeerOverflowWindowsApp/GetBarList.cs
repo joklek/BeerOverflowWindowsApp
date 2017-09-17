@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using static DataModels.GeodataDataModel;
 
 namespace BeerOverflowWindowsApp
 {
@@ -12,7 +9,7 @@ namespace BeerOverflowWindowsApp
         const string GoogleAPIKey = "AIzaSyBqe4VYJPO86ui1aOtmpxapqwI3ET0ZaMY";
         const string GoogleAPILink = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={0},{1}&radius={2}&type=bar&key=" + GoogleAPIKey;
 
-        public GetBarList()
+public GetBarList()
         {
             InitializeComponent();
             latitudeBox.Text = "54.684815";
@@ -24,7 +21,8 @@ namespace BeerOverflowWindowsApp
         {
             try
             {
-                var result = await GetBarDataAsync(latitudeBox.Text, longitudeBox.Text, radiusTextBox.Text);
+                GetBarListGoogle barListGoogle = new GetBarListGoogle();
+                var result = await barListGoogle.GetBarsAroundAsync(GetLatitude(), GetLongitude() , GetRadius());
                 DisplayData(result);
             }
             catch (Exception exception)
@@ -33,31 +31,13 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        private async Task<PlacesApiQueryResponse> GetBarDataAsync(string latitude, string longitude, string radius)
-        {
-            using (var client = new HttpClient())
-            {
-                PlacesApiQueryResponse result = null;
-                try
-                {
-                    var response = await client.GetStringAsync(string.Format(GoogleAPILink, latitude, longitude, radius));
-                    result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
-                }
-                catch (Exception exception)
-                {
-                    throw exception;
-                }
-                return result;
-            }
-        }
-
         // Clears the display first, then adds text to display
-        public void DisplayData(PlacesApiQueryResponse resultData)
+        private void DisplayData(List<Bar> resultData)
         {
             resultTextBox.Clear();
-            foreach (var result in resultData.Results)
+            foreach (var result in resultData)
             {
-                resultTextBox.AppendText(result.Name);
+                resultTextBox.AppendText(result.GetName());
                 resultTextBox.AppendText(Environment.NewLine);
             }
         }
