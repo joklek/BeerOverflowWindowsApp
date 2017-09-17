@@ -61,5 +61,20 @@ namespace BeerOverflowWindowsApp
                 resultTextBox.AppendText(Environment.NewLine);
             }
         }
+
+        private string GetLatitude ()
+        {
+            return latitudeBox.Text;
+        }
+
+        private string GetLongitude ()
+        {
+            return longitudeBox.Text;
+        }
+
+        private string GetRadius ()
+        {
+            return radiusTextBox.Text;
+        }
     }
 }
