@@ -9,7 +9,7 @@ namespace BeerOverflowWindowsApp
         const string GoogleAPIKey = "AIzaSyBqe4VYJPO86ui1aOtmpxapqwI3ET0ZaMY";
         const string GoogleAPILink = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={0},{1}&radius={2}&type=bar&key=" + GoogleAPIKey;
 
-public GetBarList()
+    public GetBarList()
         {
             InitializeComponent();
             latitudeBox.Text = "54.684815";
@@ -22,7 +22,9 @@ public GetBarList()
             try
             {
                 GetBarListGoogle barListGoogle = new GetBarListGoogle();
-                var result = await barListGoogle.GetBarsAroundAsync(GetLatitude(), GetLongitude() , GetRadius());
+                GetBarListFourSquare barListFourSquare = new GetBarListFourSquare();
+                //var result = await barListGoogle.GetBarsAroundAsync(GetLatitude(), GetLongitude() , GetRadius());
+                var result = await barListFourSquare.GetBarsAroundAsync(GetLatitude(), GetLongitude(), GetRadius());
                 DisplayData(result);
             }
             catch (Exception exception)
