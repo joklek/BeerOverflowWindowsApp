@@ -23,11 +23,13 @@ namespace BeerOverflowWindowsApp
             SharpSquare sharpSquare = new SharpSquare(FourSquare_clientId, FourSquare_clientSecret);
 
             // let's build the query
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
-            // Parameter info from https://developer.foursquare.com/docs/venues/search
-            parameters.Add("ll", latitude + "," + longitude); // Coords
-            parameters.Add("radius", radius);
-            parameters.Add("categoryId", "4d4b7105d754a06376d81259"); // "Nightlife Spot" CategoryId from https://developer.foursquare.com/categorytree
+            Dictionary<string, string> parameters = new Dictionary<string, string>
+            {
+                // Parameter info from https://developer.foursquare.com/docs/venues/search
+                { "ll", latitude + "," + longitude }, // Coords
+                { "radius", radius },
+                { "categoryId", "4d4b7105d754a06376d81259" } // "Nightlife Spot" CategoryId from https://developer.foursquare.com/categorytree
+            };
 
             return sharpSquare.SearchVenues(parameters);
         }
