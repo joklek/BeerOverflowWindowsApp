@@ -19,7 +19,9 @@ namespace BeerOverflowWindowsApp
             try
             {
                 GetBarListGoogle barListGoogle = new GetBarListGoogle();
+                GetBarListFourSquare barListFourSquare = new GetBarListFourSquare();
                 var result = await barListGoogle.GetBarsAroundAsync(GetLatitude(), GetLongitude() , GetRadius());
+                result = combineLists(result, await barListFourSquare.GetBarsAroundAsync(GetLatitude(), GetLongitude(), GetRadius()));
                 DisplayData(result);
             }
             catch (Exception exception)
@@ -27,6 +29,20 @@ namespace BeerOverflowWindowsApp
                 MessageBox.Show("Something went wrong with the message: " + exception.Message);
             }
         }
+
+        private List<Bar> combineLists(List<Bar> primaryList, List<Bar> secondaryList)
+        {
+            var length = secondaryList.ToArray().Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (!primaryList.Contains(secondaryList[i]))
+                {
+                    primaryList.Add(secondaryList[i]);
+                }
+            }
+            return primaryList;
+        }
+
 
         // Clears the display first, then adds text to display
         private void DisplayData(List<Bar> resultData)
