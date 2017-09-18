@@ -7,8 +7,8 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListFourSquare : IBeerable
     {
-        string FourSquare_clientId = "XN5J1TJ5RREJR1RVFBT2NLEN5HJXQU1VZYL2MC21MJSTCNRC";
-        string FourSquare_clientSecret = "YWHT33SLUDBU4LD4YDHHE3SKNUFCGOIIZPXRYLTE1QLREF3M";
+        string clientId = "XN5J1TJ5RREJR1RVFBT2NLEN5HJXQU1VZYL2MC21MJSTCNRC";
+        string clientSecret = "YWHT33SLUDBU4LD4YDHHE3SKNUFCGOIIZPXRYLTE1QLREF3M";
 
         public async Task<List<Bar>> GetBarsAroundAsync(string latitude, string longitude, string radius)
         {
@@ -20,7 +20,7 @@ namespace BeerOverflowWindowsApp
 
         private List<Venue> GetBarData (string latitude, string longitude, string radius)
         {
-            SharpSquare sharpSquare = new SharpSquare(FourSquare_clientId, FourSquare_clientSecret);
+            SharpSquare sharpSquare = new SharpSquare(clientId, clientSecret);
 
             // let's build the query
             Dictionary<string, string> parameters = new Dictionary<string, string>
