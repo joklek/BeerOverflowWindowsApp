@@ -1,6 +1,6 @@
 ﻿namespace BeerOverflowWindowsApp
 {
-    partial class Form1
+    partial class GetBarList
     {
         /// <summary>
         /// Required designer variable.
@@ -102,9 +102,9 @@
             this.Go.TabIndex = 8;
             this.Go.Text = "Go";
             this.Go.UseVisualStyleBackColor = true;
-            this.Go.Click += new System.EventHandler(this.Go_Click);
+            this.Go.Click += new System.EventHandler(this.Go_ClickAsync);
             // 
-            // Form1
+            // GetBarList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -117,8 +117,8 @@
             this.Controls.Add(this.longitudeLabel);
             this.Controls.Add(this.longitudeBox);
             this.Controls.Add(this.Go);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "GetBarList";
+            this.Text = "GetBarData";
             this.ResumeLayout(false);
             this.PerformLayout();
 
