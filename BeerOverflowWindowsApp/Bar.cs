@@ -31,7 +31,7 @@
             Name = name;
         }
 
-        public void setVendor (string vendor)
+        public void SetVendor (string vendor)
         {
             Vendor = vendor;
         }
