@@ -1,11 +1,8 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BeerOverflowWindowsApp
 {
@@ -13,10 +10,12 @@ namespace BeerOverflowWindowsApp
     {
         string filePath =  @".\barsData.txt";
         BarDataModel barsData = null;
+
         public BarRating()
         {
             barsData = GetBarsDataFromFile();
         }
+
         BarDataModel GetBarsDataFromFile()
         {
             if (File.Exists(filePath))
@@ -27,11 +26,13 @@ namespace BeerOverflowWindowsApp
             }
             else { return new BarDataModel { BarsList = new List<BarData> { } }; }
         }
+
         void SaveData()
         {
             var barsDataJson = JsonConvert.SerializeObject(barsData);
             File.WriteAllText(filePath, barsDataJson);
         }
+
         public void AddRating(BarData barData, int rating)
         {
             var barsCount = barsData.BarsList.Where(x => x.Title == barData.Title).Count();
@@ -50,10 +51,12 @@ namespace BeerOverflowWindowsApp
             }
             SaveData();
         }
+
         public BarDataModel GetBarsData()
         {
             return barsData;
         }
+
         public void AddBars(List<Bar> barsList)
         {
             foreach (var bar in barsList)
