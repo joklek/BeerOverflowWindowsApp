@@ -31,7 +31,7 @@
             this.barRatingsDataGrid = new System.Windows.Forms.DataGridView();
             this.ratingTextBox = new System.Windows.Forms.TextBox();
             this.barsComboBox = new System.Windows.Forms.ComboBox();
-            this.ratingButton = new System.Windows.Forms.Button();
+            this.RatingButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barRatingsDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -58,22 +58,22 @@
             this.barsComboBox.Size = new System.Drawing.Size(121, 21);
             this.barsComboBox.TabIndex = 2;
             // 
-            // ratingButton
+            // RatingButton
             // 
-            this.ratingButton.Location = new System.Drawing.Point(577, 12);
-            this.ratingButton.Name = "ratingButton";
-            this.ratingButton.Size = new System.Drawing.Size(75, 23);
-            this.ratingButton.TabIndex = 3;
-            this.ratingButton.Text = "Rate";
-            this.ratingButton.UseVisualStyleBackColor = true;
-            this.ratingButton.Click += new System.EventHandler(this.ratingButton_Click);
+            this.RatingButton.Location = new System.Drawing.Point(577, 12);
+            this.RatingButton.Name = "RatingButton";
+            this.RatingButton.Size = new System.Drawing.Size(75, 23);
+            this.RatingButton.TabIndex = 3;
+            this.RatingButton.Text = "Rate";
+            this.RatingButton.UseVisualStyleBackColor = true;
+            this.RatingButton.Click += new System.EventHandler(this.RatingButton_Click);
             // 
             // BarRatingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1223, 595);
-            this.Controls.Add(this.ratingButton);
+            this.Controls.Add(this.RatingButton);
             this.Controls.Add(this.barsComboBox);
             this.Controls.Add(this.ratingTextBox);
             this.Controls.Add(this.barRatingsDataGrid);
@@ -90,6 +90,6 @@
         private System.Windows.Forms.DataGridView barRatingsDataGrid;
         private System.Windows.Forms.TextBox ratingTextBox;
         private System.Windows.Forms.ComboBox barsComboBox;
-        private System.Windows.Forms.Button ratingButton;
+        private System.Windows.Forms.Button RatingButton;
     }
 }

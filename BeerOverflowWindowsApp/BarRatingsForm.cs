@@ -34,7 +34,7 @@ namespace BeerOverflowWindowsApp
             
         }
 
-        private void ratingButton_Click(object sender, EventArgs e)
+        private void RatingButton_Click(object sender, EventArgs e)
         {
             var rating = ratingTextBox.Text;
             int ratingNumber;
