@@ -36,6 +36,7 @@
             this.longitudeLabel = new System.Windows.Forms.Label();
             this.longitudeBox = new System.Windows.Forms.TextBox();
             this.Go = new System.Windows.Forms.Button();
+            this.rateBarsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // resultTextBox
@@ -104,11 +105,22 @@
             this.Go.UseVisualStyleBackColor = true;
             this.Go.Click += new System.EventHandler(this.Go_ClickAsync);
             // 
+            // rateBarsButton
+            // 
+            this.rateBarsButton.Location = new System.Drawing.Point(190, 157);
+            this.rateBarsButton.Name = "rateBarsButton";
+            this.rateBarsButton.Size = new System.Drawing.Size(75, 23);
+            this.rateBarsButton.TabIndex = 16;
+            this.rateBarsButton.Text = "Rate";
+            this.rateBarsButton.UseVisualStyleBackColor = true;
+            this.rateBarsButton.Click += new System.EventHandler(this.rateBarsButton_Click);
+            // 
             // GetBarList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1057, 581);
+            this.Controls.Add(this.rateBarsButton);
             this.Controls.Add(this.resultTextBox);
             this.Controls.Add(this.radiusLabel);
             this.Controls.Add(this.latitudeLabel);
@@ -134,6 +146,7 @@
         private System.Windows.Forms.Label longitudeLabel;
         private System.Windows.Forms.TextBox longitudeBox;
         private System.Windows.Forms.Button Go;
+        private System.Windows.Forms.Button rateBarsButton;
     }
 }
 

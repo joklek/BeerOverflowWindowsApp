@@ -68,6 +68,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bar.cs" />
+    <Compile Include="BarRating.cs" />
+    <Compile Include="BarRatingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BarRatingsForm.Designer.cs">
+      <DependentUpon>BarRatingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="GetBarListFourSquare.cs" />
     <Compile Include="GetBarListGoogle.cs" />
     <Compile Include="IBeerable.cs" />
@@ -80,6 +88,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BarRatingsForm.resx">
+      <DependentUpon>BarRatingsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GetBarList.resx">
       <DependentUpon>GetBarList.cs</DependentUpon>
     </EmbeddedResource>

@@ -6,6 +6,7 @@ namespace BeerOverflowWindowsApp
 {
     public partial class GetBarList : Form
     {
+        BarRating barRating = new BarRating();
         public GetBarList()
         {
             InitializeComponent();
@@ -23,6 +24,7 @@ namespace BeerOverflowWindowsApp
                 var result = await barListGoogle.GetBarsAroundAsync(GetLatitude(), GetLongitude() , GetRadius());
                 result = combineLists(result, await barListFourSquare.GetBarsAroundAsync(GetLatitude(), GetLongitude(), GetRadius()));
                 DisplayData(result);
+                barRating.AddBars(result);
             }
             catch (Exception exception)
             {
@@ -68,6 +70,12 @@ namespace BeerOverflowWindowsApp
         private string GetRadius ()
         {
             return radiusTextBox.Text;
+        }
+
+        private void rateBarsButton_Click(object sender, EventArgs e)
+        {
+            var ratingsForm = new BarRatingsForm();
+            ratingsForm.Show();
         }
     }
 }
