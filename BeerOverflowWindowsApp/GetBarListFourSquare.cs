@@ -5,12 +5,12 @@ using FourSquare.SharpSquare.Entities;
 
 namespace BeerOverflowWindowsApp
 {
-    class GetBarListFourSquare : IBeerable
+    class GetBarListFourSquare
     {
         string clientId = "XN5J1TJ5RREJR1RVFBT2NLEN5HJXQU1VZYL2MC21MJSTCNRC";
         string clientSecret = "YWHT33SLUDBU4LD4YDHHE3SKNUFCGOIIZPXRYLTE1QLREF3M";
 
-        public async Task<List<Bar>> GetBarsAroundAsync(string latitude, string longitude, string radius)
+        public List<Bar> GetBarsAround(string latitude, string longitude, string radius)
         {
             List<Bar> barList = null;
             var result = GetBarData(latitude, longitude, radius);
