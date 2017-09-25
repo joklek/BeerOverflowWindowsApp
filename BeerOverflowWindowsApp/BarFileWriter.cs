@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BeerOverflowWindowsApp.DataModels;
+﻿using BeerOverflowWindowsApp.DataModels;
 using System.IO;
 using Newtonsoft.Json;
 
