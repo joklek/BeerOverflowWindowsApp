@@ -6,7 +6,7 @@ namespace BeerOverflowWindowsApp
 {
     class BarRating
     {
-        BarDataModel barsData = null;
+        private BarDataModel barsData = null;
 
         public BarDataModel GetBarsData()
         {
