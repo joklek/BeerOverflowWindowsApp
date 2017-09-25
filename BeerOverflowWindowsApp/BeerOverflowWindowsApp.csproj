@@ -76,6 +76,8 @@
       <DependentUpon>BarRatingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataModels\BarDataModel.cs" />
+    <Compile Include="BarFileReader.cs" />
+    <Compile Include="BarFileWriter.cs" />
     <Compile Include="GetBarListFourSquare.cs" />
     <Compile Include="GetBarListGoogle.cs" />
     <Compile Include="IBeerable.cs" />
@@ -86,6 +88,8 @@
     <Compile Include="GetBarList.Designer.cs">
       <DependentUpon>GetBarList.cs</DependentUpon>
     </Compile>
+    <Compile Include="IReadable.cs" />
+    <Compile Include="IWritable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BarRatingsForm.resx">
