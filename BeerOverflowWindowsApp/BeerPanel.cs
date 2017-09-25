@@ -9,12 +9,12 @@ using System.Threading;
 
 namespace BeerOverflowWindowsApp
 {
-    public class BeerPanel : System.Windows.Forms.Panel
+    public class BeerPanel : Panel
     {
         Font textFont = new Font("Times New Roman", 24);
         private Point top;
         private Point bottom;
-        private Rectangle rectangle;
+        private Rectangle marker;
         private int height;
         private static string rating;
         public static string Rating
@@ -31,7 +31,7 @@ namespace BeerOverflowWindowsApp
             top = new Point(topX, topY);
             this.height = height;
             bottom = new Point(top.X, top.Y + height);
-            rectangle = new Rectangle(bottom.X - markerWidth / 2, bottom.Y - markerHeight / 2, markerWidth, markerHeight);
+            marker = new Rectangle(bottom.X - markerWidth / 2, bottom.Y - markerHeight / 2, markerWidth, markerHeight);
         }
 
         private void BeerPanel_Paint(object sender, PaintEventArgs e)
@@ -44,19 +44,19 @@ namespace BeerOverflowWindowsApp
             // 
             // BeerPanel
             // 
-            this.BackColor = System.Drawing.SystemColors.Window;
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.BeerPanel_Paint);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BeerPanel_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.BeerPanel_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.BeerPanel_MouseUp);
+            this.BackColor = SystemColors.Window;
+            this.Paint += new PaintEventHandler(this.BeerPanel_Paint);
+            this.MouseDown += new MouseEventHandler(this.BeerPanel_MouseDown);
+            this.MouseMove += new MouseEventHandler(this.BeerPanel_MouseMove);
+            this.MouseUp += new MouseEventHandler(this.BeerPanel_MouseUp);
             this.ResumeLayout(false);
         }
 
         private String text = "0 %";
         private void Paint_Beer_Meter(Graphics g)
         {
-            g.DrawLine(System.Drawing.Pens.Black, top, bottom);
-            g.DrawEllipse(System.Drawing.Pens.Black, rectangle);
+            g.DrawLine(Pens.Black, top, bottom);
+            g.DrawEllipse(Pens.Black, marker);
             g.DrawString(text, new Font("Arial", 16), new SolidBrush(Color.Black), top.X - 30 , top.Y - 45);
         }
 
@@ -64,9 +64,9 @@ namespace BeerOverflowWindowsApp
         private Boolean mousePressed = false;
         private void BeerPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (rectangle.Contains(e.X, e.Y))
+            if (marker.Contains(e.X, e.Y))
             {
-                difference = e.Y - rectangle.Y;
+                difference = e.Y - marker.Y;
                 mousePressed = true;
             }
         }
@@ -75,12 +75,12 @@ namespace BeerOverflowWindowsApp
         {
             if (mousePressed)
             {
-                rectangle.Y = e.Y - difference;
-                if (rectangle.Y + rectangle.Height / 2 < top.Y)
-                    rectangle.Y = top.Y - rectangle.Height / 2;
-                if (rectangle.Y + rectangle.Height / 2 > bottom.Y)
-                    rectangle.Y = bottom.Y - rectangle.Height / 2;
-                rating = (bottom.Y - rectangle.Y - rectangle.Height / 2) / (height / 100) + "";
+                marker.Y = e.Y - difference;
+                if (marker.Y + marker.Height / 2 < top.Y)
+                    marker.Y = top.Y - marker.Height / 2;
+                if (marker.Y + marker.Height / 2 > bottom.Y)
+                    marker.Y = bottom.Y - marker.Height / 2;
+                rating = (bottom.Y - marker.Y - marker.Height / 2) / (height / 100) + "";
                 text = rating + " %";
                 this.Refresh();
                 Thread.Sleep(5);
