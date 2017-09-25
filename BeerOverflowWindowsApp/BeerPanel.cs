@@ -16,11 +16,7 @@ namespace BeerOverflowWindowsApp
         private Point bottom;
         private Rectangle marker;
         private int height;
-        private static string rating;
-        public static string Rating
-        {
-            get { return rating; }
-        }
+        public static string Rating {get; private set;}
         private const int markerHeight = 30;
         private const int markerWidth = 50;
 
@@ -80,8 +76,8 @@ namespace BeerOverflowWindowsApp
                     marker.Y = top.Y - marker.Height / 2;
                 if (marker.Y + marker.Height / 2 > bottom.Y)
                     marker.Y = bottom.Y - marker.Height / 2;
-                rating = (bottom.Y - marker.Y - marker.Height / 2) / (height / 100) + "";
-                text = rating + " %";
+                Rating = (bottom.Y - marker.Y - marker.Height / 2) / (height / 100) + "";
+                text = Rating + " %";
                 this.Refresh();
                 Thread.Sleep(5);
             }
