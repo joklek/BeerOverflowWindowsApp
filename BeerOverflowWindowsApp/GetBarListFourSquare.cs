@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
+using BeerOverflowWindowsApp.DataModels;
 
 namespace BeerOverflowWindowsApp
 {
@@ -10,9 +10,9 @@ namespace BeerOverflowWindowsApp
         string clientId = "XN5J1TJ5RREJR1RVFBT2NLEN5HJXQU1VZYL2MC21MJSTCNRC";
         string clientSecret = "YWHT33SLUDBU4LD4YDHHE3SKNUFCGOIIZPXRYLTE1QLREF3M";
 
-        public List<Bar> GetBarsAround(string latitude, string longitude, string radius)
+        public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
-            List<Bar> barList = null;
+            List<BarData> barList = null;
             var result = GetBarData(latitude, longitude, radius);
             barList = VenueListToBars(result);
             return barList;
@@ -34,13 +34,16 @@ namespace BeerOverflowWindowsApp
             return sharpSquare.SearchVenues(parameters);
         }
 
-        private List<Bar> VenueListToBars (List<Venue> resultData)
+        private List<BarData> VenueListToBars (List<Venue> resultData)
         {
-            List<Bar> barList = new List<Bar>();
-            Bar newBar;
+            List<BarData> barList = new List<BarData>();
+            BarData newBar;
             foreach (var result in resultData)
             {
-                newBar = new Bar(result.name, "FourSquareAPI");
+                newBar = new BarData
+                {
+                    Title = result.name
+                };
                 barList.Add(newBar);
             }
             return barList;

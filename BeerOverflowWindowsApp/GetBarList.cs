@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BeerOverflowWindowsApp.DataModels;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -22,7 +23,7 @@ namespace BeerOverflowWindowsApp
                 GetBarListGoogle barListGoogle = new GetBarListGoogle();
                 GetBarListFourSquare barListFourSquare = new GetBarListFourSquare();
                 var result = barListGoogle.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius());
-                result = combineLists(result, barListFourSquare.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                result = CombineLists(result, barListFourSquare.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
                 DisplayData(result);
                 barRating.AddBars(result);
             }
@@ -32,7 +33,7 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        private List<Bar> combineLists(List<Bar> primaryList, List<Bar> secondaryList)
+        private List<BarData> CombineLists(List<BarData> primaryList, List<BarData> secondaryList)
         {
             var length = secondaryList.ToArray().Length;
             for (int i = 0; i < length; i++)
@@ -47,12 +48,12 @@ namespace BeerOverflowWindowsApp
 
 
         // Clears the display first, then adds text to display
-        private void DisplayData(List<Bar> resultData)
+        private void DisplayData(List<BarData> resultData)
         {
             resultTextBox.Clear();
             foreach (var result in resultData)
             {
-                resultTextBox.AppendText(result.GetName());
+                resultTextBox.AppendText(result.Title);
                 resultTextBox.AppendText(Environment.NewLine);
             }
         }
@@ -72,7 +73,7 @@ namespace BeerOverflowWindowsApp
             return radiusTextBox.Text;
         }
 
-        private void rateBarsButton_Click(object sender, EventArgs e)
+        private void RateBarsButton_Click(object sender, EventArgs e)
         {
             var ratingsForm = new BarRatingsForm();
             ratingsForm.Show();

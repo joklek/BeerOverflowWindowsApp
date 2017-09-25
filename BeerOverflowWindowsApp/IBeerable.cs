@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using static DataModels.GeodataDataModel;
+﻿using BeerOverflowWindowsApp.DataModels;
+using System.Collections.Generic;
 
 namespace BeerOverflowWindowsApp
 {
     interface IBeerable
     {
         //List<Bar> GetBarsAround(string latitude, string longitude, string radius);
-        List<Bar> GetBarsAround(string latitude, string longitude, string radius);
+        List<BarData> GetBarsAround(string latitude, string longitude, string radius);
     }
 }
