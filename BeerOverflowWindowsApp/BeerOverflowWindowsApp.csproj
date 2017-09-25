@@ -75,6 +75,9 @@
     <Compile Include="BarRatingsForm.Designer.cs">
       <DependentUpon>BarRatingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BeerPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="GetBarListFourSquare.cs" />
     <Compile Include="GetBarListGoogle.cs" />
@@ -90,6 +93,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BarRatingsForm.resx">
       <DependentUpon>BarRatingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BeerPanel.resx">
+      <DependentUpon>BeerPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GetBarList.resx">
       <DependentUpon>GetBarList.cs</DependentUpon>

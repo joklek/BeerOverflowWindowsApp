@@ -10,17 +10,17 @@ using System.Threading;
 public class BeerPanel : System.Windows.Forms.Panel
 {
     Font textFont = new Font("Times New Roman", 24);
-    Point top;
-    Point bottom;
-    Rectangle rectangle;
-    int height;
+    private Point top;
+    private Point bottom;
+    private Rectangle rectangle;
+    private int height;
     private static int rating;
     public static int Rating
     {
         get { return rating; }
     }
-    const int markerHeight = 30;
-    const int markerWidth = 50;
+    private const int markerHeight = 30;
+    private const int markerWidth = 50;
 
     public BeerPanel(int topX, int topY, int height)
     {
