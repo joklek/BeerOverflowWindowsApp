@@ -57,13 +57,13 @@ namespace BeerOverflowWindowsApp
             return barsData;
         }
 
-        public void AddBars(List<Bar> barsList)
+        public void AddBars(List<BarData> barsList)
         {
             foreach (var bar in barsList)
             {
-                if (barsData.BarsList.Where(x => x.Title == bar.GetName()).Count() == 0)
+                if (barsData.BarsList.Where(x => x.Title == bar.Title).Count() == 0)
                 {
-                    barsData.BarsList.Add(new BarData { Title = bar.GetName() });
+                    barsData.BarsList.Add( bar );
                 }
             }
             SaveData();
