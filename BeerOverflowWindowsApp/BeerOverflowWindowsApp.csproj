@@ -68,7 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bar.cs" />
     <Compile Include="BarRating.cs" />
     <Compile Include="BarRatingsForm.cs">
       <SubType>Form</SubType>
