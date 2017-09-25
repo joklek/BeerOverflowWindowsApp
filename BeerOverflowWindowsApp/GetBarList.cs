@@ -15,14 +15,14 @@ namespace BeerOverflowWindowsApp
             radiusTextBox.Text = "500";
         }
 
-        private async void Go_ClickAsync(object sender, EventArgs e)
+        private void Go_Click(object sender, EventArgs e)
         {
             try
             {
                 GetBarListGoogle barListGoogle = new GetBarListGoogle();
                 GetBarListFourSquare barListFourSquare = new GetBarListFourSquare();
-                var result = await barListGoogle.GetBarsAroundAsync(GetLatitude(), GetLongitude() , GetRadius());
-                result = combineLists(result, await barListFourSquare.GetBarsAroundAsync(GetLatitude(), GetLongitude(), GetRadius()));
+                var result = barListGoogle.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius());
+                result = combineLists(result, barListFourSquare.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
                 DisplayData(result);
                 barRating.AddBars(result);
             }

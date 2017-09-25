@@ -103,7 +103,7 @@
             this.Go.TabIndex = 8;
             this.Go.Text = "Go";
             this.Go.UseVisualStyleBackColor = true;
-            this.Go.Click += new System.EventHandler(this.Go_ClickAsync);
+            this.Go.Click += new System.EventHandler(this.Go_Click);
             // 
             // rateBarsButton
             // 
