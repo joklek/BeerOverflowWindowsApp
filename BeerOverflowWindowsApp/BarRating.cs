@@ -8,7 +8,8 @@ namespace BeerOverflowWindowsApp
 {
     class BarRating
     {
-        string filePath =  @".\barsData.txt";
+        private const string filePath =  @".\barsData.txt";
+
         BarDataModel barsData = null;
 
         public BarRating()

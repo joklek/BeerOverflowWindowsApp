@@ -7,13 +7,16 @@ namespace BeerOverflowWindowsApp
 {
     public partial class BarRatingsForm : Form
     {
+        private const string titleColumnName = "Title";
+        private const string ratingColumnName = "Rating";
+
         BarRating barRating = new BarRating();
 
         public BarRatingsForm()
         {
             InitializeComponent();
-            barRatingsDataGrid.Columns.Add("titleColumn", "Title");
-            barRatingsDataGrid.Columns.Add("ratingColumn", "Rating");
+            barRatingsDataGrid.Columns.Add("titleColumn", titleColumnName);
+            barRatingsDataGrid.Columns.Add("ratingColumn", ratingColumnName);
             ReLoadForm();
         }
 
