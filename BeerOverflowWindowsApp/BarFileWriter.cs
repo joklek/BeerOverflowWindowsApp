@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 
 namespace BeerOverflowWindowsApp
 {
-    class BarFileWriter : IWritable
+    static class BarFileWriter
     {
         private const string filePath = @".\barsData.txt";
 
-        public void SaveData(BarDataModel barData)
+        static public void SaveData(BarDataModel barData)
         {
             var barsDataJson = JsonConvert.SerializeObject(barData);
             File.WriteAllText(filePath, barsDataJson);

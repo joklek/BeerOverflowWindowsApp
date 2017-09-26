@@ -15,7 +15,7 @@ namespace BeerOverflowWindowsApp
 
         public BarRating()
         {
-            barsData = new BarFileReader().ReadData();
+            barsData = BarFileReader.ReadData();
         }
 
         public void AddRating(BarData barData, int rating)
@@ -34,7 +34,7 @@ namespace BeerOverflowWindowsApp
                 barData.Ratings.Add(rating);
                 barsData.BarsList.Add(barData);
             }
-            new BarFileWriter().SaveData(barsData);
+            BarFileWriter.SaveData(barsData);
         }
 
         public void AddBars(List<BarData> barsList)
@@ -46,7 +46,7 @@ namespace BeerOverflowWindowsApp
                     barsData.BarsList.Add( bar );
                 }
             }
-            new BarFileWriter().SaveData(barsData);
+            BarFileWriter.SaveData(barsData);
         }
     }
 }
