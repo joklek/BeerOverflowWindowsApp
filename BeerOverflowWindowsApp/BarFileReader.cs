@@ -5,11 +5,11 @@ using System.IO;
 
 namespace BeerOverflowWindowsApp
 {
-    class BarFileReader : IReadable
+    static class BarFileReader
     {
         private const string filePath = @".\barsData.txt";
 
-        public BarDataModel ReadData()
+        static public BarDataModel ReadData()
         {
             if (File.Exists(filePath))
             {
