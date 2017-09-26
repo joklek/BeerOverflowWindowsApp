@@ -79,6 +79,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DataModels\BarDataModel.cs" />
+    <Compile Include="BarFileReader.cs" />
+    <Compile Include="BarFileWriter.cs" />
     <Compile Include="GetBarListFourSquare.cs" />
     <Compile Include="GetBarListGoogle.cs" />
     <Compile Include="IBeerable.cs" />

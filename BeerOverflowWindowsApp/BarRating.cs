@@ -1,37 +1,21 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace BeerOverflowWindowsApp
 {
     class BarRating
     {
-        private const string filePath =  @".\barsData.txt";
-
         BarDataModel barsData = null;
+
+        public BarDataModel GetBarsData()
+        {
+            return barsData;
+        }
 
         public BarRating()
         {
-            barsData = GetBarsDataFromFile();
-        }
-
-        BarDataModel GetBarsDataFromFile()
-        {
-            if (File.Exists(filePath))
-            {
-                string barsData = File.ReadAllText(filePath);
-                var result = JsonConvert.DeserializeObject<BarDataModel>(barsData);
-                return result;
-            }
-            else { return new BarDataModel { BarsList = new List<BarData> { } }; }
-        }
-
-        void SaveData()
-        {
-            var barsDataJson = JsonConvert.SerializeObject(barsData);
-            File.WriteAllText(filePath, barsDataJson);
+            barsData = BarFileReader.ReadData();
         }
 
         public void AddRating(BarData barData, int rating)
@@ -50,12 +34,7 @@ namespace BeerOverflowWindowsApp
                 barData.Ratings.Add(rating);
                 barsData.BarsList.Add(barData);
             }
-            SaveData();
-        }
-
-        public BarDataModel GetBarsData()
-        {
-            return barsData;
+            BarFileWriter.SaveData(barsData);
         }
 
         public void AddBars(List<BarData> barsList)
@@ -67,7 +46,7 @@ namespace BeerOverflowWindowsApp
                     barsData.BarsList.Add( bar );
                 }
             }
-            SaveData();
+            BarFileWriter.SaveData(barsData);
         }
     }
 }
