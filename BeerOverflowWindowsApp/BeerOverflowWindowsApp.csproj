@@ -88,8 +88,6 @@
     <Compile Include="GetBarList.Designer.cs">
       <DependentUpon>GetBarList.cs</DependentUpon>
     </Compile>
-    <Compile Include="IReadable.cs" />
-    <Compile Include="IWritable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BarRatingsForm.resx">
