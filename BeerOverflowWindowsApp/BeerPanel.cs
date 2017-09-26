@@ -77,10 +77,8 @@ namespace BeerOverflowWindowsApp
                 if (marker.Y + marker.Height / 2 > bottom.Y)
                     marker.Y = bottom.Y - marker.Height / 2;
                 Rating = (bottom.Y - marker.Y - marker.Height / 2) / (height / 100) + "";
-                if (Rating == "100")
-                    text = "BEEROVERFLOW!!!";
-                else
-                    text = Rating + " %";
+                
+                    text = Rating == "100" ? "BEEROVERFLOW!!!" : Rating + " %";
                 this.Refresh();
                 Thread.Sleep(5);
             }
