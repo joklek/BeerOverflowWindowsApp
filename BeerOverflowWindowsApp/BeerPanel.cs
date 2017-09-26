@@ -67,6 +67,7 @@ namespace BeerOverflowWindowsApp
             }
         }
 
+        private const string textToDisplay = "BEEROVERFLOW!!!";
         private void BeerPanel_MouseMove(object sender, MouseEventArgs e)
         {
             if (mousePressed)
@@ -78,7 +79,7 @@ namespace BeerOverflowWindowsApp
                     marker.Y = bottom.Y - marker.Height / 2;
                 Rating = (bottom.Y - marker.Y - marker.Height / 2) / (height / 100) + "";
                 
-                    text = Rating == "100" ? "BEEROVERFLOW!!!" : Rating + " %";
+                    text = Rating == "100" ? textToDisplay : Rating + " %";
                 this.Refresh();
                 Thread.Sleep(5);
             }
