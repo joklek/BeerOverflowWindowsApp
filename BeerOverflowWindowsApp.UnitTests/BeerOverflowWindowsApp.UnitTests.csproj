@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="GetBarListGoogleUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BarFileReaderUnitTest.cs" />
     <Compile Include="BarRatingUnitTest.cs" />
     <Compile Include="GetBarListFourSquareUnitTest.cs" />
   </ItemGroup>
