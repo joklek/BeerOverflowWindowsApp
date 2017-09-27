@@ -9,7 +9,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         [ExpectedException(typeof(System.Net.WebException))]
         public void GetBarsFourSquareInvalidLatidute()
         {
+            // Arrange
             GetBarListFourSquare getBars = new GetBarListFourSquare();
+            // Act
             getBars.GetBarsAround("TEXT", "100", "100");
         }
 
@@ -17,7 +19,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         [ExpectedException(typeof(System.Net.WebException))]
         public void GetBarsFourSquareInvalidLongitude()
         {
+            // Arrange
             GetBarListFourSquare getBars = new GetBarListFourSquare();
+            // Act
             getBars.GetBarsAround("100", "TEXT", "100");
         }
 
@@ -25,7 +29,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         [ExpectedException(typeof(System.Net.WebException))]
         public void GetBarsFourSquareInvalidRadius()
         {
+            // Arrange
             GetBarListFourSquare getBars = new GetBarListFourSquare();
+            // Act
             getBars.GetBarsAround("100", "100", "TEXT");
         }
     }
