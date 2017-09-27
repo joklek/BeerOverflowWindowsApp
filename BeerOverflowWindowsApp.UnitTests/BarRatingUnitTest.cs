@@ -9,6 +9,7 @@ namespace BeerOverflowWindowsApp.UnitTests
     public class BarRatingUnitTest
     {
         [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
         public void AddRatingToNullBarList()
         {
             // Arrange
@@ -19,6 +20,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
         public void AddEmptyBarList()
         {
             // Arrange
