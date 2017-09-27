@@ -13,9 +13,8 @@ namespace BeerOverflowWindowsApp.UnitTests
         {
             // Arrange
             BarRating rating = new BarRating();
-            BarData emptyData = null;
             // Act
-            rating.AddRating(emptyData, 100);
+            rating.AddRating(null, 100);
             // Assert
         }
 
@@ -24,9 +23,8 @@ namespace BeerOverflowWindowsApp.UnitTests
         {
             // Arrange
             BarRating rating = new BarRating();
-            List<BarData> emptyData = null;
             // Act
-            rating.AddBars(emptyData);
+            rating.AddBars(null);
             // Assert
         }
     }
