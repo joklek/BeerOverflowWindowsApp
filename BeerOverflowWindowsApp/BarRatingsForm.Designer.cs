@@ -28,20 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            beerPanel = new BeerPanel(200, 200, 200);
             this.barRatingsDataGrid = new System.Windows.Forms.DataGridView();
             this.barsComboBox = new System.Windows.Forms.ComboBox();
             this.RatingButton = new System.Windows.Forms.Button();
+            this.manualBeerMeter = new BeerOverflowWindowsApp.ManualBeerMeter();
             ((System.ComponentModel.ISupportInitialize)(this.barRatingsDataGrid)).BeginInit();
             this.SuspendLayout();
-            // 
-            // beerPanel
-            // 
-            this.beerPanel.BackColor = System.Drawing.SystemColors.Window;
-            this.beerPanel.Location = new System.Drawing.Point(577, 67);
-            this.beerPanel.Name = "beerPanel";
-            this.beerPanel.Size = new System.Drawing.Size(403, 476);
-            this.beerPanel.TabIndex = 4;
             // 
             // barRatingsDataGrid
             // 
@@ -69,12 +61,22 @@
             this.RatingButton.UseVisualStyleBackColor = true;
             this.RatingButton.Click += new System.EventHandler(this.RatingButton_Click);
             // 
+            // manualBeerMeter
+            // 
+            this.manualBeerMeter.Location = new System.Drawing.Point(706, 211);
+            this.manualBeerMeter.markerHeight = 50;
+            this.manualBeerMeter.markerWidth = 150;
+            this.manualBeerMeter.Name = "manualBeerMeter";
+            this.manualBeerMeter.Size = new System.Drawing.Size(318, 332);
+            this.manualBeerMeter.TabIndex = 4;
+            this.manualBeerMeter.Text = "manualBeerMeter";
+            // 
             // BarRatingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1223, 595);
-            this.Controls.Add(this.beerPanel);
+            this.Controls.Add(this.manualBeerMeter);
             this.Controls.Add(this.RatingButton);
             this.Controls.Add(this.barsComboBox);
             this.Controls.Add(this.barRatingsDataGrid);
@@ -90,6 +92,6 @@
         private System.Windows.Forms.DataGridView barRatingsDataGrid;
         private System.Windows.Forms.ComboBox barsComboBox;
         private System.Windows.Forms.Button RatingButton;
-        private BeerPanel beerPanel;
+        private ManualBeerMeter manualBeerMeter;
     }
 }
