@@ -78,15 +78,5 @@ namespace BeerOverflowWindowsApp
             var ratingsForm = new BarRatingsForm();
             ratingsForm.Show();
         }
-
-        private void beerPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void manualBeerMeter1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

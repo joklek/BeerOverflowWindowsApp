@@ -34,13 +34,18 @@ namespace BeerOverflowWindowsApp
 
         private void RatingButton_Click(object sender, EventArgs e)
         {
-            var rating = manualBeerMeter.Rating;
+            var rating = manualBarRating.Rating;
             if (barsComboBox.SelectedIndex != -1 && rating != "" && int.TryParse(rating, out int ratingNumber))
             {
                 var barData = new BarData { Title = barsComboBox.SelectedItem.ToString() };
                 barRating.AddRating(barData, ratingNumber);
                 ReLoadForm();
             }
+        }
+
+        private void manualBarRating1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

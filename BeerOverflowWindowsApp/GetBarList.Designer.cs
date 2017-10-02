@@ -133,7 +133,6 @@
             this.Text = "GetBarData";
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

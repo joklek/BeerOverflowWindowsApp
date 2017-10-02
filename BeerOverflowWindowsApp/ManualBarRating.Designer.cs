@@ -29,7 +29,10 @@
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            this.MouseClick += ManualBarRating_MouseClick;
+            this.MouseDown += ManualBarRating_MouseDown;
+            this.MouseMove += ManualBarRating_MouseMove;
+            this.MouseUp += ManualBarRating_MouseUp;
+            this.MouseLeave += ManualBarRating_MouseLeave;
             this.ResumeLayout(false);
 
         }

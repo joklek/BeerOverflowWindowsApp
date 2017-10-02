@@ -63,9 +63,19 @@ namespace BeerOverflowWindowsApp.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BeerGlass {
+        internal static System.Drawing.Bitmap DarkBeerGlass {
             get {
-                object obj = ResourceManager.GetObject("BeerGlass", resourceCulture);
+                object obj = ResourceManager.GetObject("DarkBeerGlass", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap LightBeerGlass {
+            get {
+                object obj = ResourceManager.GetObject("LightBeerGlass", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
