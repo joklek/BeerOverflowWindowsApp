@@ -25,6 +25,7 @@ namespace BeerOverflowWindowsApp
         {            
             var barData = barRating.GetBarsData();
             barRatingsDataGrid.Rows.Clear();
+            barsComboBox.Items.Clear();
             foreach (var bar in barData.BarsList)
             {
                 var rating = bar.Ratings == null ? "-"  : bar.Ratings.Average().ToString();
@@ -54,6 +55,12 @@ namespace BeerOverflowWindowsApp
         private void ButtonSortByRating_Click(object sender, EventArgs e)
         {
             barRating.Sort(CompareType.Rating);
+            ReLoadForm();
+        }
+
+        private void ButtonSortByDistance_Click(object sender, EventArgs e)
+        {
+            barRating.Sort(CompareType.Distance);
             ReLoadForm();
         }
     }

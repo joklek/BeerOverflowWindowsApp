@@ -9,6 +9,7 @@ namespace BeerOverflowWindowsApp.BarComparers
     public enum CompareType
     {
         Title,
-        Rating
+        Rating,
+        Distance
     }
 }

@@ -34,6 +34,7 @@
             this.RatingButton = new System.Windows.Forms.Button();
             this.ButtonSortByTitle = new System.Windows.Forms.Button();
             this.ButtonSortByRating = new System.Windows.Forms.Button();
+            this.ButtonSortByDistance = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barRatingsDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -75,7 +76,7 @@
             // 
             this.ButtonSortByTitle.Location = new System.Drawing.Point(12, 12);
             this.ButtonSortByTitle.Name = "ButtonSortByTitle";
-            this.ButtonSortByTitle.Size = new System.Drawing.Size(75, 23);
+            this.ButtonSortByTitle.Size = new System.Drawing.Size(99, 23);
             this.ButtonSortByTitle.TabIndex = 5;
             this.ButtonSortByTitle.Text = "ByTitle";
             this.ButtonSortByTitle.UseVisualStyleBackColor = true;
@@ -83,19 +84,30 @@
             // 
             // ButtonSortByRating
             // 
-            this.ButtonSortByRating.Location = new System.Drawing.Point(93, 12);
+            this.ButtonSortByRating.Location = new System.Drawing.Point(117, 12);
             this.ButtonSortByRating.Name = "ButtonSortByRating";
-            this.ButtonSortByRating.Size = new System.Drawing.Size(75, 23);
+            this.ButtonSortByRating.Size = new System.Drawing.Size(108, 23);
             this.ButtonSortByRating.TabIndex = 6;
             this.ButtonSortByRating.Text = "ByRating";
             this.ButtonSortByRating.UseVisualStyleBackColor = true;
             this.ButtonSortByRating.Click += new System.EventHandler(this.ButtonSortByRating_Click);
+            // 
+            // ButtonSortByDistance
+            // 
+            this.ButtonSortByDistance.Location = new System.Drawing.Point(231, 12);
+            this.ButtonSortByDistance.Name = "ButtonSortByDistance";
+            this.ButtonSortByDistance.Size = new System.Drawing.Size(107, 23);
+            this.ButtonSortByDistance.TabIndex = 7;
+            this.ButtonSortByDistance.Text = "ByDistance";
+            this.ButtonSortByDistance.UseVisualStyleBackColor = true;
+            this.ButtonSortByDistance.Click += new System.EventHandler(this.ButtonSortByDistance_Click);
             // 
             // BarRatingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1223, 595);
+            this.Controls.Add(this.ButtonSortByDistance);
             this.Controls.Add(this.ButtonSortByRating);
             this.Controls.Add(this.ButtonSortByTitle);
             this.Controls.Add(this.beerPanel);
@@ -117,5 +129,6 @@
         private BeerPanel beerPanel;
         private System.Windows.Forms.Button ButtonSortByTitle;
         private System.Windows.Forms.Button ButtonSortByRating;
+        private System.Windows.Forms.Button ButtonSortByDistance;
     }
 }

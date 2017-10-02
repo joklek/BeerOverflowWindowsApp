@@ -61,7 +61,10 @@ namespace BeerOverflowWindowsApp
                     var ratingsComparer = new ComparerByRating();
                     barsData.BarsList.Sort(ratingsComparer);
                     break;
-                    
+                case CompareType.Distance:
+                    var distanceComparer = new ComparerByDistance();
+                    barsData.BarsList.Sort(distanceComparer);
+                    break;
             }
 
         }
