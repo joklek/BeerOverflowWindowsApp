@@ -32,6 +32,8 @@
             this.barRatingsDataGrid = new System.Windows.Forms.DataGridView();
             this.barsComboBox = new System.Windows.Forms.ComboBox();
             this.RatingButton = new System.Windows.Forms.Button();
+            this.ButtonSortByTitle = new System.Windows.Forms.Button();
+            this.ButtonSortByRating = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barRatingsDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,9 +48,9 @@
             // barRatingsDataGrid
             // 
             this.barRatingsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.barRatingsDataGrid.Location = new System.Drawing.Point(12, 12);
+            this.barRatingsDataGrid.Location = new System.Drawing.Point(12, 38);
             this.barRatingsDataGrid.Name = "barRatingsDataGrid";
-            this.barRatingsDataGrid.Size = new System.Drawing.Size(326, 571);
+            this.barRatingsDataGrid.Size = new System.Drawing.Size(326, 545);
             this.barRatingsDataGrid.TabIndex = 0;
             // 
             // barsComboBox
@@ -69,11 +71,33 @@
             this.RatingButton.UseVisualStyleBackColor = true;
             this.RatingButton.Click += new System.EventHandler(this.RatingButton_Click);
             // 
+            // ButtonSortByTitle
+            // 
+            this.ButtonSortByTitle.Location = new System.Drawing.Point(12, 12);
+            this.ButtonSortByTitle.Name = "ButtonSortByTitle";
+            this.ButtonSortByTitle.Size = new System.Drawing.Size(75, 23);
+            this.ButtonSortByTitle.TabIndex = 5;
+            this.ButtonSortByTitle.Text = "ByTitle";
+            this.ButtonSortByTitle.UseVisualStyleBackColor = true;
+            this.ButtonSortByTitle.Click += new System.EventHandler(this.ButtonSortByTitle_Click);
+            // 
+            // ButtonSortByRating
+            // 
+            this.ButtonSortByRating.Location = new System.Drawing.Point(93, 12);
+            this.ButtonSortByRating.Name = "ButtonSortByRating";
+            this.ButtonSortByRating.Size = new System.Drawing.Size(75, 23);
+            this.ButtonSortByRating.TabIndex = 6;
+            this.ButtonSortByRating.Text = "ByRating";
+            this.ButtonSortByRating.UseVisualStyleBackColor = true;
+            this.ButtonSortByRating.Click += new System.EventHandler(this.ButtonSortByRating_Click);
+            // 
             // BarRatingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1223, 595);
+            this.Controls.Add(this.ButtonSortByRating);
+            this.Controls.Add(this.ButtonSortByTitle);
             this.Controls.Add(this.beerPanel);
             this.Controls.Add(this.RatingButton);
             this.Controls.Add(this.barsComboBox);
@@ -91,5 +115,7 @@
         private System.Windows.Forms.ComboBox barsComboBox;
         private System.Windows.Forms.Button RatingButton;
         private BeerPanel beerPanel;
+        private System.Windows.Forms.Button ButtonSortByTitle;
+        private System.Windows.Forms.Button ButtonSortByRating;
     }
 }

@@ -1,4 +1,5 @@
-﻿using BeerOverflowWindowsApp.DataModels;
+﻿using BeerOverflowWindowsApp.BarComparers;
+using BeerOverflowWindowsApp.DataModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,6 +48,22 @@ namespace BeerOverflowWindowsApp
                 }
             }
             BarFileWriter.SaveData(barsData);
+        }
+        public void Sort(CompareType compareType)
+        {
+            switch (compareType)
+            {
+                case CompareType.Title:
+                    var titleComparer = new ComparerByTitle();
+                    barsData.BarsList.Sort(titleComparer);
+                    break;
+                case CompareType.Rating:
+                    var ratingsComparer = new ComparerByRating();
+                    barsData.BarsList.Sort(ratingsComparer);
+                    break;
+                    
+            }
+
         }
     }
 }

@@ -68,6 +68,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BarComparers\ComparerByRating.cs" />
+    <Compile Include="BarComparers\ComparerByTitle.cs" />
+    <Compile Include="BarComparers\ComparerType.cs" />
     <Compile Include="BarRating.cs" />
     <Compile Include="BarRatingsForm.cs">
       <SubType>Form</SubType>

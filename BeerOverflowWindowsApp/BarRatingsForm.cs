@@ -1,4 +1,5 @@
-﻿using BeerOverflowWindowsApp.DataModels;
+﻿using BeerOverflowWindowsApp.BarComparers;
+using BeerOverflowWindowsApp.DataModels;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -35,12 +36,25 @@ namespace BeerOverflowWindowsApp
         private void RatingButton_Click(object sender, EventArgs e)
         {
             var rating = BeerPanel.Rating;
-            if (barsComboBox.SelectedIndex != -1 && rating != "" && int.TryParse(rating, out int ratingNumber))
+            int ratingNumber;
+            if (barsComboBox.SelectedIndex != -1 && rating != "" && int.TryParse(rating, out ratingNumber))
             {
                 var barData = new BarData { Title = barsComboBox.SelectedItem.ToString() };
                 barRating.AddRating(barData, ratingNumber);
                 ReLoadForm();
             }
+        }
+
+        private void ButtonSortByTitle_Click(object sender, EventArgs e)
+        {
+            barRating.Sort(CompareType.Title);
+            ReLoadForm();
+        }
+
+        private void ButtonSortByRating_Click(object sender, EventArgs e)
+        {
+            barRating.Sort(CompareType.Rating);
+            ReLoadForm();
         }
     }
 }
