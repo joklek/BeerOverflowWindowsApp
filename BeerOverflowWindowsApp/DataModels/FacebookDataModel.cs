@@ -24,7 +24,7 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public class PlacesResponse
         {
-            public List<Datum> Results { get; set; }
+            public List<Datum> data { get; set; }
         }
     }
 }
