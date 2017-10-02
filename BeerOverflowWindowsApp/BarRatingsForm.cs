@@ -10,7 +10,6 @@ namespace BeerOverflowWindowsApp
     {
         private const string titleColumnName = "Title";
         private const string ratingColumnName = "Rating";
-
         BarRating barRating = new BarRating();
 
         public BarRatingsForm()
@@ -25,12 +24,11 @@ namespace BeerOverflowWindowsApp
         {            
             var barData = barRating.GetBarsData();
             barRatingsDataGrid.Rows.Clear();
-            barsComboBox.Items.Clear();
+            barsComboBox.DataSource = barData.BarsList.Select(x => x.Title).ToList();
             foreach (var bar in barData.BarsList)
             {
                 var rating = bar.Ratings == null ? "-"  : bar.Ratings.Average().ToString();
                 barRatingsDataGrid.Rows.Add(bar.Title, rating);
-                barsComboBox.Items.Add(bar.Title);
             }
         }
 
@@ -48,7 +46,7 @@ namespace BeerOverflowWindowsApp
 
         private void ButtonSortByTitle_Click(object sender, EventArgs e)
         {
-            barRating.Sort(CompareType.Title);
+            barRating.Sort(CompareType.Title);            
             ReLoadForm();
         }
 
@@ -62,6 +60,14 @@ namespace BeerOverflowWindowsApp
         {
             barRating.Sort(CompareType.Distance);
             ReLoadForm();
+        }
+
+        private void barRatingsDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if(e.RowIndex >= 0)
+            {
+                barsComboBox.SelectedIndex = e.RowIndex;
+            }            
         }
     }
 }

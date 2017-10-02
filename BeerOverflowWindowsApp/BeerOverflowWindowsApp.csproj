@@ -88,6 +88,7 @@
     <Compile Include="BarFileWriter.cs" />
     <Compile Include="GetBarListFourSquare.cs" />
     <Compile Include="GetBarListGoogle.cs" />
+    <Compile Include="CurrentLocation.cs" />
     <Compile Include="IBeerable.cs" />
     <Compile Include="DataModels\GeodataDataModel.cs" />
     <Compile Include="GetBarList.cs">
