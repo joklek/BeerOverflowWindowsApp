@@ -10,8 +10,7 @@ namespace BeerOverflowWindowsApp
     class GetBarListFacebook : IBeerable
     {
         private const string fbAPILink =
-            "https://graph.facebook.com/vX.X/search?access_token={0}&type=place&center={1}&distance={2}&fields={3}&type={4}";
-        private const string fbAccessToken = "";
+            "https://graph.facebook.com/v2.10/search?access_token={0}&type=place&center={1}&distance={2}&fields={3}&categories=['{4}']";
         private const string Category = "FOOD_BEVERAGE";
 
         private List<string> fieldList = new List<string>
@@ -24,7 +23,6 @@ namespace BeerOverflowWindowsApp
         {
             var result = GetBarData(latitude, longitude, radius);
             var barList = FacebookDataToBars(result);
-
             return barList;
         }
 
@@ -40,7 +38,7 @@ namespace BeerOverflowWindowsApp
                 }
                 returned += field;
             }
-            return returned.TrimEnd(',');
+            return returned;
         }
 
         private FacebookDataModel.PlacesResponse GetBarData(string latitude, string longitude, string radius)
@@ -66,6 +64,7 @@ namespace BeerOverflowWindowsApp
         private List<BarData> FacebookDataToBars(FacebookDataModel.PlacesResponse resultData)
         {
             var barList = new List<BarData>();
+            
             foreach (var result in resultData.Results)
             {
                 BarData newBar = new BarData()
