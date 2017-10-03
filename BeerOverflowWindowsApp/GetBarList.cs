@@ -30,6 +30,8 @@ namespace BeerOverflowWindowsApp
                 var result = new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius());
                 result = CombineLists(result, new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
                 result = CombineLists(result, new GetBarListFacebook().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
+                result = CombineLists(result, new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
+
                 DisplayData(result);
                 barRating.AddBars(result);
             }
