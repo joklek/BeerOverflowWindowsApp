@@ -8,9 +8,12 @@ namespace BeerOverflowWindowsApp.DataModels
 {
     class BarDataModel
     {
-        private double barNameReallySimilarThreshold = 0.52;
-        private double barNameLikelySimilarThreshold = 0.15;
-        private double barCoordSimilarThreshold = 0.00005;
+        private double barNameSimilarThreshold = 
+            double.Parse(System.Configuration.ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
+        private double barNameLikelySimilarThreshold = 
+            double.Parse(System.Configuration.ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
+        private double barCoordSimilarThreshold = 
+            double.Parse(System.Configuration.ConfigurationManager.AppSettings["barCoordSimilarThreshold"], CultureInfo.InvariantCulture);
 
         public List<BarData> BarsList { get; set; }
 
@@ -28,7 +31,7 @@ namespace BeerOverflowWindowsApp.DataModels
                 for (var j = i + 1; j < lengthPrimary; j++)
                 {
                     var stringSimilarity = CalculateStringSimilarity(BarsList[i].Title, BarsList[j].Title);
-                    if (stringSimilarity >= barNameReallySimilarThreshold ||
+                    if (stringSimilarity >= barNameSimilarThreshold ||
                         (stringSimilarity >= barNameLikelySimilarThreshold &&
                         CoordsAreSimilar(BarsList[i].Latitude, BarsList[i].Longitude,
                             BarsList[j].Latitude, BarsList[j].Longitude)))
