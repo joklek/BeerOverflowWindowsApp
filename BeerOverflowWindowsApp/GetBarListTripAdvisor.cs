@@ -10,11 +10,10 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListTripAdvisor
     {
-        private const string key = "722778370a97413484c29f89476a8e18";
-        private const string TripAdvisorMapperLink = 
-            "http://api.tripadvisor.com/api/partner/2.0/location_mapper/{0},{1}?key={2}-mapper&category=restaurants";
-        private const string TripAdvisorLocationAPILink =
-            "http://api.tripadvisor.com/api/partner/2.0/location/{0}?key={1}";
+        private string key = System.Configuration.ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
+        private string TripAdvisorMapperLink = System.Configuration.ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
+        private string TripAdvisorLocationAPILink = System.Configuration.ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
+
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
             List<BarData> barList = null;

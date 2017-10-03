@@ -9,9 +9,8 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListFacebook : IBeerable
     {
-        private const string fbAPILink =
-            "https://graph.facebook.com/v2.10/search?access_token={0}&type=place&center={1}&distance={2}&fields={3}&categories=['{4}']";
-        private const string fbAccessToken = "EAABpaWOJYT8BALCrZBXNm6ZAGYZBPiJ7qxpEnMYWK0XZB1I7AbHQ5tfmZBnqhHKg2kAtUk9CV0ianlZBnPwWxpgtJ5mIZB9Jb6u17dHvMDRA3H8yfqX5ON1LRpxo9ZAnR5Xv9lAepH2Ohx338ZBjiO47IqpXlV8lvkY1o9UzFVaDQWQZDZD";
+        private string fbAPILink = System.Configuration.ConfigurationManager.AppSettings["FacebookAPILink"];
+        private string fbAccessToken = System.Configuration.ConfigurationManager.AppSettings["FacebookAccessToken"];
         private const string Category = "FOOD_BEVERAGE";
 
         private List<string> fieldList = new List<string>
