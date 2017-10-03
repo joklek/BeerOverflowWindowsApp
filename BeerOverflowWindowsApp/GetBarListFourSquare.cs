@@ -7,9 +7,9 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListFourSquare
     {
-        static string clientId = System.Configuration.ConfigurationManager.AppSettings["clientId"];
-        static string clientSecret = System.Configuration.ConfigurationManager.AppSettings["clientSecret"];
-        static string categoryIdBar = System.Configuration.ConfigurationManager.AppSettings["categoryIdBar"];
+        static string clientId = System.Configuration.ConfigurationManager.AppSettings["FourSqaureClientId"];
+        static string clientSecret = System.Configuration.ConfigurationManager.AppSettings["FourSquareClientSecret"];
+        static string categoryIdBar = System.Configuration.ConfigurationManager.AppSettings["FourSqaureCategoryIdBar"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
