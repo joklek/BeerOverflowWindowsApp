@@ -4,14 +4,15 @@ using Newtonsoft.Json;
 using static DataModels.GeodataDataModel;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using BeerOverflowWindowsApp.DataModels;
 
 namespace BeerOverflowWindowsApp
 {
     class GetBarListGoogle
     {
-        private const string GoogleAPIKey = "AIzaSyBqe4VYJPO86ui1aOtmpxapqwI3ET0ZaMY";
-        private const string GoogleAPILink = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={0},{1}&radius={2}&type=bar&key=" + GoogleAPIKey;
+        static string GoogleAPIKey = System.Configuration.ConfigurationManager.AppSettings["GoogleAPIKey"];
+        static string GoogleAPILink = System.Configuration.ConfigurationManager.AppSettings["GoogleAPILink"] + GoogleAPIKey;
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -36,6 +37,7 @@ namespace BeerOverflowWindowsApp
                 try
                 {
                     var webClient = new WebClient();
+                    webClient.Encoding = Encoding.UTF8;
                     var response = webClient.DownloadString(string.Format(GoogleAPILink, latitude, longitude, radius));
                     result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
                 }
@@ -55,7 +57,9 @@ namespace BeerOverflowWindowsApp
             {
                 newBar = new BarData
                 {
-                    Title = result.Name
+                    Title = result.Name,
+                    Latitude = result.Geometry.Location.Lat,
+                    Longitude = result.Geometry.Location.Lng
                 };
                 barList.Add(newBar);
             }

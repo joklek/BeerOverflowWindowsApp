@@ -56,7 +56,9 @@
       <HintPath>..\Libraries\SharpSquare.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,6 +70,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BarComparers\ComparerByDistance.cs" />
+    <Compile Include="BarComparers\ComparerByRating.cs" />
+    <Compile Include="BarComparers\ComparerByTitle.cs" />
+    <Compile Include="BarComparers\ComparerType.cs" />
     <Compile Include="BarRating.cs" />
     <Compile Include="BarRatingsForm.cs">
       <SubType>Form</SubType>
@@ -80,6 +86,7 @@
     <Compile Include="BarFileWriter.cs" />
     <Compile Include="GetBarListFourSquare.cs" />
     <Compile Include="GetBarListGoogle.cs" />
+    <Compile Include="CurrentLocation.cs" />
     <Compile Include="IBeerable.cs" />
     <Compile Include="DataModels\GeodataDataModel.cs" />
     <Compile Include="GetBarList.cs">
@@ -136,7 +143,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

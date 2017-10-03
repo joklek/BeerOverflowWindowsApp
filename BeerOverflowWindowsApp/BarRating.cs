@@ -1,4 +1,5 @@
-﻿using BeerOverflowWindowsApp.DataModels;
+﻿using BeerOverflowWindowsApp.BarComparers;
+using BeerOverflowWindowsApp.DataModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +8,9 @@ namespace BeerOverflowWindowsApp
     class BarRating
     {
         BarDataModel barsData = null;
+        public bool SortByTitleDesc { get; set; } = false;
+        public bool SortByRatingDesc { get; set; } = false;
+        public bool SortByDistance { get; set; } = false;
 
         public BarDataModel GetBarsData()
         {
@@ -47,6 +51,46 @@ namespace BeerOverflowWindowsApp
                 }
             }
             BarFileWriter.SaveData(barsData);
+        }
+
+        public void Sort(CompareType compareType)
+        {
+            switch (compareType)
+            {
+                case CompareType.Title:
+                    var titleComparer = new ComparerByTitle();
+                    barsData.BarsList.Sort(titleComparer);
+                    if (SortByTitleDesc)
+                    {
+                        barsData.BarsList.Reverse();
+                    }
+                    SortByTitleDesc = !SortByTitleDesc;
+                    SortByRatingDesc = false;
+                    SortByDistance = false;
+                    break;
+                case CompareType.Rating:
+                    var ratingsComparer = new ComparerByRating();
+                    barsData.BarsList.Sort(ratingsComparer);
+                    if (SortByRatingDesc)
+                    {
+                        barsData.BarsList.Reverse();
+                    }
+                    SortByTitleDesc = false;
+                    SortByRatingDesc = !SortByRatingDesc;
+                    SortByDistance = false;
+                    break;
+                case CompareType.Distance:
+                    var distanceComparer = new ComparerByDistance();
+                    barsData.BarsList.Sort(distanceComparer);
+                    if (SortByDistance)
+                    {
+                        barsData.BarsList.Reverse();
+                    }
+                    SortByTitleDesc = false;
+                    SortByRatingDesc = false;
+                    SortByDistance = !SortByDistance;
+                    break;
+            }
         }
     }
 }
