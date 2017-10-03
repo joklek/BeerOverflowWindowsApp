@@ -6,10 +6,12 @@ namespace BeerOverflowWindowsApp.DataModels
     {
         public List<BarData> BarsList { get; set; }
     }
-    class BarData
+    public class BarData
     {
         public string Title { get; set; }
         public string Id { get; set; }
         public List<int> Ratings { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

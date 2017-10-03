@@ -6,7 +6,7 @@ namespace BeerOverflowWindowsApp
 {
     static class BarFileWriter
     {
-        private const string filePath = @".\barsData.txt";
+        static string filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
 
         static public void SaveData(BarDataModel barData)
         {
