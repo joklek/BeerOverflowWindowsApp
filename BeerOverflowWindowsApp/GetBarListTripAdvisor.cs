@@ -11,8 +11,10 @@ namespace BeerOverflowWindowsApp
     class GetBarListTripAdvisor
     {
         private const string key = "722778370a97413484c29f89476a8e18";
-        private const string TripAdvisorAPILink = "http://api.tripadvisor.com/api/partner/2.0/location_mapper/{0},{1}?key={2}-mapper&category=restaurants";
-
+        private const string TripAdvisorMapperLink = 
+            "http://api.tripadvisor.com/api/partner/2.0/location_mapper/{0},{1}?key={2}-mapper&category=restaurants";
+        private const string TripAdvisorLocationAPILink =
+            "http://api.tripadvisor.com/api/partner/2.0/location/{0}?key={1}";
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
             List<BarData> barList = null;
@@ -36,7 +38,7 @@ namespace BeerOverflowWindowsApp
                 try
                 {
                     var webClient = new WebClient();
-                    var response = webClient.DownloadString(string.Format(TripAdvisorAPILink, latitude, longitude, key));
+                    var response = webClient.DownloadString(string.Format(TripAdvisorMapperLink, latitude, longitude, key));
                     result = JsonConvert.DeserializeObject<TripAdvisorDataModel.PlacesResponse>(response);
                 }
                 catch (Exception exception)
@@ -67,5 +69,26 @@ namespace BeerOverflowWindowsApp
             }
             return barList;
         }
+
+        // Commented for future work, when the branch, where location getting is needed
+        // This method is needed, because TripAdvisor doesn't give coords by default, you need an addition request
+        /*
+        private void GetLocationForPlace(TripAdvisorDataModel.Datum place)
+        {
+            using (var client = new HttpClient())
+            {
+                TripAdvisorDataModel.TripAdvisorLocation result = null;
+                try
+                {
+                    var webClient = new WebClient();
+                    var response = webClient.DownloadString(string.Format(TripAdvisorLocationAPILink, place.location_id ,key));
+                    result = JsonConvert.DeserializeObject<TripAdvisorDataModel.TripAdvisorLocation>(response);
+                }
+                catch (Exception exception)
+                {
+                    throw exception;
+                }
+            }
+        }*/
     }
 }
