@@ -28,23 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            beerPanel = new BeerPanel(200, 200, 200);
             this.barRatingsDataGrid = new System.Windows.Forms.DataGridView();
             this.barsComboBox = new System.Windows.Forms.ComboBox();
             this.RatingButton = new System.Windows.Forms.Button();
+            this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
             this.ButtonSortByTitle = new System.Windows.Forms.Button();
             this.ButtonSortByRating = new System.Windows.Forms.Button();
             this.ButtonSortByDistance = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barRatingsDataGrid)).BeginInit();
             this.SuspendLayout();
-            // 
-            // beerPanel
-            // 
-            this.beerPanel.BackColor = System.Drawing.SystemColors.Window;
-            this.beerPanel.Location = new System.Drawing.Point(577, 67);
-            this.beerPanel.Name = "beerPanel";
-            this.beerPanel.Size = new System.Drawing.Size(403, 476);
-            this.beerPanel.TabIndex = 4;
             // 
             // barRatingsDataGrid
             // 
@@ -73,6 +65,17 @@
             this.RatingButton.UseVisualStyleBackColor = true;
             this.RatingButton.Click += new System.EventHandler(this.RatingButton_Click);
             // 
+            // manualBarRating
+            // 
+            this.manualBarRating.ImageSize = 100;
+            this.manualBarRating.Location = new System.Drawing.Point(555, 397);
+            this.manualBarRating.MaximumSize = new System.Drawing.Size(500, 100);
+            this.manualBarRating.MinimumSize = new System.Drawing.Size(500, 100);
+            this.manualBarRating.Name = "manualBarRating";
+            this.manualBarRating.Size = new System.Drawing.Size(500, 100);
+            this.manualBarRating.TabIndex = 5;
+            this.manualBarRating.Text = "manualBarRating";
+            //
             // ButtonSortByTitle
             // 
             this.ButtonSortByTitle.Location = new System.Drawing.Point(12, 12);
@@ -108,10 +111,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1223, 595);
+            this.Controls.Add(this.manualBarRating);
             this.Controls.Add(this.ButtonSortByDistance);
             this.Controls.Add(this.ButtonSortByRating);
             this.Controls.Add(this.ButtonSortByTitle);
-            this.Controls.Add(this.beerPanel);
             this.Controls.Add(this.RatingButton);
             this.Controls.Add(this.barsComboBox);
             this.Controls.Add(this.barRatingsDataGrid);
@@ -127,7 +130,7 @@
         private System.Windows.Forms.DataGridView barRatingsDataGrid;
         private System.Windows.Forms.ComboBox barsComboBox;
         private System.Windows.Forms.Button RatingButton;
-        private BeerPanel beerPanel;
+        private ManualBarRating manualBarRating;
         private System.Windows.Forms.Button ButtonSortByTitle;
         private System.Windows.Forms.Button ButtonSortByRating;
         private System.Windows.Forms.Button ButtonSortByDistance;

@@ -7,7 +7,7 @@ namespace BeerOverflowWindowsApp
 {
     static class BarFileReader
     {
-        private const string filePath = @".\barsData.txt";
+        static string filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
 
         static public BarDataModel ReadData()
         {

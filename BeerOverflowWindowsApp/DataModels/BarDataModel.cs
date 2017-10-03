@@ -114,7 +114,6 @@ namespace BeerOverflowWindowsApp.DataModels
         }
     }
 
-
     public class BarData
     {
         public string Title { get; set; }
