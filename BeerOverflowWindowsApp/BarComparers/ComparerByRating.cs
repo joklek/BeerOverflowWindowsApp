@@ -1,9 +1,6 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BeerOverflowWindowsApp.BarComparers
 {
@@ -16,13 +13,11 @@ namespace BeerOverflowWindowsApp.BarComparers
             {
                 result = 0;
             }
-            else
-            if (barData1.Ratings == null && barData2.Ratings != null)
+            else if (barData1.Ratings == null && barData2.Ratings != null)
             {
                 result = 1;
             }
-            else
-            if (barData1.Ratings != null && barData2.Ratings == null)
+            else if (barData1.Ratings != null && barData2.Ratings == null)
             {
                 result = -1;
             }

@@ -53,8 +53,6 @@ namespace BeerOverflowWindowsApp
             return primaryList;
         }
 
-        
-
         // Clears the display first, then adds text to display
         private void DisplayData(List<BarData> resultData)
         {

@@ -52,6 +52,7 @@ namespace BeerOverflowWindowsApp
             }
             BarFileWriter.SaveData(barsData);
         }
+
         public void Sort(CompareType compareType)
         {
             switch (compareType)
@@ -90,7 +91,6 @@ namespace BeerOverflowWindowsApp
                     SortByDistance = !SortByDistance;
                     break;
             }
-
         }
     }
 }
