@@ -28,14 +28,14 @@ namespace BeerOverflowWindowsApp
         {
             try
             {
-                var result = new List<BarData>();
-                result = BarData.CombineLists(result, new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
-                result = BarData.CombineLists(result, new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
-                result = BarData.CombineLists(result, new GetBarListFacebook().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
-                result = BarData.CombineLists(result, new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
+                var result = new BarDataModel {BarsList = new List<BarData>()};
+                result.CombineLists(new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                result.CombineLists(new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                result.CombineLists(new GetBarListFacebook().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
+                result.CombineLists(new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
 
-                DisplayData(result);
-                barRating.AddBars(result);
+                DisplayData(result.BarsList);
+                barRating.AddBars(result.BarsList);
             }
             catch (Exception exception)
             {

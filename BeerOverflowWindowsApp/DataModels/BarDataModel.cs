@@ -8,48 +8,42 @@ namespace BeerOverflowWindowsApp.DataModels
 {
     class BarDataModel
     {
-        public List<BarData> BarsList { get; set; }
-    }
-    public class BarData
-    {
-        public string Title { get; set; }
-        public string Id { get; set; }
-        public List<int> Ratings { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        private double barNameReallySimilarThreshold = 0.52;
+        private double barNameLikelySimilarThreshold = 0.15;
+        private double barCoordSimilarThreshold = 0.00005;
 
-        public static List<BarData> CombineLists(List<BarData> primaryList, List<BarData> secondaryList)
+        public List<BarData> BarsList { get; set; }
+
+        public void CombineLists(List<BarData> secondaryList)
         {
             foreach (var barDatum in secondaryList)
             {
-                primaryList.Add(barDatum);
+                BarsList.Add(barDatum);
             }
 
-            var lengthPrimary = primaryList.ToArray().Length;
+            var lengthPrimary = BarsList.ToArray().Length;
 
             for (var i = 0; i + 1 < lengthPrimary; i++)
             {
                 for (var j = i + 1; j < lengthPrimary; j++)
                 {
-                    var stringSimilarity = CalculateStringSimilarity(primaryList[i].Title, primaryList[j].Title);
-                    if (stringSimilarity >= 0.52 ||
-                        (stringSimilarity >= 0.15 &&
-                        CoordsAreSimilar(primaryList[i].Latitude, primaryList[i].Longitude,
-                                         primaryList[j].Latitude, primaryList[j].Longitude)))
+                    var stringSimilarity = CalculateStringSimilarity(BarsList[i].Title, BarsList[j].Title);
+                    if (stringSimilarity >= barNameReallySimilarThreshold ||
+                        (stringSimilarity >= barNameLikelySimilarThreshold &&
+                        CoordsAreSimilar(BarsList[i].Latitude, BarsList[i].Longitude,
+                            BarsList[j].Latitude, BarsList[j].Longitude)))
                     {
-                        primaryList.Remove(primaryList[j]);
-                        lengthPrimary = primaryList.ToArray().Length;
+                        BarsList.Remove(BarsList[j]);
+                        lengthPrimary = BarsList.ToArray().Length;
                     }
                 }
             }
-            return primaryList;
         }
 
-        private static bool CoordsAreSimilar(double lat1, double lon1, double lat2, double lon2)
+        private bool CoordsAreSimilar(double lat1, double lon1, double lat2, double lon2)
         {
-            var threshold = 0.00005;
-            if (CalculateDoubleDiff(lat1, lat2) <= threshold &&
-                (CalculateDoubleDiff(lon1, lon2) <= threshold))
+            if (CalculateDoubleDiff(lat1, lat2) <= barCoordSimilarThreshold &&
+                (CalculateDoubleDiff(lon1, lon2) <= barCoordSimilarThreshold))
             {
                 return true;
             }
@@ -59,12 +53,12 @@ namespace BeerOverflowWindowsApp.DataModels
             }
         }
 
-        private static double CalculateDoubleDiff(double number1, double number2)
+        private double CalculateDoubleDiff(double number1, double number2)
         {
             return Math.Abs(number1 - number2);
         }
 
-        private static double CalculateStringSimilarity(string source, string target)
+        private double CalculateStringSimilarity(string source, string target)
         {
             if (string.IsNullOrEmpty(source))
                 return string.IsNullOrEmpty(target) ? 1 : 0;
@@ -78,7 +72,7 @@ namespace BeerOverflowWindowsApp.DataModels
             return (1.0 - (stepsToSame / (double)Math.Max(source.Length, target.Length)));
         }
 
-        private static int ComputeLevenshteinDistance(string source, string target)
+        private int ComputeLevenshteinDistance(string source, string target)
         {
             if (string.IsNullOrEmpty(source))
                 return string.IsNullOrEmpty(target) ? 0 : target.Length;
@@ -112,11 +106,21 @@ namespace BeerOverflowWindowsApp.DataModels
             return distance[sourceLength, targetLength];
         }
 
-        private static string ToASCII(string s)
+        private string ToASCII(string s)
         {
             return string.Join("",
                 s.Normalize(NormalizationForm.FormD)
                     .Where(c => char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
         }
+    }
+
+
+    public class BarData
+    {
+        public string Title { get; set; }
+        public string Id { get; set; }
+        public List<int> Ratings { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
