@@ -72,7 +72,7 @@ namespace BeerOverflowWindowsApp
                 {
                     Title = result.name,
                     Latitude = result.location.latitude,
-                    Longitude = result.location.latitude
+                    Longitude = result.location.longitude
                 };
                 barList.Add(newBar);
             }
