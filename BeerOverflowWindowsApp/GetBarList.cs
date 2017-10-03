@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace BeerOverflowWindowsApp
@@ -16,8 +17,8 @@ namespace BeerOverflowWindowsApp
             InitializeComponent();
             var location = new CurrentLocation();
             var currentLocation = location.currentLocation;
-            var latitude = currentLocation.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var longitude = currentLocation.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var latitude = currentLocation.Latitude.ToString(CultureInfo.InvariantCulture);
+            var longitude = currentLocation.Longitude.ToString(CultureInfo.InvariantCulture);
             latitudeBox.Text = latitude;
             longitudeBox.Text = longitude;
             radiusTextBox.Text = radius.ToString();
@@ -28,10 +29,10 @@ namespace BeerOverflowWindowsApp
             try
             {
                 var result = new List<BarData>();
-                result = CombineLists(result, new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
-                result = CombineLists(result, new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
-                result = CombineLists(result, new GetBarListFacebook().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
-                result = CombineLists(result, new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
+                result = BarData.CombineLists(result, new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                result = BarData.CombineLists(result, new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                result = BarData.CombineLists(result, new GetBarListFacebook().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
+                result = BarData.CombineLists(result, new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
 
                 DisplayData(result);
                 barRating.AddBars(result);
@@ -40,19 +41,6 @@ namespace BeerOverflowWindowsApp
             {
                 MessageBox.Show("Something went wrong with the message: " + exception.Message);
             }
-        }
-
-        private List<BarData> CombineLists(List<BarData> primaryList, List<BarData> secondaryList)
-        {
-            var length = secondaryList.ToArray().Length;
-            for (int i = 0; i < length; i++)
-            {
-                if (!primaryList.Contains(secondaryList[i]))
-                {
-                    primaryList.Add(secondaryList[i]);
-                }
-            }
-            return primaryList;
         }
 
         // Clears the display first, then adds text to display
