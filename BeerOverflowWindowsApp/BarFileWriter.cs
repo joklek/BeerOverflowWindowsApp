@@ -8,7 +8,7 @@ namespace BeerOverflowWindowsApp
     {
         static string filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
 
-        static public void SaveData(BarDataModel barData)
+        public static void SaveData(BarDataModel barData)
         {
             var barsDataJson = JsonConvert.SerializeObject(barData);
             File.WriteAllText(filePath, barsDataJson);

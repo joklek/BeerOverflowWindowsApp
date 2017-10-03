@@ -9,7 +9,7 @@ namespace BeerOverflowWindowsApp
     {
         static string filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
 
-        static public BarDataModel ReadData()
+        public static BarDataModel ReadData()
         {
             if (File.Exists(filePath))
             {
