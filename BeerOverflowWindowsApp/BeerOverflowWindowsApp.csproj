@@ -81,9 +81,6 @@
     <Compile Include="BarRatingsForm.Designer.cs">
       <DependentUpon>BarRatingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="BeerPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="BarFileReader.cs" />
     <Compile Include="BarFileWriter.cs" />
@@ -98,31 +95,47 @@
     <Compile Include="GetBarList.Designer.cs">
       <DependentUpon>GetBarList.cs</DependentUpon>
     </Compile>
+    <Compile Include="ManualBarRating.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ManualBarRating.Designer.cs">
+      <DependentUpon>ManualBarRating.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManualBeerMeter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ManualBeerMeter.Designer.cs">
+      <DependentUpon>ManualBeerMeter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BarRatingsForm.resx">
       <DependentUpon>BarRatingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BeerPanel.resx">
-      <DependentUpon>BeerPanel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GetBarList.resx">
       <DependentUpon>GetBarList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ManualBarRating.resx">
+      <DependentUpon>ManualBarRating.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManualBeerMeter.resx">
+      <DependentUpon>ManualBeerMeter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -146,6 +159,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DarkBeerGlass.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LightBeerGlass.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -119,7 +119,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1057, 581);
+            this.ClientSize = new System.Drawing.Size(1223, 581);
             this.Controls.Add(this.RateBarsButton);
             this.Controls.Add(this.resultTextBox);
             this.Controls.Add(this.radiusLabel);
@@ -133,7 +133,6 @@
             this.Text = "GetBarData";
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
