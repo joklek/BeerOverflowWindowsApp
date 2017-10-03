@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using BeerOverflowWindowsApp.DataModels;
@@ -51,8 +52,11 @@ namespace BeerOverflowWindowsApp
             List<BarData> barList = new List<BarData>();
             foreach (var result in resultData.data)
             {
-                
-                if (int.Parse(result.distance) <= int.Parse(radius))
+                // Convert miles to a float and multiply by 1.609344 * 1000 = 1609, to get kilometers
+                // Culture invariant set to avoid formatting errors
+                var floatMiles = double.Parse(result.distance, CultureInfo.InvariantCulture) * 1.609344 * 1000;
+
+                if ( (int) floatMiles <= int.Parse(radius))
                 {
                     var newBar = new BarData
                     {
