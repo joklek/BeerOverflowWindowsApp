@@ -10,8 +10,8 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListGoogle
     {
-        private const string GoogleAPIKey = "AIzaSyBqe4VYJPO86ui1aOtmpxapqwI3ET0ZaMY";
-        private const string GoogleAPILink = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={0},{1}&radius={2}&type=bar&key=" + GoogleAPIKey;
+        static string GoogleAPIKey = System.Configuration.ConfigurationManager.AppSettings["GoogleAPIKey"];
+        static string GoogleAPILink = System.Configuration.ConfigurationManager.AppSettings["GoogleAPILink"] + GoogleAPIKey;
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
