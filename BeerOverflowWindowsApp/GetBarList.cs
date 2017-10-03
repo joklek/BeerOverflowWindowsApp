@@ -1,6 +1,7 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
 using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Windows.Forms;
 
 namespace BeerOverflowWindowsApp
@@ -8,23 +9,29 @@ namespace BeerOverflowWindowsApp
     public partial class GetBarList : Form
     {
         BarRating barRating = new BarRating();
+        private const double radius = 500;
+
         public GetBarList()
         {
             InitializeComponent();
-            latitudeBox.Text = "54.684815";
-            longitudeBox.Text = "25.288464";
-            radiusTextBox.Text = "500";
+            var location = new CurrentLocation();
+            var currentLocation = location.currentLocation;
+            var latitude = currentLocation.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var longitude = currentLocation.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            latitudeBox.Text = latitude;
+            longitudeBox.Text = longitude;
+            radiusTextBox.Text = radius.ToString();
         }
 
         private void Go_Click(object sender, EventArgs e)
         {
             try
             {
-                GetBarListGoogle barListGoogle = new GetBarListGoogle();
-                GetBarListFourSquare barListFourSquare = new GetBarListFourSquare();
-                var result = barListGoogle.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius());
-                result = CombineLists(result, barListFourSquare.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                var result = new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius());
+                result = CombineLists(result, new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                result = CombineLists(result, new GetBarListFacebook().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
                 result = CombineLists(result, new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
+
                 DisplayData(result);
                 barRating.AddBars(result);
             }
@@ -46,7 +53,6 @@ namespace BeerOverflowWindowsApp
             }
             return primaryList;
         }
-
 
         // Clears the display first, then adds text to display
         private void DisplayData(List<BarData> resultData)
