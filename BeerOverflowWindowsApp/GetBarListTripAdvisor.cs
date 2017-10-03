@@ -55,11 +55,8 @@ namespace BeerOverflowWindowsApp
             List<BarData> barList = new List<BarData>();
             foreach (var result in resultData.data)
             {
-                // Convert miles to a float and multiply by 1.609344 * 1000 = 1609, to get kilometers
-                // Culture invariant set to avoid formatting errors
-                var floatMiles = double.Parse(result.distance, CultureInfo.InvariantCulture) * 1.609344 * 1000;
-
-                if ( (int) floatMiles <= int.Parse(radius))
+                var distanceMeters = convertMilesToMeters(double.Parse(result.distance, CultureInfo.InvariantCulture));
+                if ( (int)distanceMeters <= int.Parse(radius))
                 {
                     var newBar = new BarData
                     {
@@ -71,6 +68,11 @@ namespace BeerOverflowWindowsApp
                 }
             }
             return barList;
+        }
+
+        private double convertMilesToMeters(double miles)
+        {
+            return miles * 1.609344 * 1000;
         }
 
         private void GetLocationForPlace(TripAdvisorDataModel.Datum place)

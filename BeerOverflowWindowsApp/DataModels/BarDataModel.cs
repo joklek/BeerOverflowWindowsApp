@@ -105,7 +105,6 @@ namespace BeerOverflowWindowsApp.DataModels
                         distance[i - 1, j - 1] + cost);
                 }
             }
-
             return distance[sourceLength, targetLength];
         }
 
