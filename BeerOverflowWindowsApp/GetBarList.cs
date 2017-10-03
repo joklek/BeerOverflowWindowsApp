@@ -24,6 +24,7 @@ namespace BeerOverflowWindowsApp
                 GetBarListFourSquare barListFourSquare = new GetBarListFourSquare();
                 var result = barListGoogle.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius());
                 result = CombineLists(result, barListFourSquare.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                result = CombineLists(result, new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
                 DisplayData(result);
                 barRating.AddBars(result);
             }
