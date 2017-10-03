@@ -40,6 +40,8 @@ namespace BeerOverflowWindowsApp
                     var webClient = new WebClient();
                     var response = webClient.DownloadString(string.Format(TripAdvisorMapperLink, latitude, longitude, key));
                     result = JsonConvert.DeserializeObject<TripAdvisorDataModel.PlacesResponse>(response);
+
+                    FetchLocations(result);
                 }
                 catch (Exception exception)
                 {
@@ -62,7 +64,9 @@ namespace BeerOverflowWindowsApp
                 {
                     var newBar = new BarData
                     {
-                        Title = result.name
+                        Title = result.name,
+                        Latitude = double.Parse(result.location.latitude, CultureInfo.InvariantCulture),
+                        Longitude = double.Parse(result.location.longitude, CultureInfo.InvariantCulture)
                     };
                     barList.Add(newBar);
                 }
@@ -70,25 +74,31 @@ namespace BeerOverflowWindowsApp
             return barList;
         }
 
-        // Commented for future work, when the branch, where location getting is needed
-        // This method is needed, because TripAdvisor doesn't give coords by default, you need an addition request
-        /*
         private void GetLocationForPlace(TripAdvisorDataModel.Datum place)
         {
             using (var client = new HttpClient())
             {
-                TripAdvisorDataModel.TripAdvisorLocation result = null;
+                TripAdvisorDataModel.Location result = null;
                 try
                 {
                     var webClient = new WebClient();
                     var response = webClient.DownloadString(string.Format(TripAdvisorLocationAPILink, place.location_id ,key));
-                    result = JsonConvert.DeserializeObject<TripAdvisorDataModel.TripAdvisorLocation>(response);
+                    result = JsonConvert.DeserializeObject<TripAdvisorDataModel.Location>(response);
+                    place.location = result;
                 }
                 catch (Exception exception)
                 {
                     throw exception;
                 }
             }
-        }*/
+        }
+
+        private void FetchLocations(TripAdvisorDataModel.PlacesResponse result)
+        {
+            foreach (var place in result.data)
+            {
+                GetLocationForPlace(place);
+            }
+        }
     }
 }

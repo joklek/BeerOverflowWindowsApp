@@ -20,6 +20,7 @@ namespace BeerOverflowWindowsApp.DataModels
             public string location_id { get; set; }
             public string name { get; set; }
             public string distance { get; set; }
+            public Location location { get; set; }
             public AddressObj address_obj { get; set; }
         }
 
@@ -28,7 +29,7 @@ namespace BeerOverflowWindowsApp.DataModels
             public List<Datum> data { get; set; }
         }
 
-        public class TripAdvisorLocation
+        public class Location
         {
             public string latitude { get; set; }
             public string longitude { get; set; }

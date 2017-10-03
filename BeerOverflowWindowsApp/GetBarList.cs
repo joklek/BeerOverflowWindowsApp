@@ -27,7 +27,8 @@ namespace BeerOverflowWindowsApp
         {
             try
             {
-                var result = new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius());
+                var result = new List<BarData>();
+                result = CombineLists(result, new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
                 result = CombineLists(result, new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
                 result = CombineLists(result, new GetBarListFacebook().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
                 result = CombineLists(result, new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
