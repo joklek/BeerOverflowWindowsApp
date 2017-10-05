@@ -8,23 +8,14 @@ namespace BeerOverflowWindowsApp.DataModels
 {
    public class BarDataModel
     {
-        public List<BarData> BarsList { get; set; }
-
-        public class BarData
-        {
-            public string Title { get; set; }
-            public string Id { get; set; }
-            public List<int> Ratings { get; set; }
-            public double Latitude { get; set; }
-            public double Longitude { get; set; }
-        }
-
         private readonly double _barNameSimilarThreshold = 
             double.Parse(System.Configuration.ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barNameLikelySimilarThreshold = 
             double.Parse(System.Configuration.ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barCoordSimilarThreshold = 
             double.Parse(System.Configuration.ConfigurationManager.AppSettings["barCoordSimilarThreshold"], CultureInfo.InvariantCulture);
+
+        public List<BarData> BarsList { get; set; }
 
         public void CombineLists(List<BarData> secondaryList)
         {
@@ -51,7 +42,6 @@ namespace BeerOverflowWindowsApp.DataModels
                                       CalculateDoubleDiff(BarsList[i].Longitude, BarsList[j].Longitude).ToString("N6") + "\n\n");
                         BarsList.Remove(BarsList[j]);
                         length--;
-                        break;
                     }
                 }
             }
@@ -121,5 +111,14 @@ namespace BeerOverflowWindowsApp.DataModels
                 s.Normalize(NormalizationForm.FormD)
                     .Where(c => char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
         }
+    }
+
+    public class BarData
+    {
+        public string Title { get; set; }
+        public string Id { get; set; }
+        public List<int> Ratings { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
