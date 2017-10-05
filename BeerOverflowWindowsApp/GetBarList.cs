@@ -27,20 +27,31 @@ namespace BeerOverflowWindowsApp
 
         private void Go_Click(object sender, EventArgs e)
         {
+            ProgressBar.Value = 0;
+            ProgressBar.Visible = true;
             try
             {
                 var result = new BarDataModel {BarsList = new List<BarData>()};
                 result.CombineLists(new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
-                result.CombineLists(new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
-                result.CombineLists(new GetBarListFacebook().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
-                result.CombineLists(new GetBarListTripAdvisor().GetBarsAround(GetLatitude(),GetLongitude(),GetRadius()));
-
+                ProgressBar.Increment(25);
+                result.CombineLists(
+                    new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                ProgressBar.Increment(25);
+                result.CombineLists(new GetBarListFacebook().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                ProgressBar.Increment(25);
+                result.CombineLists(
+                    new GetBarListTripAdvisor().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                ProgressBar.Increment(25);
                 DisplayData(result.BarsList);
                 barRating.AddBars(result.BarsList);
             }
             catch (Exception exception)
             {
                 MessageBox.Show("Something went wrong with the message: " + exception.Message);
+            }
+            finally
+            {
+                ProgressBar.Visible = false;
             }
         }
 

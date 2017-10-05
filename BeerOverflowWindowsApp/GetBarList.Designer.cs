@@ -37,6 +37,7 @@
             this.longitudeBox = new System.Windows.Forms.TextBox();
             this.Go = new System.Windows.Forms.Button();
             this.RateBarsButton = new System.Windows.Forms.Button();
+            this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // resultTextBox
@@ -115,11 +116,20 @@
             this.RateBarsButton.UseVisualStyleBackColor = true;
             this.RateBarsButton.Click += new System.EventHandler(this.RateBarsButton_Click);
             // 
+            // ProgressBar
+            // 
+            this.ProgressBar.Location = new System.Drawing.Point(44, 128);
+            this.ProgressBar.Name = "ProgressBar";
+            this.ProgressBar.Size = new System.Drawing.Size(100, 23);
+            this.ProgressBar.TabIndex = 17;
+            this.ProgressBar.Visible = false;
+            // 
             // GetBarList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1223, 581);
+            this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.RateBarsButton);
             this.Controls.Add(this.resultTextBox);
             this.Controls.Add(this.radiusLabel);
@@ -133,6 +143,7 @@
             this.Text = "GetBarData";
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -146,6 +157,7 @@
         private System.Windows.Forms.TextBox longitudeBox;
         private System.Windows.Forms.Button Go;
         private System.Windows.Forms.Button RateBarsButton;
+        private System.Windows.Forms.ProgressBar ProgressBar;
     }
 }
 
