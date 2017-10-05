@@ -61,7 +61,7 @@ namespace BeerOverflowWindowsApp
             ReLoadForm();
         }
 
-        private void barRatingsDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void BarRatingsDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if(e.RowIndex >= 0)
             {

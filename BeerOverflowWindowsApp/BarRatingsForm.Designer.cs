@@ -45,7 +45,7 @@
             this.barRatingsDataGrid.Name = "barRatingsDataGrid";
             this.barRatingsDataGrid.Size = new System.Drawing.Size(326, 545);
             this.barRatingsDataGrid.TabIndex = 0;
-            this.barRatingsDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.barRatingsDataGrid_CellClick);
+            this.barRatingsDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BarRatingsDataGrid_CellClick);
             // 
             // barsComboBox
             // 
