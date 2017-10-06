@@ -9,8 +9,8 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListFacebook : IBeerable
     {
-        private string fbAPILink = System.Configuration.ConfigurationManager.AppSettings["FacebookAPILink"];
-        private string fbAccessToken = System.Configuration.ConfigurationManager.AppSettings["FacebookAccessToken"];
+        private readonly string _fbApiLink = System.Configuration.ConfigurationManager.AppSettings["FacebookAPILink"];
+        private readonly string _fbAccessToken = System.Configuration.ConfigurationManager.AppSettings["FacebookAccessToken"];
         private const string Category = "FOOD_BEVERAGE";
 
         private List<string> fieldList = new List<string>
@@ -50,7 +50,7 @@ namespace BeerOverflowWindowsApp
                 {
                     var webClient = new WebClient();
                     var response = webClient.DownloadString(
-                        string.Format(fbAPILink, fbAccessToken, latitude+","+longitude, radius, GetFields(), Category));
+                        string.Format(_fbApiLink, _fbAccessToken, latitude+","+longitude, radius, GetFields(), Category));
                     result = JsonConvert.DeserializeObject<FacebookDataModel.PlacesResponse>(response);
                 }
                 catch (Exception exception)

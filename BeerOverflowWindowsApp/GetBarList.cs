@@ -1,7 +1,6 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
 using System;
 using System.Collections.Generic;
-using System.Device.Location;
 using System.Globalization;
 
 using System.Windows.Forms;
@@ -22,7 +21,7 @@ namespace BeerOverflowWindowsApp
             var longitude = currentLocation.Longitude.ToString(CultureInfo.InvariantCulture);
             latitudeBox.Text = latitude;
             longitudeBox.Text = longitude;
-            radiusTextBox.Text = radius.ToString();
+            radiusTextBox.Text = radius.ToString(CultureInfo.InvariantCulture);
         }
 
         private void Go_Click(object sender, EventArgs e)
@@ -56,7 +55,7 @@ namespace BeerOverflowWindowsApp
         }
 
         // Clears the display first, then adds text to display
-        private void DisplayData(List<BarData> resultData)
+        private void DisplayData(IEnumerable<BarData> resultData)
         {
             resultTextBox.Clear();
             foreach (var result in resultData)

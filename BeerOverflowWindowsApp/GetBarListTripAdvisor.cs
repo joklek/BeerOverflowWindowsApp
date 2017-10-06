@@ -8,11 +8,13 @@ using Newtonsoft.Json;
 
 namespace BeerOverflowWindowsApp
 {
-    class GetBarListTripAdvisor
+    class GetBarListTripAdvisor : IBeerable
     {
-        private string key = System.Configuration.ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
-        private string TripAdvisorMapperLink = System.Configuration.ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
-        private string TripAdvisorLocationAPILink = System.Configuration.ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
+        private static readonly string _tripAdvisorAccessKey = System.Configuration.ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
+        private static readonly string _tripAdvisorMapperLink =
+            System.Configuration.ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
+        private readonly string _tripAdvisorLocationApiLink =
+            System.Configuration.ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -37,7 +39,7 @@ namespace BeerOverflowWindowsApp
                 try
                 {
                     var webClient = new WebClient();
-                    var response = webClient.DownloadString(string.Format(TripAdvisorMapperLink, latitude, longitude, key));
+                    var response = webClient.DownloadString(string.Format(_tripAdvisorMapperLink, latitude, longitude, _tripAdvisorAccessKey));
                     result = JsonConvert.DeserializeObject<TripAdvisorDataModel.PlacesResponse>(response);
 
                     FetchLocations(result);
@@ -52,11 +54,11 @@ namespace BeerOverflowWindowsApp
 
         private List<BarData> PlacesApiQueryResponseToBars(TripAdvisorDataModel.PlacesResponse resultData, string radius)
         {
-            List<BarData> barList = new List<BarData>();
+            var barList = new List<BarData>();
             foreach (var result in resultData.data)
             {
                 var distanceMeters = convertMilesToMeters(double.Parse(result.distance, CultureInfo.InvariantCulture));
-                if ( (int)distanceMeters <= int.Parse(radius))
+                if ((int) distanceMeters <= int.Parse(radius))
                 {
                     var newBar = new BarData
                     {
@@ -79,12 +81,12 @@ namespace BeerOverflowWindowsApp
         {
             using (var client = new HttpClient())
             {
-                TripAdvisorDataModel.Location result = null;
                 try
                 {
                     var webClient = new WebClient();
-                    var response = webClient.DownloadString(string.Format(TripAdvisorLocationAPILink, place.location_id ,key));
-                    result = JsonConvert.DeserializeObject<TripAdvisorDataModel.Location>(response);
+                    var response =
+                        webClient.DownloadString(string.Format(_tripAdvisorLocationApiLink, place.location_id, _tripAdvisorAccessKey));
+                    var result = JsonConvert.DeserializeObject<TripAdvisorDataModel.Location>(response);
                     place.location = result;
                 }
                 catch (Exception exception)

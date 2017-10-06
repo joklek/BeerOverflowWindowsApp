@@ -1,7 +1,6 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
 using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
 
 namespace BeerOverflowWindowsApp.BarComparers
 {
@@ -30,6 +29,5 @@ namespace BeerOverflowWindowsApp.BarComparers
             }
             return result;
         }
-        
     }
 }
