@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BeerOverflowWindowsApp.DataModels;
-using System.Collections.Generic;
 
 namespace BeerOverflowWindowsApp.UnitTests
 {

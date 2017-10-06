@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Net;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BeerOverflowWindowsApp.UnitTests
 {
@@ -6,7 +7,7 @@ namespace BeerOverflowWindowsApp.UnitTests
     public class GetBarListFourSquareUnitTest
     {
         [TestMethod]
-        [ExpectedException(typeof(System.Net.WebException))]
+        [ExpectedException(typeof(WebException))]
         public void GetBarsFourSquareInvalidLatidute()
         {
             // Arrange
@@ -16,7 +17,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(System.Net.WebException))]
+        [ExpectedException(typeof(WebException))]
         public void GetBarsFourSquareInvalidLongitude()
         {
             // Arrange
@@ -26,7 +27,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(System.Net.WebException))]
+        [ExpectedException(typeof(WebException))]
         public void GetBarsFourSquareInvalidRadius()
         {
             // Arrange

@@ -1,9 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+﻿using System.Collections.Generic;
 using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
-using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BeerOverflowWindowsApp.UnitTests
 {
@@ -15,10 +13,10 @@ namespace BeerOverflowWindowsApp.UnitTests
         {
             // arrange  
 
-            var barData1 = new BarData { Ratings = new List<int> { } };
+            var barData1 = new BarData { Ratings = new List<int>()};
             barData1.Ratings.Add(10);
             barData1.Ratings.Add(20);
-            var barData2 = new BarData { Ratings = new List<int> { } };
+            var barData2 = new BarData { Ratings = new List<int>()};
             barData2.Ratings.Add(5);
             barData2.Ratings.Add(10);
             int expectedResult = -1;
@@ -35,10 +33,10 @@ namespace BeerOverflowWindowsApp.UnitTests
         {
             // arrange  
 
-            var barData1 = new BarData { Ratings = new List<int> { } };
+            var barData1 = new BarData { Ratings = new List<int>()};
             barData1.Ratings.Add(5);
             barData1.Ratings.Add(10);
-            var barData2 = new BarData { Ratings = new List<int> { } };
+            var barData2 = new BarData { Ratings = new List<int>()};
             barData2.Ratings.Add(10);
             barData2.Ratings.Add(20);
             int expectedResult = 1;
@@ -55,10 +53,10 @@ namespace BeerOverflowWindowsApp.UnitTests
         {
             // arrange  
 
-            var barData1 = new BarData { Ratings = new List<int> { } };
+            var barData1 = new BarData { Ratings = new List<int>()};
             barData1.Ratings.Add(5);
             barData1.Ratings.Add(10);
-            var barData2 = new BarData { Ratings = new List<int> { } };
+            var barData2 = new BarData { Ratings = new List<int>()};
             barData2.Ratings.Add(10);
             barData2.Ratings.Add(5);
             int expectedResult = 0;
