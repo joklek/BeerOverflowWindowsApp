@@ -25,7 +25,7 @@ namespace BeerOverflowWindowsApp
 
         public void AddRating(BarData barData, int rating)
         {
-            var barsCount = _barsData.BarsList.Where(x => x.Title == barData.Title).Count();
+            var barsCount = _barsData.BarsList.Count(x => x.Title == barData.Title);
             if (barsCount > 0)
             {
                 var ratings = _barsData.BarsList.Where(x => x.Title == barData.Title).Select(x => x.Ratings).FirstOrDefault();
@@ -46,7 +46,7 @@ namespace BeerOverflowWindowsApp
         {
             foreach (var bar in barsList)
             {
-                if (_barsData.BarsList.Where(x => x.Title == bar.Title).Count() == 0)
+                if (_barsData.BarsList.Count(x => x.Title == bar.Title) == 0)
                 {
                     _barsData.BarsList.Add( bar );
                 }
