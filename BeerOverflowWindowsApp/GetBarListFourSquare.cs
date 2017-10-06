@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
 using BeerOverflowWindowsApp.DataModels;
@@ -7,9 +8,9 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListFourSquare : IBeerable
     {
-        private static readonly string clientId = System.Configuration.ConfigurationManager.AppSettings["FourSquareClientId"];
-        private static readonly string clientSecret = System.Configuration.ConfigurationManager.AppSettings["FourSquareClientSecret"];
-        private static readonly string categoryIdBar = System.Configuration.ConfigurationManager.AppSettings["FourSquareCategoryIdBar"];
+        private static readonly string clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
+        private static readonly string clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
+        private static readonly string categoryIdBar = ConfigurationManager.AppSettings["FourSquareCategoryIdBar"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {

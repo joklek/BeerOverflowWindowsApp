@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
@@ -11,11 +12,9 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListTripAdvisor : IBeerable
     {
-        private static readonly string _tripAdvisorAccessKey = System.Configuration.ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
-        private static readonly string _tripAdvisorMapperLink =
-            System.Configuration.ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
-        private readonly string _tripAdvisorLocationApiLink =
-            System.Configuration.ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
+        private static readonly string _tripAdvisorAccessKey = ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
+        private static readonly string _tripAdvisorMapperLink = ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
+        private readonly string _tripAdvisorLocationApiLink = ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
