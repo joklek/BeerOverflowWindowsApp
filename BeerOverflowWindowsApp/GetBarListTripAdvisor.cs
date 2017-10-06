@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
-using BeerOverflowWindowsApp.DataModels;
 using Newtonsoft.Json;
+using BeerOverflowWindowsApp.DataModels;
+using static BeerOverflowWindowsApp.DataModels.TripAdvisorDataModel;
 
 namespace BeerOverflowWindowsApp
 {
@@ -31,16 +32,16 @@ namespace BeerOverflowWindowsApp
             return barList;
         }
 
-        private TripAdvisorDataModel.PlacesResponse GetBarData(string latitude, string longitude, string radius)
+        private PlacesResponse GetBarData(string latitude, string longitude, string radius)
         {
             using (var client = new HttpClient())
             {
-                TripAdvisorDataModel.PlacesResponse result = null;
+                PlacesResponse result = null;
                 try
                 {
                     var webClient = new WebClient();
                     var response = webClient.DownloadString(string.Format(_tripAdvisorMapperLink, latitude, longitude, _tripAdvisorAccessKey));
-                    result = JsonConvert.DeserializeObject<TripAdvisorDataModel.PlacesResponse>(response);
+                    result = JsonConvert.DeserializeObject<PlacesResponse>(response);
 
                     FetchLocations(result);
                 }
@@ -52,7 +53,7 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        private List<BarData> PlacesApiQueryResponseToBars(TripAdvisorDataModel.PlacesResponse resultData, string radius)
+        private List<BarData> PlacesApiQueryResponseToBars(PlacesResponse resultData, string radius)
         {
             var barList = new List<BarData>();
             foreach (var result in resultData.data)
@@ -77,7 +78,7 @@ namespace BeerOverflowWindowsApp
             return miles * 1.609344 * 1000;
         }
 
-        private void GetLocationForPlace(TripAdvisorDataModel.Datum place)
+        private void GetLocationForPlace(Datum place)
         {
             using (var client = new HttpClient())
             {
@@ -86,7 +87,7 @@ namespace BeerOverflowWindowsApp
                     var webClient = new WebClient();
                     var response =
                         webClient.DownloadString(string.Format(_tripAdvisorLocationApiLink, place.location_id, _tripAdvisorAccessKey));
-                    var result = JsonConvert.DeserializeObject<TripAdvisorDataModel.Location>(response);
+                    var result = JsonConvert.DeserializeObject<Location>(response);
                     place.location = result;
                 }
                 catch (Exception exception)
@@ -96,7 +97,7 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        private void FetchLocations(TripAdvisorDataModel.PlacesResponse result)
+        private void FetchLocations(PlacesResponse result)
         {
             foreach (var place in result.data)
             {

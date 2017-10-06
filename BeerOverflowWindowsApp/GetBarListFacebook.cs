@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using BeerOverflowWindowsApp.DataModels;
 using Newtonsoft.Json;
+using static BeerOverflowWindowsApp.DataModels.FacebookDataModel;
 
 namespace BeerOverflowWindowsApp
 {
@@ -41,17 +42,17 @@ namespace BeerOverflowWindowsApp
             return returned;
         }
 
-        private FacebookDataModel.PlacesResponse GetBarData(string latitude, string longitude, string radius)
+        private PlacesResponse GetBarData(string latitude, string longitude, string radius)
         {
             using (var client = new HttpClient())
             {
-                FacebookDataModel.PlacesResponse result;
+                PlacesResponse result;
                 try
                 {
                     var webClient = new WebClient();
                     var response = webClient.DownloadString(
                         string.Format(_fbApiLink, _fbAccessToken, latitude+","+longitude, radius, GetFields(), Category));
-                    result = JsonConvert.DeserializeObject<FacebookDataModel.PlacesResponse>(response);
+                    result = JsonConvert.DeserializeObject<PlacesResponse>(response);
                 }
                 catch (Exception exception)
                 {
@@ -61,7 +62,7 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        private List<BarData> FacebookDataToBars(FacebookDataModel.PlacesResponse resultData)
+        private List<BarData> FacebookDataToBars(PlacesResponse resultData)
         {
             var barList = new List<BarData>();
             
