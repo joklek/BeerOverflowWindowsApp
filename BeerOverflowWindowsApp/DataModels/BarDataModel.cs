@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -9,11 +10,11 @@ namespace BeerOverflowWindowsApp.DataModels
    public class BarDataModel
     {
         private readonly double _barNameSimilarThreshold = 
-            double.Parse(System.Configuration.ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
+            double.Parse(ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barNameLikelySimilarThreshold = 
-            double.Parse(System.Configuration.ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
+            double.Parse(ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barCoordSimilarThreshold = 
-            double.Parse(System.Configuration.ConfigurationManager.AppSettings["barCoordSimilarThreshold"], CultureInfo.InvariantCulture);
+            double.Parse(ConfigurationManager.AppSettings["barCoordSimilarThreshold"], CultureInfo.InvariantCulture);
 
         public List<BarData> BarsList { get; set; }
 
@@ -37,9 +38,11 @@ namespace BeerOverflowWindowsApp.DataModels
                     if (stringSimilarity >= _barNameSimilarThreshold ||
                         (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
                     {
-                        Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " " + coordCheck + "\n" +
-                                      CalculateDoubleDiff(BarsList[i].Latitude, BarsList[j].Latitude).ToString("N6") + " " +
-                                      CalculateDoubleDiff(BarsList[i].Longitude, BarsList[j].Longitude).ToString("N6") + "\n\n");
+                        // Prints out merged bars, their string similarity score and the difference of coordinates
+                        // Commented for testing purposes, because this process needs to be improved
+                        /*Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " " + coordCheck + "\n" +
+                                        CalculateDoubleDiff(BarsList[i].Latitude, BarsList[j].Latitude).ToString("N6") + " " +
+                                        CalculateDoubleDiff(BarsList[i].Longitude, BarsList[j].Longitude).ToString("N6") + "\n\n");*/
                         BarsList.Remove(BarsList[j]);
                         length--;
                     }
@@ -69,7 +72,7 @@ namespace BeerOverflowWindowsApp.DataModels
             var asciifiedNormalizedSource = ToASCII(source.ToLower());
             var asciifiedNormalizedTarget = ToASCII(target.ToLower());
             double stepsToSame = ComputeLevenshteinDistance(asciifiedNormalizedSource, asciifiedNormalizedTarget);
-            return (1.0 - (stepsToSame / (double)Math.Max(source.Length, target.Length)));
+            return (1.0 - (stepsToSame / Math.Max(source.Length, target.Length)));
         }
 
         private static int ComputeLevenshteinDistance(string source, string target)
@@ -89,9 +92,9 @@ namespace BeerOverflowWindowsApp.DataModels
             for (var i = 0; i <= sourceLength; distance[i, 0] = i++) ;
             for (var j = 0; j <= targetLength; distance[0, j] = j++) ;
 
-            for (int i = 1; i <= sourceLength; i++)
+            for (var i = 1; i <= sourceLength; i++)
             {
-                for (int j = 1; j <= targetLength; j++)
+                for (var j = 1; j <= targetLength; j++)
                 {
                     // Step 2
                     var cost = (target[j - 1] == source[i - 1]) ? 0 : 1;
