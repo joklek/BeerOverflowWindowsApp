@@ -183,8 +183,7 @@ namespace BeerOverflowWindowsApp
         {
             if (!RadiusTextIsCorrect())
             {
-                MessageBox.Show("Please enter a valid radius, between 1 and 1000.");
-                RadiusTextBox.Text = RadiusTextBox.Text.Remove(RadiusTextBox.Text.Length - 1);
+                RadiusTextBox.ForeColor = Color.Red;
             }
             else { RadiusTextBox.ResetForeColor(); }
         }
