@@ -92,7 +92,7 @@
     <Compile Include="GetBarListGoogle.cs" />
     <Compile Include="CurrentLocation.cs" />
     <Compile Include="IBeerable.cs" />
-    <Compile Include="DataModels\GeodataDataModel.cs" />
+    <Compile Include="DataModels\GoogleDataModel.cs" />
     <Compile Include="GetBarList.cs">
       <SubType>Form</SubType>
     </Compile>

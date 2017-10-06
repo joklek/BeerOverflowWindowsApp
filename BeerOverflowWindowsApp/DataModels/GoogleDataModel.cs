@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace DataModels
+namespace BeerOverflowWindowsApp.DataModels
 {
-    public class GeodataDataModel
+    public class GoogleDataModel
     {
         public class Location
         {
