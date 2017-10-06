@@ -7,7 +7,7 @@ namespace BeerOverflowWindowsApp
 {
     class BarRating
     {
-        BarDataModel barsData = null;
+        private BarDataModel barsData = null;
         public bool SortByTitleDesc { get; set; } = false;
         public bool SortByRatingDesc { get; set; } = false;
         public bool SortByDistance { get; set; } = false;
