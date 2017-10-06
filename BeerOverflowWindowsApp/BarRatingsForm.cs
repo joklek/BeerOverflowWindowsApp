@@ -34,7 +34,8 @@ namespace BeerOverflowWindowsApp
 
         private void RatingButton_Click(object sender, EventArgs e)
         {
-            var rating = BeerPanel.Rating;
+
+            var rating = manualBarRating.Rating;
             if (barsComboBox.SelectedIndex != -1 && rating != "" && int.TryParse(rating, out var ratingNumber))
             {
                 var barData = new BarData { Title = barsComboBox.SelectedItem.ToString() };
@@ -42,7 +43,7 @@ namespace BeerOverflowWindowsApp
                 ReLoadForm();
             }
         }
-
+        
         private void ButtonSortByTitle_Click(object sender, EventArgs e)
         {
             barRating.Sort(CompareType.Title);            
