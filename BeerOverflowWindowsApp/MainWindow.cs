@@ -127,24 +127,6 @@ namespace BeerOverflowWindowsApp
             if (e.RowIndex >= 0)
             {
                 var val = BarDataGridView[0, e.RowIndex].Value.ToString();
-                ProgressBar.Value = 0;
-                ProgressBar.Visible = true;
-                var result = new BarDataModel { BarsList = new List<BarData>() };
-
-                CollectBarsFromProvider(new GetBarListGoogle(), result, GetLatitude(), GetLongitude(), GetRadius());
-                ProgressBar.Increment(25);
-                CollectBarsFromProvider(new GetBarListFourSquare(), result, GetLatitude(), GetLongitude(), GetRadius());
-                ProgressBar.Increment(25);
-                CollectBarsFromProvider(new GetBarListFacebook(), result, GetLatitude(), GetLongitude(), GetRadius());
-                ProgressBar.Increment(25);
-                CollectBarsFromProvider(new GetBarListTripAdvisor(), result, GetLatitude(), GetLongitude(), GetRadius());
-                ProgressBar.Increment(25);
-                ProgressBar.Visible = false;
-                // Display
-                _barRating = new BarRating();
-                _barRating.AddBars(result.BarsList);
-                ReLoadForm();
-                
                 barToRate = _barRating.GetBarsData().BarsList.First(bar => bar.Title == val);
             }
         }
