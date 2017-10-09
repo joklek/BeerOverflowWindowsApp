@@ -18,6 +18,11 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public List<BarData> BarsList { get; set; }
 
+        public BarDataModel()
+        {
+            BarsList = new List<BarData>();
+        }
+
         public void CombineLists(List<BarData> secondaryList)
         {
             BarsList.AddRange(secondaryList);

@@ -11,6 +11,11 @@ namespace BeerOverflowWindowsApp
         public BarDataModel BarsData { get; set; }
         private CompareType _lastCompare = CompareType.None;
 
+        public BarRating()
+        {
+            BarsData = new BarDataModel();
+        }
+
         public void AddRating(BarData barData, int rating)
         {
             var allBars = BarFileReader.GetAllBarData();
@@ -73,16 +78,19 @@ namespace BeerOverflowWindowsApp
         }
 
         private void SortAndInvertIfNeeded(IComparer<BarData> comparer, CompareType compareType)
-        {
-            BarsData.BarsList.Sort(comparer);
-            if (compareType == _lastCompare)
+        { 
+            if (BarsData != null)
             {
-                BarsData.BarsList.Reverse();
-                _lastCompare = CompareType.None;
-            }
-            else
-            {
-                _lastCompare = compareType;
+                BarsData.BarsList.Sort(comparer);
+                if (compareType == _lastCompare)
+                {
+                    BarsData.BarsList.Reverse();
+                    _lastCompare = CompareType.None;
+                }
+                else
+                {
+                    _lastCompare = compareType;
+                }
             }
         }
     }
