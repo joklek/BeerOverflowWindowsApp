@@ -13,20 +13,33 @@ namespace BeerOverflowWindowsApp
 
         public void AddRating(BarData barData, int rating)
         {
-            var barsCount = BarsData.BarsList.Count(x => x.Title == barData.Title);
-            if (barsCount > 0)
+            var allBars = BarFileReader.GetAllBarData();
+
+            if (barData.Ratings == null)
             {
-                var ratings = BarsData.BarsList.Where(x => x.Title == barData.Title).Select(x => x.Ratings).FirstOrDefault();
-                if(ratings == null) { ratings = new List<int> { }; }
-                ratings.Add(rating);
-                BarsData.BarsList.Where(x => x.Title == barData.Title).Select(x => x.Ratings = ratings).ToList();
+                barData.Ratings = new List<int>();
+            }
+            barData.Ratings.Add(rating);
+            // Update local copy of list
+            BarsData.BarsList.Find(x => x == barData).Ratings = barData.Ratings;
+
+            if (allBars.BarsList.Count > 0)
+            {
+                var foundBar = allBars.BarsList.FindIndex(x => x.Title == barData.Title);
+                if (foundBar != -1)
+                {
+                    allBars.BarsList[foundBar].Ratings = barData.Ratings;
+                }
+                else
+                {
+                    allBars.BarsList.Add(barData);
+                }
             }
             else
             {
-                barData.Ratings = new List<int> {rating};
-                BarsData.BarsList.Add(barData);
+                allBars.BarsList = new List<BarData>() { barData };
             }
-            BarFileWriter.SaveData(BarsData);
+            BarFileWriter.SaveData(allBars);
         }
 
         public void AddBars(List<BarData> barsList)
