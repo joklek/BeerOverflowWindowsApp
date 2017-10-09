@@ -3,6 +3,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
 using System.Text;
 using BeerOverflowWindowsApp.DataModels;
@@ -11,8 +12,8 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListGoogle : IBeerable
     {
-        private static readonly string _googleApiKey = System.Configuration.ConfigurationManager.AppSettings["GoogleAPIKey"];
-        private static readonly string _googleApiLink = System.Configuration.ConfigurationManager.AppSettings["GoogleAPILink"] + _googleApiKey;
+        private static readonly string _googleApiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
+        private static readonly string _googleApiLink = ConfigurationManager.AppSettings["GoogleAPILink"] + _googleApiKey;
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {

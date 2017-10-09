@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using BeerOverflowWindowsApp.DataModels;
@@ -10,8 +11,8 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListFacebook : IBeerable
     {
-        private readonly string _fbApiLink = System.Configuration.ConfigurationManager.AppSettings["FacebookAPILink"];
-        private readonly string _fbAccessToken = System.Configuration.ConfigurationManager.AppSettings["FacebookAccessToken"];
+        private readonly string _fbApiLink = ConfigurationManager.AppSettings["FacebookAPILink"];
+        private readonly string _fbAccessToken = ConfigurationManager.AppSettings["FacebookAccessToken"];
         private const string Category = "FOOD_BEVERAGE";
 
         private List<string> fieldList = new List<string>
