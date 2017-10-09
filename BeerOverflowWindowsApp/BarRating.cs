@@ -8,7 +8,7 @@ namespace BeerOverflowWindowsApp
 {
     class BarRating
     {
-        public BarDataModel BarsData { get; }
+        public BarDataModel BarsData { get; set; }
         private CompareType _lastCompare = CompareType.None;
 
         public BarRating()

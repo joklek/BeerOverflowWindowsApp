@@ -114,6 +114,14 @@ namespace BeerOverflowWindowsApp.DataModels
                 s.Normalize(NormalizationForm.FormD)
                     .Where(c => char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
         }
+
+        public void GetRatings()
+        {
+            foreach (var bar in BarsList)
+            {
+                bar.Ratings = BarFileReader.GetBarRatings(bar);
+            }
+        }
     }
 
     public class BarData

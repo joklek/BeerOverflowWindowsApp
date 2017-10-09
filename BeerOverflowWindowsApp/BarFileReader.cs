@@ -19,5 +19,13 @@ namespace BeerOverflowWindowsApp
             }
             else { return new BarDataModel { BarsList = new List<BarData> { } }; }
         }
+
+        public static List<int> GetBarRatings(BarData bar)
+        {
+            var barList = ReadData();
+            var barInDatabase = barList.BarsList.Find(x => x.Title == bar.Title);
+            var barsRatings = barInDatabase != null ? barInDatabase.Ratings : new List<int> {0};
+            return barsRatings;
+        }
     }
 }

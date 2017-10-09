@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -61,8 +62,10 @@ namespace BeerOverflowWindowsApp
                 ProgressBar.Increment(25);
                 ProgressBar.Visible = false;
                 // Display
-                _barRating = new BarRating();
-                _barRating.AddBars(result.BarsList);
+                result.GetRatings();
+                //_barRating = new BarRating();
+                _barRating.BarsData = result;
+                //_barRating.AddBars(result.BarsList);
                 _barRating.Sort(CompareType.Distance);
                 ReLoadForm();
             }
