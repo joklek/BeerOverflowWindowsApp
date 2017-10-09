@@ -34,8 +34,7 @@ namespace BeerOverflowWindowsApp
             BarDataGridView.Rows.Clear();
             foreach (var bar in barData.BarsList)
             {
-                var rating = bar.Ratings.Count != 0 ? 
-                    bar.Ratings.Average().ToString(CultureInfo.InvariantCulture) : "0";
+                var rating = bar.Ratings?.Average().ToString(CultureInfo.InvariantCulture) ?? "0";
                 BarDataGridView.Rows.Add(bar.Title, rating);
             }
         }

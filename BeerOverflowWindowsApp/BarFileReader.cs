@@ -7,7 +7,7 @@ namespace BeerOverflowWindowsApp
 {
     static class BarFileReader
     {
-        private static string _filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
+        private static readonly string _filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
 
         public static BarDataModel GetAllBarData()
         {
@@ -24,7 +24,7 @@ namespace BeerOverflowWindowsApp
         {
             var barList = GetAllBarData();
             var barInDatabase = barList.BarsList.Find(x => x.Title == bar.Title);
-            var barsRatings = barInDatabase != null ? barInDatabase.Ratings : new List<int> {};
+            var barsRatings = barInDatabase?.Ratings;
             return barsRatings;
         }
     }
