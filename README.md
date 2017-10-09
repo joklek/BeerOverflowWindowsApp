@@ -13,6 +13,5 @@ _ _ _
 
 _ _ _
 ## To Be Done
-- UI revamp.
 - Show bars on the map.
 - ???
