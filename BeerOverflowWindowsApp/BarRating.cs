@@ -33,8 +33,7 @@ namespace BeerOverflowWindowsApp
             }
             else
             {
-                barData.Ratings = new List<int> { };
-                barData.Ratings.Add(rating);
+                barData.Ratings = new List<int> {rating};
                 _barsData.BarsList.Add(barData);
             }
             BarFileWriter.SaveData(_barsData);
