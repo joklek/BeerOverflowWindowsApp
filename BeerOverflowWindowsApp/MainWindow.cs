@@ -136,9 +136,9 @@ namespace BeerOverflowWindowsApp
         {
             if (!LongitudeTextIsCorrect())
             {
-                LongitudeTextBox.ForeColor = Color.Red;
+                PaintTextBoxIncorrect(LongitudeTextBox);
             }
-            else { LongitudeTextBox.ResetForeColor(); }
+            else { ResetTextBoxColor(LongitudeTextBox); }
         }
 
         private bool LongitudeTextIsCorrect()
@@ -151,9 +151,9 @@ namespace BeerOverflowWindowsApp
         {
             if (!LatitudeTextIsCorrect())
             {
-                LatitudeTextBox.ForeColor = Color.Red;
+                PaintTextBoxIncorrect(LatitudeTextBox);
             }
-            else { LatitudeTextBox.ResetForeColor();}
+            else { ResetTextBoxColor(LatitudeTextBox); }
         }
 
         private bool LatitudeTextIsCorrect()
@@ -166,9 +166,21 @@ namespace BeerOverflowWindowsApp
         {
             if (!RadiusTextIsCorrect())
             {
-                RadiusTextBox.ForeColor = Color.Red;
+                PaintTextBoxIncorrect(RadiusTextBox);
             }
-            else { RadiusTextBox.ResetForeColor(); }
+            else { ResetTextBoxColor(RadiusTextBox); }
+        }
+
+        private void PaintTextBoxIncorrect(TextBox textBox)
+        {
+            textBox.ForeColor = Color.White;
+            textBox.BackColor = Color.Red;
+        }
+
+        private void ResetTextBoxColor(TextBox textBox)
+        {
+            textBox.ResetForeColor();
+            textBox.ResetBackColor();
         }
 
         private bool RadiusTextIsCorrect()
