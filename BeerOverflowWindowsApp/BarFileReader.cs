@@ -9,7 +9,7 @@ namespace BeerOverflowWindowsApp
     {
         private static string _filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
 
-        public static BarDataModel ReadData()
+        public static BarDataModel GetAllBarData()
         {
             if (File.Exists(_filePath))
             {
@@ -22,9 +22,9 @@ namespace BeerOverflowWindowsApp
 
         public static List<int> GetBarRatings(BarData bar)
         {
-            var barList = ReadData();
+            var barList = GetAllBarData();
             var barInDatabase = barList.BarsList.Find(x => x.Title == bar.Title);
-            var barsRatings = barInDatabase != null ? barInDatabase.Ratings : new List<int> {0};
+            var barsRatings = barInDatabase != null ? barInDatabase.Ratings : new List<int> {};
             return barsRatings;
         }
     }

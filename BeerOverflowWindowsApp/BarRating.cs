@@ -11,11 +11,6 @@ namespace BeerOverflowWindowsApp
         public BarDataModel BarsData { get; set; }
         private CompareType _lastCompare = CompareType.None;
 
-        public BarRating()
-        {
-            BarsData = BarFileReader.ReadData();
-        }
-
         public void AddRating(BarData barData, int rating)
         {
             var barsCount = BarsData.BarsList.Count(x => x.Title == barData.Title);
