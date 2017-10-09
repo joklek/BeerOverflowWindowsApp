@@ -1,7 +1,8 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
 using System;
 using System.Collections.Generic;
-using System.Device.Location;
+using System.Globalization;
+
 using System.Windows.Forms;
 
 namespace BeerOverflowWindowsApp
@@ -16,45 +17,45 @@ namespace BeerOverflowWindowsApp
             InitializeComponent();
             var location = new CurrentLocation();
             var currentLocation = location.currentLocation;
-            var latitude = currentLocation.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var longitude = currentLocation.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var latitude = currentLocation.Latitude.ToString(CultureInfo.InvariantCulture);
+            var longitude = currentLocation.Longitude.ToString(CultureInfo.InvariantCulture);
             latitudeBox.Text = latitude;
             longitudeBox.Text = longitude;
-            radiusTextBox.Text = radius.ToString();
+            radiusTextBox.Text = radius.ToString(CultureInfo.InvariantCulture);
         }
 
         private void Go_Click(object sender, EventArgs e)
         {
+            ProgressBar.Value = 0;
+            ProgressBar.Visible = true;
             try
             {
-                GetBarListGoogle barListGoogle = new GetBarListGoogle();
-                GetBarListFourSquare barListFourSquare = new GetBarListFourSquare();
-                var result = barListGoogle.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius());
-                result = CombineLists(result, barListFourSquare.GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
-                DisplayData(result);
-                barRating.AddBars(result);
+                var result = new BarDataModel {BarsList = new List<BarData>()};
+                result.CombineLists(new GetBarListGoogle().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                ProgressBar.Increment(25);
+                result.CombineLists(
+                    new GetBarListFourSquare().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                ProgressBar.Increment(25);
+                result.CombineLists(new GetBarListFacebook().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                ProgressBar.Increment(25);
+                result.CombineLists(
+                    new GetBarListTripAdvisor().GetBarsAround(GetLatitude(), GetLongitude(), GetRadius()));
+                ProgressBar.Increment(25);
+                DisplayData(result.BarsList);
+                barRating.AddBars(result.BarsList);
             }
             catch (Exception exception)
             {
                 MessageBox.Show("Something went wrong with the message: " + exception.Message);
             }
-        }
-
-        private List<BarData> CombineLists(List<BarData> primaryList, List<BarData> secondaryList)
-        {
-            var length = secondaryList.ToArray().Length;
-            for (int i = 0; i < length; i++)
+            finally
             {
-                if (!primaryList.Contains(secondaryList[i]))
-                {
-                    primaryList.Add(secondaryList[i]);
-                }
+                ProgressBar.Visible = false;
             }
-            return primaryList;
         }
 
         // Clears the display first, then adds text to display
-        private void DisplayData(List<BarData> resultData)
+        private void DisplayData(IEnumerable<BarData> resultData)
         {
             resultTextBox.Clear();
             foreach (var result in resultData)

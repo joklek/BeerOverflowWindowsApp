@@ -5,11 +5,11 @@ using BeerOverflowWindowsApp.DataModels;
 
 namespace BeerOverflowWindowsApp
 {
-    class GetBarListFourSquare
+    class GetBarListFourSquare : IBeerable
     {
-        static string clientId = System.Configuration.ConfigurationManager.AppSettings["FourSqaureClientId"];
-        static string clientSecret = System.Configuration.ConfigurationManager.AppSettings["FourSquareClientSecret"];
-        static string categoryIdBar = System.Configuration.ConfigurationManager.AppSettings["FourSqaureCategoryIdBar"];
+        private static readonly string clientId = System.Configuration.ConfigurationManager.AppSettings["FourSquareClientId"];
+        private static readonly string clientSecret = System.Configuration.ConfigurationManager.AppSettings["FourSquareClientSecret"];
+        private static readonly string categoryIdBar = System.Configuration.ConfigurationManager.AppSettings["FourSquareCategoryIdBar"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -21,7 +21,7 @@ namespace BeerOverflowWindowsApp
 
         private List<Venue> GetBarData (string latitude, string longitude, string radius)
         {
-            SharpSquare sharpSquare = new SharpSquare(clientId, clientSecret);
+            var sharpSquare = new SharpSquare(clientId, clientSecret);
 
             // let's build the query
             Dictionary<string, string> parameters = new Dictionary<string, string>
@@ -34,13 +34,12 @@ namespace BeerOverflowWindowsApp
             return sharpSquare.SearchVenues(parameters);
         }
 
-        private List<BarData> VenueListToBars (List<Venue> resultData)
+        private List<BarData> VenueListToBars (IEnumerable<Venue> resultData)
         {
-            List<BarData> barList = new List<BarData>();
-            BarData newBar;
+            var barList = new List<BarData>();
             foreach (var result in resultData)
             {
-                newBar = new BarData
+                var newBar = new BarData
                 {
                     Title = result.name,
                     Latitude = result.location.lat,

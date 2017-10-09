@@ -7,13 +7,13 @@ namespace BeerOverflowWindowsApp
 {
     static class BarFileReader
     {
-        static string filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
+        private static string _filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
 
-        static public BarDataModel ReadData()
+        public static BarDataModel ReadData()
         {
-            if (File.Exists(filePath))
+            if (File.Exists(_filePath))
             {
-                string barsData = File.ReadAllText(filePath);
+                var barsData = File.ReadAllText(_filePath);
                 var result = JsonConvert.DeserializeObject<BarDataModel>(barsData);
                 return result;
             }

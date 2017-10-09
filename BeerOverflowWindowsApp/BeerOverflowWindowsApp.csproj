@@ -84,11 +84,15 @@
     <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="BarFileReader.cs" />
     <Compile Include="BarFileWriter.cs" />
+    <Compile Include="DataModels\TripAdvisorDataModel.cs" />
+    <Compile Include="GetBarListTripAdvisor.cs" />
+    <Compile Include="DataModels\FacebookDataModel.cs" />
+    <Compile Include="GetBarListFacebook.cs" />
     <Compile Include="GetBarListFourSquare.cs" />
     <Compile Include="GetBarListGoogle.cs" />
     <Compile Include="CurrentLocation.cs" />
     <Compile Include="IBeerable.cs" />
-    <Compile Include="DataModels\GeodataDataModel.cs" />
+    <Compile Include="DataModels\GoogleDataModel.cs" />
     <Compile Include="GetBarList.cs">
       <SubType>Form</SubType>
     </Compile>

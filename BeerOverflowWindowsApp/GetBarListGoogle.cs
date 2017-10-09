@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using Newtonsoft.Json;
-using static DataModels.GeodataDataModel;
+using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -9,10 +9,10 @@ using BeerOverflowWindowsApp.DataModels;
 
 namespace BeerOverflowWindowsApp
 {
-    class GetBarListGoogle
+    class GetBarListGoogle : IBeerable
     {
-        static string GoogleAPIKey = System.Configuration.ConfigurationManager.AppSettings["GoogleAPIKey"];
-        static string GoogleAPILink = System.Configuration.ConfigurationManager.AppSettings["GoogleAPILink"] + GoogleAPIKey;
+        private static readonly string _googleApiKey = System.Configuration.ConfigurationManager.AppSettings["GoogleAPIKey"];
+        private static readonly string _googleApiLink = System.Configuration.ConfigurationManager.AppSettings["GoogleAPILink"] + _googleApiKey;
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -36,9 +36,8 @@ namespace BeerOverflowWindowsApp
                 PlacesApiQueryResponse result = null;
                 try
                 {
-                    var webClient = new WebClient();
-                    webClient.Encoding = Encoding.UTF8;
-                    var response = webClient.DownloadString(string.Format(GoogleAPILink, latitude, longitude, radius));
+                    var webClient = new WebClient {Encoding = Encoding.UTF8};
+                    var response = webClient.DownloadString(string.Format(_googleApiLink, latitude, longitude, radius));
                     result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
                 }
                 catch (Exception exception)
@@ -51,11 +50,10 @@ namespace BeerOverflowWindowsApp
 
         private List<BarData> PlacesApiQueryResponseToBars (PlacesApiQueryResponse resultData)
         {
-            List<BarData> barList = new List<BarData>();
-            BarData newBar;
+            var barList = new List<BarData>();
             foreach (var result in resultData.Results)
             {
-                newBar = new BarData
+                var newBar = new BarData
                 {
                     Title = result.Name,
                     Latitude = result.Geometry.Location.Lat,

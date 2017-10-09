@@ -6,12 +6,12 @@ namespace BeerOverflowWindowsApp
 {
     static class BarFileWriter
     {
-        static string filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
+        private static string _filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
 
-        static public void SaveData(BarDataModel barData)
+        public static void SaveData(BarDataModel barData)
         {
             var barsDataJson = JsonConvert.SerializeObject(barData);
-            File.WriteAllText(filePath, barsDataJson);
+            File.WriteAllText(_filePath, barsDataJson);
         }
     }
 }
