@@ -9,9 +9,7 @@ namespace BeerOverflowWindowsApp
     class BarRating
     {
         private BarDataModel _barsData = null;
-        public bool SortByTitleDesc { get; set; } = false;
-        public bool SortByRatingDesc { get; set; } = false;
-        public bool SortByDistance { get; set; } = false;
+        private CompareType _lastCompare = CompareType.None;
 
         public BarDataModel GetBarsData()
         {
@@ -59,40 +57,30 @@ namespace BeerOverflowWindowsApp
             switch (compareType)
             {
                 case CompareType.Title:
-                    var titleComparer = new ComparerByTitle();
-                    _barsData.BarsList.Sort(titleComparer);
-                    if (SortByTitleDesc)
-                    {
-                        _barsData.BarsList.Reverse();
-                    }
-                    SortByTitleDesc = !SortByTitleDesc;
-                    SortByRatingDesc = false;
-                    SortByDistance = false;
+                    SortAndInvertIfNeeded(new ComparerByTitle(), CompareType.Title);
                     break;
                 case CompareType.Rating:
-                    var ratingsComparer = new ComparerByRating();
-                    _barsData.BarsList.Sort(ratingsComparer);
-                    if (SortByRatingDesc)
-                    {
-                        _barsData.BarsList.Reverse();
-                    }
-                    SortByTitleDesc = false;
-                    SortByRatingDesc = !SortByRatingDesc;
-                    SortByDistance = false;
+                    SortAndInvertIfNeeded(new ComparerByRating(), CompareType.Rating);
                     break;
                 case CompareType.Distance:
-                    var distanceComparer = new ComparerByDistance();
-                    _barsData.BarsList.Sort(distanceComparer);
-                    if (SortByDistance)
-                    {
-                        _barsData.BarsList.Reverse();
-                    }
-                    SortByTitleDesc = false;
-                    SortByRatingDesc = false;
-                    SortByDistance = !SortByDistance;
+                    SortAndInvertIfNeeded(new ComparerByDistance(), CompareType.Distance);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(compareType), compareType, null);
+            }
+        }
+
+        private void SortAndInvertIfNeeded(IComparer<BarData> comparer, CompareType compareType)
+        {
+            _barsData.BarsList.Sort(comparer);
+            if (compareType == _lastCompare)
+            {
+                _barsData.BarsList.Reverse();
+                _lastCompare = CompareType.None;
+            }
+            else
+            {
+                _lastCompare = compareType;
             }
         }
     }
