@@ -143,7 +143,7 @@ namespace BeerOverflowWindowsApp
         private bool LongitudeTextIsCorrect()
         {
             return System.Text.RegularExpressions.Regex.IsMatch(LongitudeTextBox.Text,
-                @"^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{0,8})?|180(?:\.0{0,8})?)$");
+                @"^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,8})?|180(?:\.0{1,8})?)$");
         }
 
         private void LatitudeTextBox_TextChanged(object sender, EventArgs e)
@@ -158,7 +158,7 @@ namespace BeerOverflowWindowsApp
         private bool LatitudeTextIsCorrect()
         {
             return System.Text.RegularExpressions.Regex.IsMatch(LatitudeTextBox.Text,
-                @"^(-?[1-8]?\d(?:\.\d{0,8})?|90(?:\.0{0,8})?)$");
+                @"^(-?[1-8]?\d(?:\.\d{1,8})?|90(?:\.0{1,8})?)$");
         }
 
         private void RadiusTextBox_TextChanged(object sender, EventArgs e)
@@ -173,7 +173,7 @@ namespace BeerOverflowWindowsApp
         private bool RadiusTextIsCorrect()
         {
             return System.Text.RegularExpressions.Regex.IsMatch(RadiusTextBox.Text,
-                @"^[0-9]{0,3}$");
+                @"^[0-9]{1,3}$");
         }
     }
 }
