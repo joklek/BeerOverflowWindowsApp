@@ -195,6 +195,26 @@
             this.manualBarRating.TabIndex = 12;
             this.manualBarRating.Click += new System.EventHandler(this.manualBarRating_Click);
             // 
+            // titleColumn
+            // 
+            this.titleColumn.FillWeight = 260F;
+            this.titleColumn.HeaderText = "Title";
+            this.titleColumn.Name = "titleColumn";
+            this.titleColumn.ReadOnly = true;
+            this.titleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.titleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.titleColumn.Width = 260;
+            // 
+            // ratingColumn
+            // 
+            this.ratingColumn.FillWeight = 90F;
+            this.ratingColumn.HeaderText = "Rating";
+            this.ratingColumn.Name = "ratingColumn";
+            this.ratingColumn.ReadOnly = true;
+            this.ratingColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ratingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ratingColumn.Width = 90;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
