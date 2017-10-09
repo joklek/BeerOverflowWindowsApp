@@ -18,6 +18,7 @@ namespace BeerOverflowWindowsApp
         public MainWindow()
         {
             InitializeComponent();
+            _barRating = new BarRating();
             var location = new CurrentLocation();
             var currentLocation = location.currentLocation;
             var latitude = currentLocation.Latitude.ToString(CultureInfo.InvariantCulture);
@@ -29,7 +30,7 @@ namespace BeerOverflowWindowsApp
 
         public void ReLoadForm()
         {
-            var barData = _barRating.GetBarsData();
+            var barData = _barRating.BarsData;
             BarDataGridView.Rows.Clear();
             foreach (var bar in barData.BarsList)
             {
@@ -128,7 +129,7 @@ namespace BeerOverflowWindowsApp
             if (e.RowIndex >= 0)
             {
                 var val = BarDataGridView[0, e.RowIndex].Value.ToString();
-                barToRate = _barRating.GetBarsData().BarsList.First(bar => bar.Title == val);
+                barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
             }
         }
 
