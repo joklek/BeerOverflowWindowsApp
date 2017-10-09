@@ -117,7 +117,7 @@ namespace BeerOverflowWindowsApp
         private void manualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
-            if (barToRate != null && rating != "" && int.TryParse(rating, out int ratingNumber))
+            if (barToRate != null && rating != "" && int.TryParse(rating, out var ratingNumber))
             {
                 _barRating.AddRating(barToRate ,ratingNumber);
                 ReLoadForm();
