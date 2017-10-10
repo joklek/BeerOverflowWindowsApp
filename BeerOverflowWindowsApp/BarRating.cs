@@ -93,5 +93,9 @@ namespace BeerOverflowWindowsApp
                 }
             }
         }
+        public void ResetLastCompare()
+        {
+            _lastCompare = CompareType.None;
+        }
     }
 }

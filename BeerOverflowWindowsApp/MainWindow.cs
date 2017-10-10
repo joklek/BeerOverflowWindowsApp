@@ -65,6 +65,7 @@ namespace BeerOverflowWindowsApp
                 //_barRating = new BarRating();
                 _barRating.BarsData = result;
                 //_barRating.AddBars(result.BarsList);
+                _barRating.ResetLastCompare();
                 _barRating.Sort(CompareType.Distance);
                 ReLoadForm();
             }
