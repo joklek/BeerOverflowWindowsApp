@@ -18,6 +18,11 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public List<BarData> BarsList { get; set; }
 
+        public BarDataModel()
+        {
+            BarsList = new List<BarData>();
+        }
+
         public void CombineLists(List<BarData> secondaryList)
         {
             BarsList.AddRange(secondaryList);
@@ -113,6 +118,14 @@ namespace BeerOverflowWindowsApp.DataModels
             return string.Join("",
                 s.Normalize(NormalizationForm.FormD)
                     .Where(c => char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
+        }
+
+        public void GetRatings()
+        {
+            foreach (var bar in BarsList)
+            {
+                bar.Ratings = BarFileReader.GetBarRatings(bar);
+            }
         }
     }
 

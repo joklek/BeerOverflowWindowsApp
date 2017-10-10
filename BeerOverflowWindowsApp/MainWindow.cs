@@ -18,6 +18,7 @@ namespace BeerOverflowWindowsApp
         public MainWindow()
         {
             InitializeComponent();
+            _barRating = new BarRating();
             var location = new CurrentLocation();
             var currentLocation = location.currentLocation;
             var latitude = currentLocation.Latitude.ToString(CultureInfo.InvariantCulture);
@@ -29,11 +30,11 @@ namespace BeerOverflowWindowsApp
 
         public void ReLoadForm()
         {
-            var barData = _barRating.GetBarsData();
+            var barData = _barRating.BarsData;
             BarDataGridView.Rows.Clear();
             foreach (var bar in barData.BarsList)
             {
-                var rating = bar.Ratings?.Average().ToString(CultureInfo.InvariantCulture) ?? "-";
+                var rating = bar.Ratings?.Average().ToString(CultureInfo.InvariantCulture) ?? "0";
                 BarDataGridView.Rows.Add(bar.Title, rating);
             }
         }
@@ -60,8 +61,12 @@ namespace BeerOverflowWindowsApp
                 ProgressBar.Increment(25);
                 ProgressBar.Visible = false;
                 // Display
-                _barRating = new BarRating();
-                _barRating.AddBars(result.BarsList);
+                result.GetRatings();
+                //_barRating = new BarRating();
+                _barRating.BarsData = result;
+                //_barRating.AddBars(result.BarsList);
+                _barRating.ResetLastCompare();
+                _barRating.Sort(CompareType.Distance);
                 ReLoadForm();
             }
         }
@@ -127,7 +132,7 @@ namespace BeerOverflowWindowsApp
             if (e.RowIndex >= 0)
             {
                 var val = BarDataGridView[0, e.RowIndex].Value.ToString();
-                barToRate = _barRating.GetBarsData().BarsList.First(bar => bar.Title == val);
+                barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
             }
         }
 
@@ -135,45 +140,57 @@ namespace BeerOverflowWindowsApp
         {
             if (!LongitudeTextIsCorrect())
             {
-                LongitudeTextBox.ForeColor = Color.Red;
+                PaintTextBoxIncorrect(LongitudeTextBox);
             }
-            else { LongitudeTextBox.ResetForeColor(); }
+            else { ResetTextBoxColor(LongitudeTextBox); }
         }
 
         private bool LongitudeTextIsCorrect()
         {
             return System.Text.RegularExpressions.Regex.IsMatch(LongitudeTextBox.Text,
-                @"^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{0,8})?|180(?:\.0{0,8})?)$");
+                @"^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,})?|180(?:\.0{1,})?)$");
         }
 
         private void LatitudeTextBox_TextChanged(object sender, EventArgs e)
         {
             if (!LatitudeTextIsCorrect())
             {
-                LatitudeTextBox.ForeColor = Color.Red;
+                PaintTextBoxIncorrect(LatitudeTextBox);
             }
-            else { LatitudeTextBox.ResetForeColor();}
+            else { ResetTextBoxColor(LatitudeTextBox); }
         }
 
         private bool LatitudeTextIsCorrect()
         {
             return System.Text.RegularExpressions.Regex.IsMatch(LatitudeTextBox.Text,
-                @"^(-?[1-8]?\d(?:\.\d{0,8})?|90(?:\.0{0,8})?)$");
+                @"^(-?[1-8]?\d(?:\.\d{1,})?|90(?:\.0{1,})?)$");
         }
 
         private void RadiusTextBox_TextChanged(object sender, EventArgs e)
         {
             if (!RadiusTextIsCorrect())
             {
-                RadiusTextBox.ForeColor = Color.Red;
+                PaintTextBoxIncorrect(RadiusTextBox);
             }
-            else { RadiusTextBox.ResetForeColor(); }
+            else { ResetTextBoxColor(RadiusTextBox); }
+        }
+
+        private void PaintTextBoxIncorrect(TextBox textBox)
+        {
+            textBox.ForeColor = Color.White;
+            textBox.BackColor = Color.Red;
+        }
+
+        private void ResetTextBoxColor(TextBox textBox)
+        {
+            textBox.ResetForeColor();
+            textBox.ResetBackColor();
         }
 
         private bool RadiusTextIsCorrect()
         {
             return System.Text.RegularExpressions.Regex.IsMatch(RadiusTextBox.Text,
-                @"^[0-9]{0,3}$");
+                @"^[0-9]{1,3}$");
         }
     }
 }

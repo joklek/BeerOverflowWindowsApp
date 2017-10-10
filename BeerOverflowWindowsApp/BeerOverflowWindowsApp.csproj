@@ -79,11 +79,11 @@
     <Compile Include="BarFileReader.cs" />
     <Compile Include="BarFileWriter.cs" />
     <Compile Include="DataModels\TripAdvisorDataModel.cs" />
-    <Compile Include="GetBarListTripAdvisor.cs" />
+    <Compile Include="BarProviders\GetBarListTripAdvisor.cs" />
     <Compile Include="DataModels\FacebookDataModel.cs" />
-    <Compile Include="GetBarListFacebook.cs" />
-    <Compile Include="GetBarListFourSquare.cs" />
-    <Compile Include="GetBarListGoogle.cs" />
+    <Compile Include="BarProviders\GetBarListFacebook.cs" />
+    <Compile Include="BarProviders\GetBarListFourSquare.cs" />
+    <Compile Include="BarProviders\GetBarListGoogle.cs" />
     <Compile Include="CurrentLocation.cs" />
     <Compile Include="IBeerable.cs" />
     <Compile Include="DataModels\GoogleDataModel.cs" />
@@ -93,16 +93,16 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ManualBarRating.cs">
+    <Compile Include="BarRaters\ManualBarRating.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ManualBarRating.Designer.cs">
+    <Compile Include="BarRaters\ManualBarRating.Designer.cs">
       <DependentUpon>ManualBarRating.cs</DependentUpon>
     </Compile>
-    <Compile Include="ManualBeerMeter.cs">
+    <Compile Include="BarRaters\ManualBeerMeter.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ManualBeerMeter.Designer.cs">
+    <Compile Include="BarRaters\ManualBeerMeter.Designer.cs">
       <DependentUpon>ManualBeerMeter.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -110,10 +110,10 @@
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ManualBarRating.resx">
+    <EmbeddedResource Include="BarRaters\ManualBarRating.resx">
       <DependentUpon>ManualBarRating.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ManualBeerMeter.resx">
+    <EmbeddedResource Include="BarRaters\ManualBeerMeter.resx">
       <DependentUpon>ManualBeerMeter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

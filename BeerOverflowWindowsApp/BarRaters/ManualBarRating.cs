@@ -2,10 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace BeerOverflowWindowsApp
 {
@@ -70,15 +75,11 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        Boolean mousePressed = false;
+        Boolean mouseEntered = false;
         private int numberOfGlasses = 0;
-        private void ManualBarRating_MouseDown(object sender, MouseEventArgs e)
+        private void ManualBarRating_MouseEnter(object sender, System.EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                mousePressed = true;
-                SelectRating(e);
-            }
+            mouseEntered = true;
         }
 
         private const string toolTipMessage1 = "Got in a fight with a bartender";
@@ -90,25 +91,21 @@ namespace BeerOverflowWindowsApp
         int lastLocation = -1;
         private void ManualBarRating_MouseMove(object sender, MouseEventArgs e)
         {
-            if (mousePressed)
-                SelectRating(e);
-            if(ClientRectangle.Contains(e.Location) && (e.X / imageSize) != lastLocation)
+            if (mouseEntered && (e.X / imageSize) != lastLocation)
             {
+                SelectRating(e);
                 lastLocation = e.X / imageSize;
-                toolTip.Show(toolTipMessages[e.X / imageSize], this, e.X + 10, e.Y + 10, 3000);
+                toolTip.Show(toolTipMessages[lastLocation], this, e.X + 10, e.Y + 10, 3000);
             }
-        }
-
-        private void ManualBarRating_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-                mousePressed = false;
         }
 
         private void ManualBarRating_MouseLeave(object sender, System.EventArgs e)
         {
             lastLocation = -1;
             toolTip.Hide(this);
+            mouseEntered = false;
+            numberOfGlasses = 0;
+            Refresh();
         }
 
         private void SelectRating(MouseEventArgs e)

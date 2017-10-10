@@ -21,11 +21,11 @@ namespace BeerOverflowWindowsApp.BarComparers
             }
             else if (distance1 < distance2)
             {
-                result = -1;
+                result = 1;
             }
             else
             {
-                result = 1;
+                result = -1;
             }
             return result;
         }

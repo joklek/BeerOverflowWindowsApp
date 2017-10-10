@@ -8,50 +8,55 @@ namespace BeerOverflowWindowsApp
 {
     class BarRating
     {
-        private BarDataModel _barsData = null;
-        public bool SortByTitleDesc { get; set; } = false;
-        public bool SortByRatingDesc { get; set; } = false;
-        public bool SortByDistance { get; set; } = false;
-
-        public BarDataModel GetBarsData()
-        {
-            return _barsData;
-        }
+        public BarDataModel BarsData { get; set; }
+        private CompareType _lastCompare = CompareType.None;
 
         public BarRating()
         {
-            _barsData = BarFileReader.ReadData();
+            BarsData = new BarDataModel();
         }
 
         public void AddRating(BarData barData, int rating)
         {
-            var barsCount = _barsData.BarsList.Count(x => x.Title == barData.Title);
-            if (barsCount > 0)
+            var allBars = BarFileReader.GetAllBarData();
+
+            if (barData.Ratings == null)
             {
-                var ratings = _barsData.BarsList.Where(x => x.Title == barData.Title).Select(x => x.Ratings).FirstOrDefault();
-                if(ratings == null) { ratings = new List<int> { }; }
-                ratings.Add(rating);
-                _barsData.BarsList.Where(x => x.Title == barData.Title).Select(x => x.Ratings = ratings).ToList();
+                barData.Ratings = new List<int>();
+            }
+            barData.Ratings.Add(rating);
+            // Update local copy of list
+            BarsData.BarsList.Find(x => x == barData).Ratings = barData.Ratings;
+
+            if (allBars.BarsList.Count > 0)
+            {
+                var foundBar = allBars.BarsList.FindIndex(x => x.Title == barData.Title);
+                if (foundBar != -1)
+                {
+                    allBars.BarsList[foundBar].Ratings = barData.Ratings;
+                }
+                else
+                {
+                    allBars.BarsList.Add(barData);
+                }
             }
             else
             {
-                barData.Ratings = new List<int> { };
-                barData.Ratings.Add(rating);
-                _barsData.BarsList.Add(barData);
+                allBars.BarsList = new List<BarData>() { barData };
             }
-            BarFileWriter.SaveData(_barsData);
+            BarFileWriter.SaveData(allBars);
         }
 
         public void AddBars(List<BarData> barsList)
         {
             foreach (var bar in barsList)
             {
-                if (_barsData.BarsList.Count(x => x.Title == bar.Title) == 0)
+                if (BarsData.BarsList.Count(x => x.Title == bar.Title) == 0)
                 {
-                    _barsData.BarsList.Add( bar );
+                    BarsData.BarsList.Add( bar );
                 }
             }
-            BarFileWriter.SaveData(_barsData);
+            BarFileWriter.SaveData(BarsData);
         }
 
         public void Sort(CompareType compareType)
@@ -59,41 +64,38 @@ namespace BeerOverflowWindowsApp
             switch (compareType)
             {
                 case CompareType.Title:
-                    var titleComparer = new ComparerByTitle();
-                    _barsData.BarsList.Sort(titleComparer);
-                    if (SortByTitleDesc)
-                    {
-                        _barsData.BarsList.Reverse();
-                    }
-                    SortByTitleDesc = !SortByTitleDesc;
-                    SortByRatingDesc = false;
-                    SortByDistance = false;
+                    SortAndInvertIfNeeded(new ComparerByTitle(), CompareType.Title);
                     break;
                 case CompareType.Rating:
-                    var ratingsComparer = new ComparerByRating();
-                    _barsData.BarsList.Sort(ratingsComparer);
-                    if (SortByRatingDesc)
-                    {
-                        _barsData.BarsList.Reverse();
-                    }
-                    SortByTitleDesc = false;
-                    SortByRatingDesc = !SortByRatingDesc;
-                    SortByDistance = false;
+                    SortAndInvertIfNeeded(new ComparerByRating(), CompareType.Rating);
                     break;
                 case CompareType.Distance:
-                    var distanceComparer = new ComparerByDistance();
-                    _barsData.BarsList.Sort(distanceComparer);
-                    if (SortByDistance)
-                    {
-                        _barsData.BarsList.Reverse();
-                    }
-                    SortByTitleDesc = false;
-                    SortByRatingDesc = false;
-                    SortByDistance = !SortByDistance;
+                    SortAndInvertIfNeeded(new ComparerByDistance(), CompareType.Distance);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(compareType), compareType, null);
             }
+        }
+
+        private void SortAndInvertIfNeeded(IComparer<BarData> comparer, CompareType compareType)
+        { 
+            if (BarsData != null)
+            {
+                BarsData.BarsList.Sort(comparer);
+                if (compareType == _lastCompare)
+                {
+                    BarsData.BarsList.Reverse();
+                    _lastCompare = CompareType.None;
+                }
+                else
+                {
+                    _lastCompare = compareType;
+                }
+            }
+        }
+        public void ResetLastCompare()
+        {
+            _lastCompare = CompareType.None;
         }
     }
 }

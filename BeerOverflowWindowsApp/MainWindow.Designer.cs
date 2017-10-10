@@ -37,19 +37,19 @@
             this.GoButton = new System.Windows.Forms.Button();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.BarDataGridView = new System.Windows.Forms.DataGridView();
+            this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ButtonSortByTitle = new System.Windows.Forms.Button();
             this.ButtonSortByRating = new System.Windows.Forms.Button();
             this.ButtonSortByDistance = new System.Windows.Forms.Button();
             this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
-            this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // LongitudeLabel
             // 
             this.LongitudeLabel.AutoSize = true;
-            this.LongitudeLabel.Location = new System.Drawing.Point(18, 29);
+            this.LongitudeLabel.Location = new System.Drawing.Point(18, 55);
             this.LongitudeLabel.Name = "LongitudeLabel";
             this.LongitudeLabel.Size = new System.Drawing.Size(54, 13);
             this.LongitudeLabel.TabIndex = 0;
@@ -58,7 +58,7 @@
             // LatitudeLabel
             // 
             this.LatitudeLabel.AutoSize = true;
-            this.LatitudeLabel.Location = new System.Drawing.Point(18, 55);
+            this.LatitudeLabel.Location = new System.Drawing.Point(18, 29);
             this.LatitudeLabel.Name = "LatitudeLabel";
             this.LatitudeLabel.Size = new System.Drawing.Size(45, 13);
             this.LatitudeLabel.TabIndex = 1;
@@ -75,7 +75,7 @@
             // 
             // LongitudeTextBox
             // 
-            this.LongitudeTextBox.Location = new System.Drawing.Point(78, 26);
+            this.LongitudeTextBox.Location = new System.Drawing.Point(78, 52);
             this.LongitudeTextBox.Name = "LongitudeTextBox";
             this.LongitudeTextBox.Size = new System.Drawing.Size(125, 20);
             this.LongitudeTextBox.TabIndex = 3;
@@ -83,7 +83,7 @@
             // 
             // LatitudeTextBox
             // 
-            this.LatitudeTextBox.Location = new System.Drawing.Point(78, 52);
+            this.LatitudeTextBox.Location = new System.Drawing.Point(78, 26);
             this.LatitudeTextBox.Name = "LatitudeTextBox";
             this.LatitudeTextBox.Size = new System.Drawing.Size(125, 20);
             this.LatitudeTextBox.TabIndex = 4;
@@ -133,6 +133,26 @@
             this.BarDataGridView.Size = new System.Drawing.Size(350, 268);
             this.BarDataGridView.TabIndex = 8;
             this.BarDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BarDataGridView_CellClick);
+            // 
+            // titleColumn
+            // 
+            this.titleColumn.FillWeight = 260F;
+            this.titleColumn.HeaderText = "Title";
+            this.titleColumn.Name = "titleColumn";
+            this.titleColumn.ReadOnly = true;
+            this.titleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.titleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.titleColumn.Width = 260;
+            // 
+            // ratingColumn
+            // 
+            this.ratingColumn.FillWeight = 90F;
+            this.ratingColumn.HeaderText = "Rating";
+            this.ratingColumn.Name = "ratingColumn";
+            this.ratingColumn.ReadOnly = true;
+            this.ratingColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ratingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ratingColumn.Width = 90;
             // 
             // ButtonSortByTitle
             // 
