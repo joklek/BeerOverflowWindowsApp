@@ -51,7 +51,13 @@ namespace BeerOverflowWindowsApp
                 var distance = currentLocation.GetDistanceTo(barLocation).ToString("0");
                 BarDataGridView.Rows.Add(bar.Title, rating, distance);               
             }
-            BarDataGridView.Rows[_lastRowIndex].Selected = true;
+            if (BarDataGridView.Rows.Count > 0)
+            {
+                BarDataGridView.Rows[_lastRowIndex].Selected = true;               
+                var val = BarDataGridView[0, _lastRowIndex].Value.ToString();
+                barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
+            }
+            
         }
 
         private void GoButton_Click(object sender, EventArgs e)
