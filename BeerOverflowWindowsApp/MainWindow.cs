@@ -264,6 +264,5 @@ namespace BeerOverflowWindowsApp
             _lastSortColumnIndex = columnIndex;           
             ReLoadForm();           
         }
-
     }
 }
