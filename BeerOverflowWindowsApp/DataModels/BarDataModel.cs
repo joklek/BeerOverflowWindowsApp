@@ -41,16 +41,14 @@ namespace BeerOverflowWindowsApp.DataModels
                 for (var j = i + 1; j < length; j++)
                 {
                     var stringSimilarity = CalculateStringSimilarity(BarsList[i].Title, BarsList[j].Title);
-                    var coordCheck = DistaceIsLessThanThreshold(BarsList[i].Latitude, BarsList[i].Longitude,
-                        BarsList[j].Latitude, BarsList[j].Longitude);
+                    var coordCheck = DistaceIsLessThanThreshold(BarsList[i].Location, BarsList[j].Location);
                     if (stringSimilarity >= _barNameSimilarThreshold ||
                         (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
                     {
                         // Prints out merged bars, their string similarity score and the difference of coordinates
                         // Commented for testing purposes, because this process needs to be improved
                         /*Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " : " +
-                                      GetDistanceBetweenBars(BarsList[i].Latitude, BarsList[i].Longitude,
-                                                             BarsList[j].Latitude, BarsList[j].Longitude).ToString("N3") + "\n\n");*/
+                                      BarsList[i].Location.GetDistanceTo(BarsList[j].Location)).ToString("N3") + "\n\n");*/
                         BarsList.Remove(BarsList[j]);
                         length--;
                     }
@@ -58,20 +56,10 @@ namespace BeerOverflowWindowsApp.DataModels
             }
         }
 
-        private bool DistaceIsLessThanThreshold(double lat1, double lon1, double lat2, double lon2)
+        private bool DistaceIsLessThanThreshold(GeoCoordinate location1, GeoCoordinate location2)
         {
-            var coord1 = new GeoCoordinate(lat1, lon1);
-            var coord2 = new GeoCoordinate(lat2, lon2);
-            var distance = coord1.GetDistanceTo(coord2);
+            var distance = location1.GetDistanceTo(location2);
             return distance <= _barNearnessThresholdInMeters;
-        }
-
-        private double GetDistanceBetweenBars(double lat1, double lon1, double lat2, double lon2)
-        {
-            var coord1 = new GeoCoordinate(lat1, lon1);
-            var coord2 = new GeoCoordinate(lat2, lon2);
-            var distance = coord1.GetDistanceTo(coord2);
-            return distance;
         }
 
         private static double CalculateStringSimilarity(string source, string target)

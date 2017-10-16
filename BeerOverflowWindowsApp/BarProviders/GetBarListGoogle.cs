@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Device.Location;
 using System.Net;
 using System.Text;
 using BeerOverflowWindowsApp.DataModels;
@@ -57,8 +58,7 @@ namespace BeerOverflowWindowsApp
                 var newBar = new BarData
                 {
                     Title = result.Name,
-                    Latitude = result.Geometry.Location.Lat,
-                    Longitude = result.Geometry.Location.Lng
+                    Location = new GeoCoordinate() { Latitude = result.Geometry.Location.Lat, Longitude = result.Geometry.Location.Lng }
                 };
                 barList.Add(newBar);
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Device.Location;
 using System.Net;
 using System.Net.Http;
 using BeerOverflowWindowsApp.DataModels;
@@ -69,11 +70,10 @@ namespace BeerOverflowWindowsApp
             
             foreach (var result in resultData.data)
             {
-                BarData newBar = new BarData()
+                var newBar = new BarData()
                 {
                     Title = result.name,
-                    Latitude = result.location.latitude,
-                    Longitude = result.location.longitude
+                    Location = new GeoCoordinate(){Latitude = result.location.latitude, Longitude = result.location.longitude }
                 };
                 barList.Add(newBar);
             }
