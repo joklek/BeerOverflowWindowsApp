@@ -40,9 +40,9 @@
             this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ButtonSortByTitle = new System.Windows.Forms.Button();
+            /*this.ButtonSortByTitle = new System.Windows.Forms.Button();
             this.ButtonSortByRating = new System.Windows.Forms.Button();
-            this.ButtonSortByDistance = new System.Windows.Forms.Button();
+            this.ButtonSortByDistance = new System.Windows.Forms.Button();*/
             this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -178,6 +178,7 @@
             this.Distance.Name = "Distance";
             this.Distance.ReadOnly = true;
             this.Distance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            /*
             // 
             // ButtonSortByTitle
             // 
@@ -208,6 +209,7 @@
             this.ButtonSortByDistance.Text = "Sort By Distance";
             this.ButtonSortByDistance.UseVisualStyleBackColor = true;
             this.ButtonSortByDistance.Click += new System.EventHandler(this.ButtonSortByDistance_Click);
+            */        
             // 
             // manualBarRating
             // 
@@ -286,9 +288,9 @@
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(717, 410);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.ButtonSortByDistance);
+            /*this.Controls.Add(this.ButtonSortByDistance);
             this.Controls.Add(this.ButtonSortByRating);
-            this.Controls.Add(this.ButtonSortByTitle);
+            this.Controls.Add(this.ButtonSortByTitle);*/
             this.Name = "MainWindow";
             this.Text = "MainWindow";
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).EndInit();
@@ -313,9 +315,9 @@
         private System.Windows.Forms.Button GoButton;
         private System.Windows.Forms.ProgressBar ProgressBar;
         private System.Windows.Forms.DataGridView BarDataGridView;
-        private System.Windows.Forms.Button ButtonSortByTitle;
+        /*private System.Windows.Forms.Button ButtonSortByTitle;
         private System.Windows.Forms.Button ButtonSortByRating;
-        private System.Windows.Forms.Button ButtonSortByDistance;
+        private System.Windows.Forms.Button ButtonSortByDistance;*/
         private ManualBarRating manualBarRating;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
