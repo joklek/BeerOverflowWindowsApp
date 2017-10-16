@@ -100,6 +100,7 @@ namespace BeerOverflowWindowsApp
                 _barRating.ResetLastCompare();
                 _lastSortColumnIndex = -1;
                 SortList(CompareType.Distance);
+                Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
             }
         }
