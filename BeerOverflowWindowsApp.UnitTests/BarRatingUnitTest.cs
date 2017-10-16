@@ -1,4 +1,5 @@
 ﻿using System;
+using BeerOverflowWindowsApp.BarComparers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BeerOverflowWindowsApp.UnitTests
@@ -8,7 +9,7 @@ namespace BeerOverflowWindowsApp.UnitTests
     {
         [TestMethod]
         [ExpectedException(typeof(NullReferenceException))]
-        public void AddRatingToNullBarList()
+        public void BarRatingUnitTest_AddRatingToNullBarList()
         {
             // Arrange
             BarRating rating = new BarRating();
@@ -19,12 +20,25 @@ namespace BeerOverflowWindowsApp.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(NullReferenceException))]
-        public void AddEmptyBarList()
+        public void BarRatingUnitTest_AddEmptyBarList()
         {
             // Arrange
             BarRating rating = new BarRating();
             // Act
             rating.AddBars(null);
+            // Assert
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void BarRatingUnitTest_SortUnknownEnum()
+        {
+            // Arrange
+            BarRating rating = new BarRating();
+
+            // Act
+            rating.Sort((CompareType) 99999);
+            
             // Assert
         }
     }
