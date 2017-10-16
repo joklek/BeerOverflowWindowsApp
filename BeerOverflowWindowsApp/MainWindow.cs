@@ -69,27 +69,27 @@ namespace BeerOverflowWindowsApp
             }
             else
             {
-                var currentValue = 0;
+                var currentProgressValue = 0;
 
                 InitiateProgressBars();
-                UpdateProgressBars(currentValue);
+                UpdateProgressBars(currentProgressValue);
 
                 var result = new BarDataModel { BarsList = new List<BarData>() };
                 CollectBarsFromProvider(new GetBarListGoogle(), result, GetLatitude(), GetLongitude(), GetRadius());
-                currentValue += 25;
-                UpdateProgressBars(currentValue);
+                currentProgressValue += 25;
+                UpdateProgressBars(currentProgressValue);
 
                 CollectBarsFromProvider(new GetBarListFourSquare(), result, GetLatitude(), GetLongitude(), GetRadius());
-                currentValue += 25;
-                UpdateProgressBars(currentValue);
+                currentProgressValue += 25;
+                UpdateProgressBars(currentProgressValue);
 
                 CollectBarsFromProvider(new GetBarListFacebook(), result, GetLatitude(), GetLongitude(), GetRadius());
-                currentValue += 25;
-                UpdateProgressBars(currentValue);
+                currentProgressValue += 25;
+                UpdateProgressBars(currentProgressValue);
 
                 CollectBarsFromProvider(new GetBarListTripAdvisor(), result, GetLatitude(), GetLongitude(), GetRadius());
-                currentValue += 25;
-                UpdateProgressBars(currentValue);
+                currentProgressValue += 25;
+                UpdateProgressBars(currentProgressValue);
                 HideProgressBars();
                 
                 // Display
