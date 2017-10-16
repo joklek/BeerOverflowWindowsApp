@@ -6,12 +6,15 @@ using System.Linq;
 using System.Windows.Forms;
 using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
+using System.Device.Location;
 
 namespace BeerOverflowWindowsApp
 {
     public partial class MainWindow : Form
     {
         private BarRating _barRating = null;
+        private int _lastRowIndex = 0;
+        private int _lastSortColumnIndex = -1;
         private BarData barToRate = null;
         private readonly string defaultRadius = "150";
 
@@ -28,15 +31,33 @@ namespace BeerOverflowWindowsApp
             RadiusTextBox.Text = defaultRadius;
         }
 
-        public void ReLoadForm()
+        public void ReLoadForm(bool completely = false)
         {
+            if (completely)
+            {
+                for(var index = 0; index< BarDataGridView.Columns.Count; index++) {
+                    BarDataGridView.Columns[index].HeaderCell.SortGlyphDirection = (SortOrder)0;
+                }
+            }            
             var barData = _barRating.BarsData;
             BarDataGridView.Rows.Clear();
+            var currentLatitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
+            var currentLongitude = Convert.ToDouble(GetLongitude(), CultureInfo.InvariantCulture);
+            var currentLocation = new GeoCoordinate(currentLatitude, currentLongitude);
             foreach (var bar in barData.BarsList)
             {
-                var rating = bar.Ratings?.Average().ToString(CultureInfo.InvariantCulture) ?? "0";
-                BarDataGridView.Rows.Add(bar.Title, rating);
+                var rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
+                var barLocation = new GeoCoordinate(bar.Latitude, bar.Longitude);
+                var distance = currentLocation.GetDistanceTo(barLocation).ToString("0");
+                BarDataGridView.Rows.Add(bar.Title, rating, distance);               
             }
+            if (BarDataGridView.Rows.Count > 0)
+            {
+                BarDataGridView.Rows[_lastRowIndex].Selected = true;               
+                var val = BarDataGridView[0, _lastRowIndex].Value.ToString();
+                barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
+            }
+            
         }
 
         private void GoButton_Click(object sender, EventArgs e)
@@ -67,7 +88,7 @@ namespace BeerOverflowWindowsApp
                 //_barRating.AddBars(result.BarsList);
                 _barRating.ResetLastCompare();
                 _barRating.Sort(CompareType.Distance);
-                ReLoadForm();
+                ReLoadForm(true);
             }
         }
 
@@ -131,6 +152,7 @@ namespace BeerOverflowWindowsApp
         {
             if (e.RowIndex >= 0)
             {
+                _lastRowIndex = e.RowIndex;
                 var val = BarDataGridView[0, e.RowIndex].Value.ToString();
                 barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
             }
@@ -192,5 +214,27 @@ namespace BeerOverflowWindowsApp
             return System.Text.RegularExpressions.Regex.IsMatch(RadiusTextBox.Text,
                 @"^[0-9]{1,3}$");
         }
+
+        private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            var columnIndex = e.ColumnIndex;
+            _barRating.Sort((CompareType)(columnIndex + 1));
+            if(_lastSortColumnIndex == columnIndex)
+            {
+                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = 
+                    BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection == (SortOrder)1 ? (SortOrder)2 : (SortOrder)1;
+            }
+            else
+            {
+                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = (SortOrder)2;
+                if (_lastSortColumnIndex != -1)
+                {
+                    BarDataGridView.Columns[_lastSortColumnIndex].HeaderCell.SortGlyphDirection = (SortOrder)0;
+                }
+            }
+            _lastSortColumnIndex = columnIndex;           
+            ReLoadForm();           
+        }
+
     }
 }
