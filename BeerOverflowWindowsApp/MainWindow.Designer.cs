@@ -35,19 +35,17 @@
             this.LatitudeTextBox = new System.Windows.Forms.TextBox();
             this.RadiusTextBox = new System.Windows.Forms.TextBox();
             this.GoButton = new System.Windows.Forms.Button();
-            this.ProgressBar = new System.Windows.Forms.ProgressBar();
+            this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.BarDataGridView = new System.Windows.Forms.DataGridView();
             this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // LongitudeLabel
@@ -118,14 +116,69 @@
             this.GoButton.UseVisualStyleBackColor = true;
             this.GoButton.Click += new System.EventHandler(this.GoButton_Click);
             // 
-            // ProgressBar
+            // manualBarRating
             // 
-            this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ProgressBar.Location = new System.Drawing.Point(3, 257);
-            this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(501, 24);
-            this.ProgressBar.TabIndex = 7;
-            this.ProgressBar.Visible = false;
+            this.manualBarRating.ImageSize = 100;
+            this.manualBarRating.Location = new System.Drawing.Point(207, 313);
+            this.manualBarRating.MaximumSize = new System.Drawing.Size(500, 100);
+            this.manualBarRating.MinimumSize = new System.Drawing.Size(500, 100);
+            this.manualBarRating.Name = "manualBarRating";
+            this.manualBarRating.Size = new System.Drawing.Size(500, 100);
+            this.manualBarRating.TabIndex = 12;
+            this.manualBarRating.Click += new System.EventHandler(this.manualBarRating_Click);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.BarDataGridView, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.manualBarRating, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.progressBar, 1, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(717, 410);
+            this.tableLayoutPanel1.TabIndex = 13;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.AutoSize = true;
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 138F));
+            this.tableLayoutPanel3.Controls.Add(this.LatitudeLabel, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.LatitudeTextBox, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.LongitudeTextBox, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.LongitudeLabel, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.RadiusLabel, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.GoButton, 1, 3);
+            this.tableLayoutPanel3.Controls.Add(this.RadiusTextBox, 1, 2);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 5;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(198, 275);
+            this.tableLayoutPanel3.TabIndex = 13;
+            // 
+            // progressBar
+            // 
+            this.progressBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.progressBar.Location = new System.Drawing.Point(207, 284);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(507, 23);
+            this.progressBar.TabIndex = 14;
             // 
             // BarDataGridView
             // 
@@ -139,16 +192,14 @@
             this.ratingColumn,
             this.Distance});
             this.BarDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BarDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.BarDataGridView.Location = new System.Drawing.Point(207, 3);
             this.BarDataGridView.MultiSelect = false;
             this.BarDataGridView.Name = "BarDataGridView";
             this.BarDataGridView.ReadOnly = true;
             this.BarDataGridView.RowHeadersVisible = false;
             this.BarDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.BarDataGridView.Size = new System.Drawing.Size(501, 248);
-            this.BarDataGridView.TabIndex = 8;
-            this.BarDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BarDataGridView_CellClick);
-            this.BarDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.BarDataGridView_ColumnHeaderMouseClick);
+            this.BarDataGridView.Size = new System.Drawing.Size(507, 275);
+            this.BarDataGridView.TabIndex = 15;
             // 
             // titleColumn
             // 
@@ -179,76 +230,6 @@
             this.Distance.ReadOnly = true;
             this.Distance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
-            // manualBarRating
-            // 
-            this.manualBarRating.ImageSize = 100;
-            this.manualBarRating.Location = new System.Drawing.Point(207, 293);
-            this.manualBarRating.MaximumSize = new System.Drawing.Size(500, 100);
-            this.manualBarRating.MinimumSize = new System.Drawing.Size(500, 100);
-            this.manualBarRating.Name = "manualBarRating";
-            this.manualBarRating.Size = new System.Drawing.Size(500, 100);
-            this.manualBarRating.TabIndex = 12;
-            this.manualBarRating.Click += new System.EventHandler(this.manualBarRating_Click);
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.manualBarRating, 1, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70.7317F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 29.26829F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(717, 410);
-            this.tableLayoutPanel1.TabIndex = 13;
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.BarDataGridView, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.ProgressBar, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(207, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.5208F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.4792F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(507, 284);
-            this.tableLayoutPanel2.TabIndex = 0;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 138F));
-            this.tableLayoutPanel3.Controls.Add(this.LatitudeLabel, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.LatitudeTextBox, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.LongitudeTextBox, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.LongitudeLabel, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.RadiusLabel, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.GoButton, 1, 3);
-            this.tableLayoutPanel3.Controls.Add(this.RadiusTextBox, 1, 2);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 5;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(198, 284);
-            this.tableLayoutPanel3.TabIndex = 13;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,12 +239,11 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "MainWindow";
             this.Text = "BeerOverflow";
-            ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -278,15 +258,11 @@
         private System.Windows.Forms.TextBox LatitudeTextBox;
         private System.Windows.Forms.TextBox RadiusTextBox;
         private System.Windows.Forms.Button GoButton;
-        private System.Windows.Forms.ProgressBar ProgressBar;
-        private System.Windows.Forms.DataGridView BarDataGridView;
-        /*private System.Windows.Forms.Button ButtonSortByTitle;
-        private System.Windows.Forms.Button ButtonSortByRating;
-        private System.Windows.Forms.Button ButtonSortByDistance;*/
         private ManualBarRating manualBarRating;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.DataGridView BarDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn titleColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ratingColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Distance;
