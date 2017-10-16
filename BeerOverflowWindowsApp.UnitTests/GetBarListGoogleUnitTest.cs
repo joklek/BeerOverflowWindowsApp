@@ -6,7 +6,7 @@ namespace BeerOverflowWindowsApp.UnitTests
     public class GetBarListGoogleUnitTest
     {
         [TestMethod]
-        public void GetBarsGoogleInvalidLatidute()
+        public void GetBarsGoogle_InvalidLatidute()
         {
             // Arrange
             GetBarListGoogle getBars = new GetBarListGoogle();
@@ -16,7 +16,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [TestMethod]
-        public void GetBarsGoogleInvalidLongitude()
+        public void GetBarsGoogle_InvalidLongitude()
         {
             // Arrange
             GetBarListGoogle getBars = new GetBarListGoogle();
@@ -26,7 +26,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [TestMethod]
-        public void GetBarsGoogleInvalidRadius()
+        public void GetBarsGoogle_InvalidRadius()
         {
             // Arrange
             GetBarListGoogle getBars = new GetBarListGoogle();

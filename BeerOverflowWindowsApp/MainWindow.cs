@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 using System.Device.Location;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace BeerOverflowWindowsApp
 {
@@ -31,7 +32,7 @@ namespace BeerOverflowWindowsApp
             RadiusTextBox.Text = defaultRadius;
         }
 
-        public void ReLoadForm(bool completely = false)
+        public void ReLoadDataGrid(bool completely = false)
         {
             if (completely)
             {
@@ -68,28 +69,56 @@ namespace BeerOverflowWindowsApp
             }
             else
             {
-                ProgressBar.Value = 0;
-                ProgressBar.Visible = true;
-                var result = new BarDataModel { BarsList = new List<BarData>() };
+                var currentProgressValue = 0;
 
+                InitiateProgressBars();
+                UpdateProgressBars(currentProgressValue);
+
+                var result = new BarDataModel { BarsList = new List<BarData>() };
                 CollectBarsFromProvider(new GetBarListGoogle(), result, GetLatitude(), GetLongitude(), GetRadius());
-                ProgressBar.Increment(25);
+                currentProgressValue += 25;
+                UpdateProgressBars(currentProgressValue);
+
                 CollectBarsFromProvider(new GetBarListFourSquare(), result, GetLatitude(), GetLongitude(), GetRadius());
-                ProgressBar.Increment(25);
+                currentProgressValue += 25;
+                UpdateProgressBars(currentProgressValue);
+
                 CollectBarsFromProvider(new GetBarListFacebook(), result, GetLatitude(), GetLongitude(), GetRadius());
-                ProgressBar.Increment(25);
+                currentProgressValue += 25;
+                UpdateProgressBars(currentProgressValue);
+
                 CollectBarsFromProvider(new GetBarListTripAdvisor(), result, GetLatitude(), GetLongitude(), GetRadius());
-                ProgressBar.Increment(25);
-                ProgressBar.Visible = false;
+                currentProgressValue += 25;
+                UpdateProgressBars(currentProgressValue);
+                HideProgressBars();
+                
                 // Display
                 result.GetRatings();
                 //_barRating = new BarRating();
                 _barRating.BarsData = result;
                 //_barRating.AddBars(result.BarsList);
                 _barRating.ResetLastCompare();
-                _barRating.Sort(CompareType.Distance);
-                ReLoadForm(true);
+                _lastSortColumnIndex = -1;
+                SortList(CompareType.Distance);
             }
+        }
+
+        private void InitiateProgressBars()
+        {
+            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+            progressBar.Value = 0;
+        }
+
+        private void HideProgressBars()
+        {
+            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+            progressBar.Value = 0;
+        }
+
+        private void UpdateProgressBars(int currentValue)
+        {
+            TaskbarManager.Instance.SetProgressValue(currentValue, 100);
+            progressBar.Value = currentValue;
         }
 
         private void CollectBarsFromProvider(IBeerable provider, BarDataModel barList,
@@ -120,31 +149,13 @@ namespace BeerOverflowWindowsApp
             return RadiusTextBox.Text;
         }
 
-        private void ButtonSortByTitle_Click(object sender, EventArgs e)
-        {
-            _barRating.Sort(CompareType.Title);
-            ReLoadForm();
-        }
-
-        private void ButtonSortByRating_Click(object sender, EventArgs e)
-        {
-            _barRating.Sort(CompareType.Rating);
-            ReLoadForm();
-        }
-
-        private void ButtonSortByDistance_Click(object sender, EventArgs e)
-        {
-            _barRating.Sort(CompareType.Distance);
-            ReLoadForm();
-        }
-
         private void manualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
             if (barToRate != null && rating != "" && int.TryParse(rating, out var ratingNumber))
             {
                 _barRating.AddRating(barToRate ,ratingNumber);
-                ReLoadForm();
+                ReLoadDataGrid();
             }
         }
 
@@ -215,26 +226,30 @@ namespace BeerOverflowWindowsApp
                 @"^[0-9]{1,3}$");
         }
 
-        private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void SortList(CompareType sortType)
         {
-            var columnIndex = e.ColumnIndex;
-            _barRating.Sort((CompareType)(columnIndex + 1));
-            if(_lastSortColumnIndex == columnIndex)
+            var columnIndex = (int) sortType - 1;
+            _barRating.Sort(sortType);
+            if (_lastSortColumnIndex == columnIndex)
             {
-                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = 
+                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection =
                     BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection == (SortOrder)1 ? (SortOrder)2 : (SortOrder)1;
             }
             else
             {
-                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = (SortOrder)2;
+                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = (SortOrder)1;
                 if (_lastSortColumnIndex != -1)
                 {
                     BarDataGridView.Columns[_lastSortColumnIndex].HeaderCell.SortGlyphDirection = (SortOrder)0;
                 }
             }
-            _lastSortColumnIndex = columnIndex;           
-            ReLoadForm();           
+            _lastSortColumnIndex = columnIndex;
+            ReLoadDataGrid();
         }
 
+        private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            SortList((CompareType) e.ColumnIndex + 1);
+        }
     }
 }

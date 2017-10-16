@@ -72,6 +72,8 @@ namespace BeerOverflowWindowsApp
                 case CompareType.Distance:
                     SortAndInvertIfNeeded(new ComparerByDistance(), CompareType.Distance);
                     break;
+                case CompareType.None:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(compareType), compareType, null);
             }
@@ -93,6 +95,7 @@ namespace BeerOverflowWindowsApp
                 }
             }
         }
+
         public void ResetLastCompare()
         {
             _lastCompare = CompareType.None;
