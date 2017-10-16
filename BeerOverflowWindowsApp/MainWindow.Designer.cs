@@ -38,8 +38,6 @@ namespace BeerOverflowWindowsApp
             this.RadiusTextBox = new System.Windows.Forms.TextBox();
             this.GoButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.BarDataGridView = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.manualBarRating = new ManualBarRating();
@@ -47,9 +45,7 @@ namespace BeerOverflowWindowsApp
             this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
@@ -142,39 +138,6 @@ namespace BeerOverflowWindowsApp
             this.tableLayoutPanel1.Size = new System.Drawing.Size(717, 410);
             this.tableLayoutPanel1.TabIndex = 13;
             // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 138F));
-            this.tableLayoutPanel3.Controls.Add(this.LatitudeLabel, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.LatitudeTextBox, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.LongitudeTextBox, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.LongitudeLabel, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.RadiusLabel, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.GoButton, 1, 3);
-            this.tableLayoutPanel3.Controls.Add(this.RadiusTextBox, 1, 2);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 5;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(198, 265);
-            this.tableLayoutPanel3.TabIndex = 13;
-            // 
-            // progressBar
-            // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.progressBar.Location = new System.Drawing.Point(207, 274);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(507, 23);
-            this.progressBar.TabIndex = 14;
-            // 
             // BarDataGridView
             // 
             this.BarDataGridView.AllowUserToAddRows = false;
@@ -223,34 +186,6 @@ namespace BeerOverflowWindowsApp
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.Size = new System.Drawing.Size(198, 265);
             this.tableLayoutPanel3.TabIndex = 13;
-            // titleColumn
-            // 
-            this.titleColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.titleColumn.FillWeight = 230F;
-            this.titleColumn.HeaderText = "Title";
-            this.titleColumn.Name = "titleColumn";
-            this.titleColumn.ReadOnly = true;
-            this.titleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.titleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
-            // ratingColumn
-            // 
-            this.ratingColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ratingColumn.FillWeight = 125F;
-            this.ratingColumn.HeaderText = "Rating";
-            this.ratingColumn.Name = "ratingColumn";
-            this.ratingColumn.ReadOnly = true;
-            this.ratingColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.ratingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
-            // Distance
-            // 
-            this.Distance.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Distance.FillWeight = 125F;
-            this.Distance.HeaderText = "Distance";
-            this.Distance.Name = "Distance";
-            this.Distance.ReadOnly = true;
-            this.Distance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // manualBarRating
             // 
@@ -311,8 +246,6 @@ namespace BeerOverflowWindowsApp
             this.Text = "BeerOverflow";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
@@ -341,10 +274,5 @@ namespace BeerOverflowWindowsApp
         private System.Windows.Forms.DataGridViewTextBoxColumn titleColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ratingColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Distance;
-=======
-        private System.Windows.Forms.DataGridViewTextBoxColumn titleColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ratingColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Distance;
-        private System.Windows.Forms.ProgressBar progressBar;
     }
 }
