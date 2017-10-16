@@ -149,24 +149,6 @@ namespace BeerOverflowWindowsApp
             return RadiusTextBox.Text;
         }
 
-        private void ButtonSortByTitle_Click(object sender, EventArgs e)
-        {
-            _barRating.Sort(CompareType.Title);
-            ReLoadForm();
-        }
-
-        private void ButtonSortByRating_Click(object sender, EventArgs e)
-        {
-            _barRating.Sort(CompareType.Rating);
-            ReLoadForm();
-        }
-
-        private void ButtonSortByDistance_Click(object sender, EventArgs e)
-        {
-            _barRating.Sort(CompareType.Distance);
-            ReLoadForm();
-        }
-
         private void manualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
