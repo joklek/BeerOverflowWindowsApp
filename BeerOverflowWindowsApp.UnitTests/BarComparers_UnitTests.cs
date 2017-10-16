@@ -19,7 +19,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             var barData2 = new BarData { Ratings = new List<int>()};
             barData2.Ratings.Add(5);
             barData2.Ratings.Add(10);
-            int expectedResult = -1;
+            int expectedResult = 1;
             var comparer = new ComparerByRating();
             // act  
 
@@ -39,7 +39,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             var barData2 = new BarData { Ratings = new List<int>()};
             barData2.Ratings.Add(10);
             barData2.Ratings.Add(20);
-            int expectedResult = 1;
+            int expectedResult = -1;
             var comparer = new ComparerByRating();
             // act  
 
