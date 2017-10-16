@@ -32,7 +32,7 @@ namespace BeerOverflowWindowsApp
             RadiusTextBox.Text = defaultRadius;
         }
 
-        public void ReLoadForm(bool completely = false)
+        public void ReLoadDataGrid(bool completely = false)
         {
             if (completely)
             {
@@ -58,7 +58,6 @@ namespace BeerOverflowWindowsApp
                 var val = BarDataGridView[0, _lastRowIndex].Value.ToString();
                 barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
             }
-            
         }
 
         private void GoButton_Click(object sender, EventArgs e)
@@ -100,7 +99,6 @@ namespace BeerOverflowWindowsApp
                 _barRating.ResetLastCompare();
                 _lastSortColumnIndex = -1;
                 SortList(CompareType.Distance);
-                ReLoadForm();
             }
         }
 
@@ -156,7 +154,7 @@ namespace BeerOverflowWindowsApp
             if (barToRate != null && rating != "" && int.TryParse(rating, out var ratingNumber))
             {
                 _barRating.AddRating(barToRate ,ratingNumber);
-                ReLoadForm();
+                ReLoadDataGrid();
             }
         }
 
@@ -245,12 +243,12 @@ namespace BeerOverflowWindowsApp
                 }
             }
             _lastSortColumnIndex = columnIndex;
+            ReLoadDataGrid();
         }
 
         private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             SortList((CompareType) e.ColumnIndex + 1);
-            ReLoadForm();
         }
     }
 }
