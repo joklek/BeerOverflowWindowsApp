@@ -1,4 +1,5 @@
-﻿using BeerOverflowWindowsApp.DataModels;
+﻿using System;
+using BeerOverflowWindowsApp.DataModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,6 +9,9 @@ namespace BeerOverflowWindowsApp.BarComparers
     {
         public int Compare(BarData barData1, BarData barData2)
         {
+            if (barData1 == null) throw new ArgumentNullException(nameof(barData1));
+            if (barData2 == null) throw new ArgumentNullException(nameof(barData2));
+
             int result;
             if (barData1.Ratings == null && barData2.Ratings == null)
             {
