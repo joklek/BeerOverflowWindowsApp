@@ -12,21 +12,21 @@ namespace BeerOverflowWindowsApp
         public static void SaveData(BarDataModel barData)
         {
             var barsInFile = BarFileReader.GetAllBarData();
-            foreach (var bar in barData.BarsList)
+            foreach (var bar in barData)
             {
-                var barInListIndex = barsInFile.BarsList.FindIndex(x => x.Title == bar.Title);
+                var barInListIndex = barsInFile.FindIndex(x => x.Title == bar.Title);
                 if (barInListIndex != -1)
                 {
-                    var barOccurenceInFile = barsInFile.BarsList[barInListIndex];
+                    var barOccurenceInFile = barsInFile[barInListIndex];
                     if (barOccurenceInFile.Ratings == null
-                        || barsInFile.BarsList[barInListIndex].Ratings.SequenceEqual(bar.Ratings))
+                        || barsInFile[barInListIndex].Ratings.SequenceEqual(bar.Ratings))
                     {
-                        barsInFile.BarsList[barInListIndex].Ratings = bar.Ratings;
+                        barsInFile[barInListIndex].Ratings = bar.Ratings;
                     }
                 }
                 else
                 {
-                    barsInFile.BarsList.Add(bar);
+                    barsInFile.Add(bar);
                 }
             }
             var barsDataJson = JsonConvert.SerializeObject(barData);

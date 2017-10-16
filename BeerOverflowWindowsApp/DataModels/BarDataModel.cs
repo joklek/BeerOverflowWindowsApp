@@ -8,7 +8,7 @@ using System.Text;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
-   public class BarDataModel
+   public class BarDataModel : List<BarData>
     {
         private readonly double _barNameSimilarThreshold = 
             double.Parse(ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
@@ -19,30 +19,23 @@ namespace BeerOverflowWindowsApp.DataModels
         private readonly double _barCoordSimilarThreshold =
             double.Parse(ConfigurationManager.AppSettings["barCoordSimilarThreshold"], CultureInfo.InvariantCulture);
 
-        public List<BarData> BarsList { get; set; }
-
-        public BarDataModel()
-        {
-            BarsList = new List<BarData>();
-        }
-
         public void CombineLists(List<BarData> secondaryList)
         {
-            BarsList.AddRange(secondaryList);
+            this.AddRange(secondaryList);
             RemoveDuplicates();
         }
 
         private void RemoveDuplicates ()
         {
-            var length = BarsList.Count;
+            var length = this.Count;
 
             for (var i = 0; i + 1 < length; i++)
             {
                 for (var j = i + 1; j < length; j++)
                 {
-                    var stringSimilarity = CalculateStringSimilarity(BarsList[i].Title, BarsList[j].Title);
-                    var coordCheck = DistaceIsLessThanThreshold(BarsList[i].Latitude, BarsList[i].Longitude,
-                        BarsList[j].Latitude, BarsList[j].Longitude);
+                    var stringSimilarity = CalculateStringSimilarity(this[i].Title, this[j].Title);
+                    var coordCheck = DistaceIsLessThanThreshold(this[i].Latitude, this[i].Longitude,
+                        this[j].Latitude, this[j].Longitude);
                     if (stringSimilarity >= _barNameSimilarThreshold ||
                         (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
                     {
@@ -51,7 +44,7 @@ namespace BeerOverflowWindowsApp.DataModels
                         /*Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " : " +
                                       GetDistanceBetweenBars(BarsList[i].Latitude, BarsList[i].Longitude,
                                                              BarsList[j].Latitude, BarsList[j].Longitude).ToString("N3") + "\n\n");*/
-                        BarsList.Remove(BarsList[j]);
+                        this.Remove(this[j]);
                         length--;
                     }
                 }
@@ -130,7 +123,7 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public void GetRatings()
         {
-            foreach (var bar in BarsList)
+            foreach (var bar in this)
             {
                 bar.Ratings = BarFileReader.GetBarRatings(bar);
             }

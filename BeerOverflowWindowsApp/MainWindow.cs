@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -45,7 +44,7 @@ namespace BeerOverflowWindowsApp
             var currentLatitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
             var currentLongitude = Convert.ToDouble(GetLongitude(), CultureInfo.InvariantCulture);
             var currentLocation = new GeoCoordinate(currentLatitude, currentLongitude);
-            foreach (var bar in barData.BarsList)
+            foreach (var bar in barData)
             {
                 var rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
                 var barLocation = new GeoCoordinate(bar.Latitude, bar.Longitude);
@@ -56,7 +55,7 @@ namespace BeerOverflowWindowsApp
             {
                 BarDataGridView.Rows[_lastRowIndex].Selected = true;               
                 var val = BarDataGridView[0, _lastRowIndex].Value.ToString();
-                barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
+                barToRate = _barRating.BarsData.First(bar => bar.Title == val);
             }
         }
 
@@ -74,7 +73,7 @@ namespace BeerOverflowWindowsApp
                 InitiateProgressBars();
                 UpdateProgressBars(currentProgressValue);
 
-                var result = new BarDataModel { BarsList = new List<BarData>() };
+                var result = new BarDataModel ();
                 CollectBarsFromProvider(new GetBarListGoogle(), result, GetLatitude(), GetLongitude(), GetRadius());
                 currentProgressValue += 25;
                 UpdateProgressBars(currentProgressValue);
@@ -167,7 +166,7 @@ namespace BeerOverflowWindowsApp
             {
                 _lastRowIndex = e.RowIndex;
                 var val = BarDataGridView[0, e.RowIndex].Value.ToString();
-                barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
+                barToRate = _barRating.BarsData.First(bar => bar.Title == val);
             }
         }
 
