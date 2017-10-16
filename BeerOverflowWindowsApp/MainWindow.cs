@@ -17,7 +17,7 @@ namespace BeerOverflowWindowsApp
         private int _lastRowIndex = 0;
         private int _lastSortColumnIndex = -1;
         private BarData barToRate = null;
-        private readonly string defaultRadius = "150";
+        private readonly string defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
 
         public MainWindow()
         {
