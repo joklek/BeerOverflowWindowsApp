@@ -82,33 +82,37 @@
             // 
             // LongitudeTextBox
             // 
+            this.LongitudeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LongitudeTextBox.Location = new System.Drawing.Point(63, 29);
             this.LongitudeTextBox.Name = "LongitudeTextBox";
-            this.LongitudeTextBox.Size = new System.Drawing.Size(104, 20);
+            this.LongitudeTextBox.Size = new System.Drawing.Size(132, 20);
             this.LongitudeTextBox.TabIndex = 3;
             this.LongitudeTextBox.TextChanged += new System.EventHandler(this.LongitudeTextBox_TextChanged);
             // 
             // LatitudeTextBox
             // 
+            this.LatitudeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LatitudeTextBox.Location = new System.Drawing.Point(63, 3);
             this.LatitudeTextBox.Name = "LatitudeTextBox";
-            this.LatitudeTextBox.Size = new System.Drawing.Size(104, 20);
+            this.LatitudeTextBox.Size = new System.Drawing.Size(132, 20);
             this.LatitudeTextBox.TabIndex = 4;
             this.LatitudeTextBox.TextChanged += new System.EventHandler(this.LatitudeTextBox_TextChanged);
             // 
             // RadiusTextBox
             // 
+            this.RadiusTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RadiusTextBox.Location = new System.Drawing.Point(63, 55);
             this.RadiusTextBox.Name = "RadiusTextBox";
-            this.RadiusTextBox.Size = new System.Drawing.Size(104, 20);
+            this.RadiusTextBox.Size = new System.Drawing.Size(132, 20);
             this.RadiusTextBox.TabIndex = 5;
             this.RadiusTextBox.TextChanged += new System.EventHandler(this.RadiusTextBox_TextChanged);
             // 
             // GoButton
             // 
+            this.GoButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GoButton.Location = new System.Drawing.Point(63, 81);
             this.GoButton.Name = "GoButton";
-            this.GoButton.Size = new System.Drawing.Size(104, 23);
+            this.GoButton.Size = new System.Drawing.Size(132, 23);
             this.GoButton.TabIndex = 6;
             this.GoButton.Text = "Go";
             this.GoButton.UseVisualStyleBackColor = true;
