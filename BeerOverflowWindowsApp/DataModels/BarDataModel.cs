@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,9 @@ namespace BeerOverflowWindowsApp.DataModels
             double.Parse(ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barNameLikelySimilarThreshold = 
             double.Parse(ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
-        private readonly double _barCoordSimilarThreshold = 
+        private readonly double _barNearnessThresholdInMeters = 
+            double.Parse(ConfigurationManager.AppSettings["barNearnessInMetersThreshold"], CultureInfo.InvariantCulture);
+        private readonly double _barCoordSimilarThreshold =
             double.Parse(ConfigurationManager.AppSettings["barCoordSimilarThreshold"], CultureInfo.InvariantCulture);
 
         public List<BarData> BarsList { get; set; }
@@ -38,7 +41,7 @@ namespace BeerOverflowWindowsApp.DataModels
                 for (var j = i + 1; j < length; j++)
                 {
                     var stringSimilarity = CalculateStringSimilarity(BarsList[i].Title, BarsList[j].Title);
-                    var coordCheck = CoordsAreSimilar(BarsList[i].Latitude, BarsList[i].Longitude,
+                    var coordCheck = DistaceIsLessThanThreshold(BarsList[i].Latitude, BarsList[i].Longitude,
                         BarsList[j].Latitude, BarsList[j].Longitude);
                     if (stringSimilarity >= _barNameSimilarThreshold ||
                         (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
@@ -59,6 +62,14 @@ namespace BeerOverflowWindowsApp.DataModels
         {
             return CalculateDoubleDiff(lat1, lat2) <= _barCoordSimilarThreshold &&
                    (CalculateDoubleDiff(lon1, lon2) <= _barCoordSimilarThreshold);
+        }
+
+        private bool DistaceIsLessThanThreshold(double lat1, double lon1, double lat2, double lon2)
+        {
+            var coord1 = new GeoCoordinate(lat1, lon2);
+            var coord2 = new GeoCoordinate(lat1, lon2);
+            var distance = coord1.GetDistanceTo(coord2);
+            return distance <= _barNearnessThresholdInMeters;
         }
 
         private static double CalculateDoubleDiff(double number1, double number2)
@@ -127,14 +138,5 @@ namespace BeerOverflowWindowsApp.DataModels
                 bar.Ratings = BarFileReader.GetBarRatings(bar);
             }
         }
-    }
-
-    public class BarData
-    {
-        public string Title { get; set; }
-        public string Id { get; set; }
-        public List<int> Ratings { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
     }
 }
