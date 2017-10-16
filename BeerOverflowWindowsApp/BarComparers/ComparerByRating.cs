@@ -17,22 +17,29 @@ namespace BeerOverflowWindowsApp.BarComparers
             {
                 result = 0;
             }
+            // 0 < x
             else if (barData1.Ratings == null && barData2.Ratings != null)
-            {
-                result = 1;
-            }
-            else if (barData1.Ratings != null && barData2.Ratings == null)
             {
                 result = -1;
             }
+            // x > 0
+            else if (barData1.Ratings != null && barData2.Ratings == null)
+            {
+                result = 1;
+            }
             else
             {
-                result = barData1.Ratings.Average() ==  barData2.Ratings.Average() 
+                var bar1RatingAverage = barData1.Ratings.Average();
+                var bar2RatingAverage = barData2.Ratings.Average();
+
+                result = bar1RatingAverage == bar2RatingAverage
                     ? 0 
-                    : barData1.Ratings.Average() > barData2.Ratings.Average() 
-                        ? -1 
-                        : 1 ;
+                    : bar1RatingAverage > bar2RatingAverage
+                        ? 1 
+                        : -1 ;
             }
+            // compares by titles, if ratings are equal. 
+            // Is this necesary?
             if (result == 0)
             {
                 result = string.Compare(barData1.Title, barData2.Title);
