@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 using System.Device.Location;
+using System.Configuration;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace BeerOverflowWindowsApp

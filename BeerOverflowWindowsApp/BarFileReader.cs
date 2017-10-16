@@ -1,13 +1,14 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 
 namespace BeerOverflowWindowsApp
 {
     static class BarFileReader
     {
-        private static readonly string _filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
+        private static readonly string _filePath = ConfigurationManager.AppSettings["filePath"];
 
         public static BarDataModel GetAllBarData()
         {

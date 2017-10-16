@@ -1,4 +1,5 @@
-﻿using BeerOverflowWindowsApp.DataModels;
+﻿using System.Configuration;
+using BeerOverflowWindowsApp.DataModels;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -7,7 +8,7 @@ namespace BeerOverflowWindowsApp
 {
     static class BarFileWriter
     {
-        private static string _filePath = System.Configuration.ConfigurationManager.AppSettings["filePath"];
+        private static string _filePath = ConfigurationManager.AppSettings["filePath"];
 
         public static void SaveData(BarDataModel barData)
         {
