@@ -50,9 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GetBarListGoogleUnitTest.cs" />
-    <Compile Include="ComparerByRating_UnitTests.cs" />
+    <Compile Include="ComparerByRatingUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BarRatingUnitTest.cs" />
+    <Compile Include="BarRatingUnitTests.cs" />
     <Compile Include="GetBarListFourSquareUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>

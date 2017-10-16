@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BeerOverflowWindowsApp.UnitTests
 {
     [TestClass]
-    public class ComparerByRating_UnitTests
+    public class ComparerByRatingUnitTests
     {
         [TestMethod]
         public void ComparerByRating_RatingsFirstBigger()
