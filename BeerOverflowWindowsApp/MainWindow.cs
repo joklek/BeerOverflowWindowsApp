@@ -69,6 +69,7 @@ namespace BeerOverflowWindowsApp
             else
             {
                 var currentProgressValue = 0;
+                GoButton.Enabled = false;
 
                 InitiateProgressBars();
                 UpdateProgressBars(currentProgressValue);
@@ -99,6 +100,7 @@ namespace BeerOverflowWindowsApp
                 _barRating.ResetLastCompare();
                 _lastSortColumnIndex = -1;
                 SortList(CompareType.Distance);
+                GoButton.Enabled = true;
             }
         }
 
