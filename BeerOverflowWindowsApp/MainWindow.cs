@@ -58,6 +58,7 @@ namespace BeerOverflowWindowsApp
                 var val = BarDataGridView[0, _lastRowIndex].Value.ToString();
                 barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
             }
+            
         }
 
         private void GoButton_Click(object sender, EventArgs e)

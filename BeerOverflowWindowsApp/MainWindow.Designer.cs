@@ -260,9 +260,6 @@
         private System.Windows.Forms.TextBox LatitudeTextBox;
         private System.Windows.Forms.TextBox RadiusTextBox;
         private System.Windows.Forms.Button GoButton;
-        /*private System.Windows.Forms.Button ButtonSortByTitle;
-        private System.Windows.Forms.Button ButtonSortByRating;
-        private System.Windows.Forms.Button ButtonSortByDistance;*/
         private ManualBarRating manualBarRating;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
