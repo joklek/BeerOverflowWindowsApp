@@ -1,4 +1,4 @@
-﻿namespace BeerOverflowWindowsApp
+﻿namespace BeerOverflowWindowsApp.BarRaters
 {
     partial class ManualBarRating
     {

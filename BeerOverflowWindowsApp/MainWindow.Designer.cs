@@ -1,4 +1,6 @@
-﻿namespace BeerOverflowWindowsApp
+﻿using BeerOverflowWindowsApp.BarRaters;
+
+namespace BeerOverflowWindowsApp
 {
     partial class MainWindow
     {
@@ -38,7 +40,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.BarDataGridView = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
+            this.manualBarRating = new ManualBarRating();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
