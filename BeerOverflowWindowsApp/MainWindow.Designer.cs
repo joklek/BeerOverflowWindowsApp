@@ -292,7 +292,7 @@
             this.Controls.Add(this.ButtonSortByRating);
             this.Controls.Add(this.ButtonSortByTitle);*/
             this.Name = "MainWindow";
-            this.Text = "MainWindow";
+            this.Text = "BeerOverflow";
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
