@@ -264,10 +264,5 @@ namespace BeerOverflowWindowsApp
             _lastSortColumnIndex = columnIndex;           
             ReLoadForm();           
         }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }
