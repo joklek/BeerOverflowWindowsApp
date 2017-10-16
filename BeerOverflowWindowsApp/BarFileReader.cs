@@ -11,13 +11,15 @@ namespace BeerOverflowWindowsApp
 
         public static BarDataModel GetAllBarData()
         {
+            BarDataModel result = null;
             if (File.Exists(_filePath))
             {
                 var barsData = File.ReadAllText(_filePath);
-                var result = JsonConvert.DeserializeObject<BarDataModel>(barsData);
-                return result;
+                result = JsonConvert.DeserializeObject<BarDataModel>(barsData);
             }
-            else { return new BarDataModel { BarsList = new List<BarData> { } }; }
+            if ( result == null )
+            { result =  new BarDataModel { BarsList = new List<BarData>() }; }
+            return result;
         }
 
         public static List<int> GetBarRatings(BarData bar)
