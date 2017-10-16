@@ -32,8 +32,8 @@ namespace BeerOverflowWindowsApp.UnitTests
         public void ComparerByRating_RatingsFirstNotNullSecondNull()
         {
             // arrange  
-            var barData1 = new BarData { Ratings = new List<int>() };
-            var barData2 = new BarData();
+            var barData1 = new BarData { Ratings = new List<int>() }; ;
+            var barData2 = new BarData { Ratings = null }; ;
             var expectedResult = 1;
             var comparer = new ComparerByRating();
 
@@ -68,8 +68,8 @@ namespace BeerOverflowWindowsApp.UnitTests
         public void ComparerByRating_RatingsFirstNullSecondNotNull()
         {
             // arrange  
-            var barData1 = new BarData ();
-            var barData2 = new BarData { Ratings = new List<int>() };
+            var barData1 = new BarData { Ratings = null };
+            var barData2 = new BarData { Ratings = new List<int>() }; ;
             var expectedResult = -1;
             var comparer = new ComparerByRating();
 
@@ -104,8 +104,8 @@ namespace BeerOverflowWindowsApp.UnitTests
         public void ComparerByRating_RatingsBothNull()
         {
             // arrange  
-            var barData1 = new BarData ();
-            var barData2 = new BarData ();
+            var barData1 = new BarData { Ratings = null };
+            var barData2 = new BarData { Ratings = null }; ;
             var expectedResult = 0;
             var comparer = new ComparerByRating();
 
