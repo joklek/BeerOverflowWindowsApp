@@ -52,8 +52,9 @@
             // 
             // LongitudeLabel
             // 
+            this.LongitudeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.LongitudeLabel.AutoSize = true;
-            this.LongitudeLabel.Location = new System.Drawing.Point(3, 26);
+            this.LongitudeLabel.Location = new System.Drawing.Point(3, 32);
             this.LongitudeLabel.Name = "LongitudeLabel";
             this.LongitudeLabel.Size = new System.Drawing.Size(54, 13);
             this.LongitudeLabel.TabIndex = 0;
@@ -61,8 +62,9 @@
             // 
             // LatitudeLabel
             // 
+            this.LatitudeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.LatitudeLabel.AutoSize = true;
-            this.LatitudeLabel.Location = new System.Drawing.Point(3, 0);
+            this.LatitudeLabel.Location = new System.Drawing.Point(3, 6);
             this.LatitudeLabel.Name = "LatitudeLabel";
             this.LatitudeLabel.Size = new System.Drawing.Size(45, 13);
             this.LatitudeLabel.TabIndex = 1;
@@ -70,8 +72,9 @@
             // 
             // RadiusLabel
             // 
+            this.RadiusLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.RadiusLabel.AutoSize = true;
-            this.RadiusLabel.Location = new System.Drawing.Point(3, 52);
+            this.RadiusLabel.Location = new System.Drawing.Point(3, 58);
             this.RadiusLabel.Name = "RadiusLabel";
             this.RadiusLabel.Size = new System.Drawing.Size(40, 13);
             this.RadiusLabel.TabIndex = 2;
