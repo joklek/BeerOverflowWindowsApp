@@ -227,7 +227,7 @@
             this.Controls.Add(this.LatitudeLabel);
             this.Controls.Add(this.LongitudeLabel);
             this.Name = "MainWindow";
-            this.Text = "MainWindow";
+            this.Text = "BeerOverflow";
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
