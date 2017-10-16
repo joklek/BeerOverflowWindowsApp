@@ -106,19 +106,19 @@ namespace BeerOverflowWindowsApp
         private void InitiateProgressBars()
         {
             TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-            progressBar.Visible = true;
+            ProgressBar.Visible = true;
         }
 
         private void HideProgressBars()
         {
             TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-            progressBar.Visible = false;
+            ProgressBar.Visible = false;
         }
 
         private void UpdateProgressBars(int currentValue)
         {
             TaskbarManager.Instance.SetProgressValue(currentValue, 100);
-            progressBar.Value = currentValue;
+            ProgressBar.Value = currentValue;
         }
 
         private void CollectBarsFromProvider(IBeerable provider, BarDataModel barList,
