@@ -98,8 +98,9 @@ namespace BeerOverflowWindowsApp
                 _barRating.BarsData = result;
                 //_barRating.AddBars(result.BarsList);
                 _barRating.ResetLastCompare();
-                _barRating.Sort(CompareType.Distance);
-                ReLoadForm(true);
+                _lastSortColumnIndex = -1;
+                SortList(CompareType.Distance);
+                ReLoadForm();
             }
         }
 
@@ -226,25 +227,30 @@ namespace BeerOverflowWindowsApp
                 @"^[0-9]{1,3}$");
         }
 
-        private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void SortList(CompareType sortType)
         {
-            var columnIndex = e.ColumnIndex;
-            _barRating.Sort((CompareType)(columnIndex + 1));
-            if(_lastSortColumnIndex == columnIndex)
+            var columnIndex = (int) sortType - 1;
+            _barRating.Sort(sortType);
+            if (_lastSortColumnIndex == columnIndex)
             {
-                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = 
+                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection =
                     BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection == (SortOrder)1 ? (SortOrder)2 : (SortOrder)1;
             }
             else
             {
-                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = (SortOrder)2;
+                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = (SortOrder)1;
                 if (_lastSortColumnIndex != -1)
                 {
                     BarDataGridView.Columns[_lastSortColumnIndex].HeaderCell.SortGlyphDirection = (SortOrder)0;
                 }
             }
-            _lastSortColumnIndex = columnIndex;           
-            ReLoadForm();           
+            _lastSortColumnIndex = columnIndex;
+        }
+
+        private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            SortList((CompareType) e.ColumnIndex + 1);
+            ReLoadForm();
         }
     }
 }
