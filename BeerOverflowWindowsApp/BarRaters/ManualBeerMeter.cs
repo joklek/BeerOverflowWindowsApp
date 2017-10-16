@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarRaters
 {
     [Description("A manual beer meter")]
     public partial class ManualBeerMeter : Control
