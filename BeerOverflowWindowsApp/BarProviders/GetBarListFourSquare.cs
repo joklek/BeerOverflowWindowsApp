@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Device.Location;
 using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
 using BeerOverflowWindowsApp.DataModels;
@@ -44,7 +43,8 @@ namespace BeerOverflowWindowsApp
                 var newBar = new BarData
                 {
                     Title = result.name,
-                    Location = new GeoCoordinate() { Latitude = result.location.lat, Longitude = result.location.lng }
+                    Latitude = result.location.lat,
+                    Longitude = result.location.lng
                 };
                 barList.Add(newBar);
             }

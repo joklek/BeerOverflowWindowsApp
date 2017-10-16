@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Device.Location;
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
@@ -64,8 +63,8 @@ namespace BeerOverflowWindowsApp
                     var newBar = new BarData
                     {
                         Title = result.name,
-                        Location = new GeoCoordinate() { Latitude = double.Parse(result.location.latitude, CultureInfo.InvariantCulture),
-                                                         Longitude = double.Parse(result.location.longitude, CultureInfo.InvariantCulture) }
+                        Latitude = double.Parse(result.location.latitude, CultureInfo.InvariantCulture),
+                        Longitude = double.Parse(result.location.longitude, CultureInfo.InvariantCulture)
                     };
                     barList.Add(newBar);
                 }

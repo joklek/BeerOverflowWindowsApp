@@ -48,7 +48,7 @@ namespace BeerOverflowWindowsApp
             foreach (var bar in barData.BarsList)
             {
                 var rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
-                var barLocation = new GeoCoordinate(bar.Location.Latitude, bar.Location.Longitude);
+                var barLocation = new GeoCoordinate(bar.Latitude, bar.Longitude);
                 var distance = currentLocation.GetDistanceTo(barLocation).ToString("0");
                 BarDataGridView.Rows.Add(bar.Title, rating, distance);               
             }
