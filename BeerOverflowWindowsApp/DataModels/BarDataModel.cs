@@ -48,9 +48,9 @@ namespace BeerOverflowWindowsApp.DataModels
                     {
                         // Prints out merged bars, their string similarity score and the difference of coordinates
                         // Commented for testing purposes, because this process needs to be improved
-                        /*Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " " + coordCheck + "\n" +
-                                        CalculateDoubleDiff(BarsList[i].Latitude, BarsList[j].Latitude).ToString("N6") + " " +
-                                        CalculateDoubleDiff(BarsList[i].Longitude, BarsList[j].Longitude).ToString("N6") + "\n\n");*/
+                        /*Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " : " +
+                                      GetDistanceBetweenBars(BarsList[i].Latitude, BarsList[i].Longitude,
+                                                             BarsList[j].Latitude, BarsList[j].Longitude).ToString("N3") + "\n\n");*/
                         BarsList.Remove(BarsList[j]);
                         length--;
                     }
@@ -58,23 +58,20 @@ namespace BeerOverflowWindowsApp.DataModels
             }
         }
 
-        private bool CoordsAreSimilar(double lat1, double lon1, double lat2, double lon2)
-        {
-            return CalculateDoubleDiff(lat1, lat2) <= _barCoordSimilarThreshold &&
-                   (CalculateDoubleDiff(lon1, lon2) <= _barCoordSimilarThreshold);
-        }
-
         private bool DistaceIsLessThanThreshold(double lat1, double lon1, double lat2, double lon2)
         {
-            var coord1 = new GeoCoordinate(lat1, lon2);
-            var coord2 = new GeoCoordinate(lat1, lon2);
+            var coord1 = new GeoCoordinate(lat1, lon1);
+            var coord2 = new GeoCoordinate(lat2, lon2);
             var distance = coord1.GetDistanceTo(coord2);
             return distance <= _barNearnessThresholdInMeters;
         }
 
-        private static double CalculateDoubleDiff(double number1, double number2)
+        private double GetDistanceBetweenBars(double lat1, double lon1, double lat2, double lon2)
         {
-            return Math.Abs(number1 - number2);
+            var coord1 = new GeoCoordinate(lat1, lon1);
+            var coord2 = new GeoCoordinate(lat2, lon2);
+            var distance = coord1.GetDistanceTo(coord2);
+            return distance;
         }
 
         private static double CalculateStringSimilarity(string source, string target)
