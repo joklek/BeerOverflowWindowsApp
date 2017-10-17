@@ -1,69 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
-   public class BarDataModel
+   public class BarDataModel : List<BarData>
     {
         private readonly double _barNameSimilarThreshold = 
             double.Parse(ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barNameLikelySimilarThreshold = 
             double.Parse(ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
-        private readonly double _barCoordSimilarThreshold = 
+        private readonly double _barNearnessThresholdInMeters = 
+            double.Parse(ConfigurationManager.AppSettings["barNearnessInMetersThreshold"], CultureInfo.InvariantCulture);
+        private readonly double _barCoordSimilarThreshold =
             double.Parse(ConfigurationManager.AppSettings["barCoordSimilarThreshold"], CultureInfo.InvariantCulture);
-
-        public List<BarData> BarsList { get; set; }
-
-        public BarDataModel()
-        {
-            BarsList = new List<BarData>();
-        }
 
         public void CombineLists(List<BarData> secondaryList)
         {
-            BarsList.AddRange(secondaryList);
+            this.AddRange(secondaryList);
             RemoveDuplicates();
         }
 
         private void RemoveDuplicates ()
         {
-            var length = BarsList.Count;
+            var length = this.Count;
 
             for (var i = 0; i + 1 < length; i++)
             {
                 for (var j = i + 1; j < length; j++)
                 {
-                    var stringSimilarity = CalculateStringSimilarity(BarsList[i].Title, BarsList[j].Title);
-                    var coordCheck = CoordsAreSimilar(BarsList[i].Latitude, BarsList[i].Longitude,
-                        BarsList[j].Latitude, BarsList[j].Longitude);
+                    var stringSimilarity = CalculateStringSimilarity(this[i].Title, this[j].Title);
+                    var coordCheck = DistaceIsLessThanThreshold(this[i].Latitude, this[i].Longitude,
+                        this[j].Latitude, this[j].Longitude);
                     if (stringSimilarity >= _barNameSimilarThreshold ||
                         (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
                     {
                         // Prints out merged bars, their string similarity score and the difference of coordinates
                         // Commented for testing purposes, because this process needs to be improved
-                        /*Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " " + coordCheck + "\n" +
-                                        CalculateDoubleDiff(BarsList[i].Latitude, BarsList[j].Latitude).ToString("N6") + " " +
-                                        CalculateDoubleDiff(BarsList[i].Longitude, BarsList[j].Longitude).ToString("N6") + "\n\n");*/
-                        BarsList.Remove(BarsList[j]);
+                        /*Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " : " +
+                                      GetDistanceBetweenBars(BarsList[i].Latitude, BarsList[i].Longitude,
+                                                             BarsList[j].Latitude, BarsList[j].Longitude).ToString("N3") + "\n\n");*/
+                        this.Remove(this[j]);
                         length--;
                     }
                 }
             }
         }
 
-        private bool CoordsAreSimilar(double lat1, double lon1, double lat2, double lon2)
+        private bool DistaceIsLessThanThreshold(double lat1, double lon1, double lat2, double lon2)
         {
-            return CalculateDoubleDiff(lat1, lat2) <= _barCoordSimilarThreshold &&
-                   (CalculateDoubleDiff(lon1, lon2) <= _barCoordSimilarThreshold);
+            var coord1 = new GeoCoordinate(lat1, lon1);
+            var coord2 = new GeoCoordinate(lat2, lon2);
+            var distance = coord1.GetDistanceTo(coord2);
+            return distance <= _barNearnessThresholdInMeters;
         }
 
-        private static double CalculateDoubleDiff(double number1, double number2)
+        private double GetDistanceBetweenBars(double lat1, double lon1, double lat2, double lon2)
         {
-            return Math.Abs(number1 - number2);
+            var coord1 = new GeoCoordinate(lat1, lon1);
+            var coord2 = new GeoCoordinate(lat2, lon2);
+            var distance = coord1.GetDistanceTo(coord2);
+            return distance;
         }
 
         private static double CalculateStringSimilarity(string source, string target)
@@ -122,19 +123,10 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public void GetRatings()
         {
-            foreach (var bar in BarsList)
+            foreach (var bar in this)
             {
                 bar.Ratings = BarFileReader.GetBarRatings(bar);
             }
         }
-    }
-
-    public class BarData
-    {
-        public string Title { get; set; }
-        public string Id { get; set; }
-        public List<int> Ratings { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
     }
 }

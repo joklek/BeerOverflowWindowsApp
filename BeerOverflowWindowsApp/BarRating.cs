@@ -26,24 +26,18 @@ namespace BeerOverflowWindowsApp
             }
             barData.Ratings.Add(rating);
             // Update local copy of list
-            BarsData.BarsList.Find(x => x == barData).Ratings = barData.Ratings;
+            BarsData.Find(x => x == barData).Ratings = barData.Ratings;
 
-            if (allBars.BarsList.Count > 0)
+            var foundBar = allBars.FindIndex(x => x.Title == barData.Title);
+            if (foundBar != -1)
             {
-                var foundBar = allBars.BarsList.FindIndex(x => x.Title == barData.Title);
-                if (foundBar != -1)
-                {
-                    allBars.BarsList[foundBar].Ratings = barData.Ratings;
-                }
-                else
-                {
-                    allBars.BarsList.Add(barData);
-                }
+                allBars[foundBar].Ratings = barData.Ratings;
             }
             else
             {
-                allBars.BarsList = new List<BarData>() { barData };
+                allBars.Add(barData);
             }
+
             BarFileWriter.SaveData(allBars);
         }
 
@@ -51,9 +45,9 @@ namespace BeerOverflowWindowsApp
         {
             foreach (var bar in barsList)
             {
-                if (BarsData.BarsList.Count(x => x.Title == bar.Title) == 0)
+                if (BarsData.Count(x => x.Title == bar.Title) == 0)
                 {
-                    BarsData.BarsList.Add( bar );
+                    BarsData.Add( bar );
                 }
             }
             BarFileWriter.SaveData(BarsData);
@@ -83,10 +77,10 @@ namespace BeerOverflowWindowsApp
         { 
             if (BarsData != null)
             {
-                BarsData.BarsList.Sort(comparer);
+                BarsData.Sort(comparer);
                 if (compareType == _lastCompare)
                 {
-                    BarsData.BarsList.Reverse();
+                    BarsData.Reverse();
                     _lastCompare = CompareType.None;
                 }
                 else

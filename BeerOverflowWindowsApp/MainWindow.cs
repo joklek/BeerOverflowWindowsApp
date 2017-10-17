@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Windows.Forms;
 using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 using System.Device.Location;
+using System.Configuration;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace BeerOverflowWindowsApp
@@ -17,7 +17,7 @@ namespace BeerOverflowWindowsApp
         private int _lastRowIndex = 0;
         private int _lastSortColumnIndex = -1;
         private BarData barToRate = null;
-        private readonly string defaultRadius = "150";
+        private readonly string defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
 
         public MainWindow()
         {
@@ -45,7 +45,7 @@ namespace BeerOverflowWindowsApp
             var currentLatitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
             var currentLongitude = Convert.ToDouble(GetLongitude(), CultureInfo.InvariantCulture);
             var currentLocation = new GeoCoordinate(currentLatitude, currentLongitude);
-            foreach (var bar in barData.BarsList)
+            foreach (var bar in barData)
             {
                 var rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
                 var barLocation = new GeoCoordinate(bar.Latitude, bar.Longitude);
@@ -56,25 +56,25 @@ namespace BeerOverflowWindowsApp
             {
                 BarDataGridView.Rows[_lastRowIndex].Selected = true;               
                 var val = BarDataGridView[0, _lastRowIndex].Value.ToString();
-                barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
+                barToRate = _barRating.BarsData.First(bar => bar.Title == val);
             }
-            
         }
 
         private void GoButton_Click(object sender, EventArgs e)
         {
             if (!LatitudeTextIsCorrect() || !LongitudeTextIsCorrect() || !RadiusTextIsCorrect())
             {
-                MessageBox.Show("Please enter correct required data. Erroneus data is painted red");
+                MessageBox.Show("Please enter correct required data. Erroneus data is painted red.");
             }
             else
             {
                 var currentProgressValue = 0;
+                GoButton.Enabled = false;
 
                 InitiateProgressBars();
                 UpdateProgressBars(currentProgressValue);
 
-                var result = new BarDataModel { BarsList = new List<BarData>() };
+                var result = new BarDataModel ();
                 CollectBarsFromProvider(new GetBarListGoogle(), result, GetLatitude(), GetLongitude(), GetRadius());
                 currentProgressValue += 25;
                 UpdateProgressBars(currentProgressValue);
@@ -100,6 +100,8 @@ namespace BeerOverflowWindowsApp
                 _barRating.ResetLastCompare();
                 _lastSortColumnIndex = -1;
                 SortList(CompareType.Distance);
+                Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
+                GoButton.Enabled = true;
             }
         }
 
@@ -165,7 +167,7 @@ namespace BeerOverflowWindowsApp
             {
                 _lastRowIndex = e.RowIndex;
                 var val = BarDataGridView[0, e.RowIndex].Value.ToString();
-                barToRate = _barRating.BarsData.BarsList.First(bar => bar.Title == val);
+                barToRate = _barRating.BarsData.First(bar => bar.Title == val);
             }
         }
 

@@ -1,4 +1,6 @@
-﻿namespace BeerOverflowWindowsApp
+﻿using BeerOverflowWindowsApp.BarRaters;
+
+namespace BeerOverflowWindowsApp
 {
     partial class MainWindow
     {
@@ -36,16 +38,16 @@
             this.RadiusTextBox = new System.Windows.Forms.TextBox();
             this.GoButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.BarDataGridView = new System.Windows.Forms.DataGridView();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.manualBarRating = new BeerOverflowWindowsApp.BarRaters.ManualBarRating();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.manualBarRating = new BeerOverflowWindowsApp.ManualBarRating();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).BeginInit();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // LongitudeLabel
@@ -136,6 +138,30 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(717, 410);
             this.tableLayoutPanel1.TabIndex = 13;
             // 
+            // BarDataGridView
+            // 
+            this.BarDataGridView.AllowUserToAddRows = false;
+            this.BarDataGridView.AllowUserToDeleteRows = false;
+            this.BarDataGridView.AllowUserToResizeColumns = false;
+            this.BarDataGridView.AllowUserToResizeRows = false;
+            this.BarDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.BarDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.titleColumn,
+            this.ratingColumn,
+            this.Distance});
+            this.BarDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BarDataGridView.Location = new System.Drawing.Point(207, 3);
+            this.BarDataGridView.MultiSelect = false;
+            this.BarDataGridView.Name = "BarDataGridView";
+            this.BarDataGridView.ReadOnly = true;
+            this.BarDataGridView.RowHeadersVisible = false;
+            this.BarDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.BarDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.BarDataGridView.Size = new System.Drawing.Size(507, 265);
+            this.BarDataGridView.TabIndex = 15;
+            this.BarDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BarDataGridView_CellClick);
+            this.BarDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.BarDataGridView_ColumnHeaderMouseClick);
+            // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.AutoSize = true;
@@ -161,66 +187,6 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(198, 265);
             this.tableLayoutPanel3.TabIndex = 13;
             // 
-            // progressBar
-            // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.progressBar.Location = new System.Drawing.Point(207, 274);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(507, 23);
-            this.progressBar.TabIndex = 14;
-            // 
-            // BarDataGridView
-            // 
-            this.BarDataGridView.AllowUserToAddRows = false;
-            this.BarDataGridView.AllowUserToDeleteRows = false;
-            this.BarDataGridView.AllowUserToResizeColumns = false;
-            this.BarDataGridView.AllowUserToResizeRows = false;
-            this.BarDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.BarDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.titleColumn,
-            this.ratingColumn,
-            this.Distance});
-            this.BarDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BarDataGridView.Location = new System.Drawing.Point(207, 3);
-            this.BarDataGridView.MultiSelect = false;
-            this.BarDataGridView.Name = "BarDataGridView";
-            this.BarDataGridView.ReadOnly = true;
-            this.BarDataGridView.RowHeadersVisible = false;
-            this.BarDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.BarDataGridView.Size = new System.Drawing.Size(507, 265);
-            this.BarDataGridView.TabIndex = 15;
-            this.BarDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BarDataGridView_CellClick);
-            this.BarDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.BarDataGridView_ColumnHeaderMouseClick);
-            // 
-            // titleColumn
-            // 
-            this.titleColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.titleColumn.FillWeight = 230F;
-            this.titleColumn.HeaderText = "Title";
-            this.titleColumn.Name = "titleColumn";
-            this.titleColumn.ReadOnly = true;
-            this.titleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.titleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
-            // ratingColumn
-            // 
-            this.ratingColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ratingColumn.FillWeight = 125F;
-            this.ratingColumn.HeaderText = "Rating";
-            this.ratingColumn.Name = "ratingColumn";
-            this.ratingColumn.ReadOnly = true;
-            this.ratingColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.ratingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
-            // Distance
-            // 
-            this.Distance.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Distance.FillWeight = 125F;
-            this.Distance.HeaderText = "Distance";
-            this.Distance.Name = "Distance";
-            this.Distance.ReadOnly = true;
-            this.Distance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
             // manualBarRating
             // 
             this.manualBarRating.ImageSize = 100;
@@ -231,6 +197,43 @@
             this.manualBarRating.Size = new System.Drawing.Size(500, 100);
             this.manualBarRating.TabIndex = 12;
             this.manualBarRating.Click += new System.EventHandler(this.manualBarRating_Click);
+            // 
+            // progressBar
+            // 
+            this.progressBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.progressBar.Location = new System.Drawing.Point(207, 274);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(507, 23);
+            this.progressBar.TabIndex = 14;
+            // 
+            // titleColumn
+            // 
+            this.titleColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.titleColumn.FillWeight = 5F;
+            this.titleColumn.HeaderText = "Title";
+            this.titleColumn.Name = "titleColumn";
+            this.titleColumn.ReadOnly = true;
+            this.titleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.titleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            // 
+            // ratingColumn
+            // 
+            this.ratingColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ratingColumn.FillWeight = 1F;
+            this.ratingColumn.HeaderText = "Rating";
+            this.ratingColumn.Name = "ratingColumn";
+            this.ratingColumn.ReadOnly = true;
+            this.ratingColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ratingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            // 
+            // Distance
+            // 
+            this.Distance.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Distance.FillWeight = 2F;
+            this.Distance.HeaderText = "Distance, (m)";
+            this.Distance.Name = "Distance";
+            this.Distance.ReadOnly = true;
+            this.Distance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // MainWindow
             // 
@@ -243,9 +246,9 @@
             this.Text = "BeerOverflow";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -260,13 +263,16 @@
         private System.Windows.Forms.TextBox LatitudeTextBox;
         private System.Windows.Forms.TextBox RadiusTextBox;
         private System.Windows.Forms.Button GoButton;
+        /*private System.Windows.Forms.Button ButtonSortByTitle;
+        private System.Windows.Forms.Button ButtonSortByRating;
+        private System.Windows.Forms.Button ButtonSortByDistance;*/
         private ManualBarRating manualBarRating;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.DataGridView BarDataGridView;
+        private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.DataGridViewTextBoxColumn titleColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ratingColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Distance;
-        private System.Windows.Forms.ProgressBar progressBar;
     }
 }
