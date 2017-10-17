@@ -40,7 +40,7 @@ namespace BeerOverflowWindowsApp
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.BarDataGridView = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.manualBarRating = new ManualBarRating();
+            this.manualBarRating = new BeerOverflowWindowsApp.BarRaters.ManualBarRating();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -230,7 +230,7 @@ namespace BeerOverflowWindowsApp
             // 
             this.Distance.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Distance.FillWeight = 2F;
-            this.Distance.HeaderText = "Distance";
+            this.Distance.HeaderText = "Distance, (m)";
             this.Distance.Name = "Distance";
             this.Distance.ReadOnly = true;
             this.Distance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;

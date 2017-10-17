@@ -64,7 +64,7 @@ namespace BeerOverflowWindowsApp
         {
             if (!LatitudeTextIsCorrect() || !LongitudeTextIsCorrect() || !RadiusTextIsCorrect())
             {
-                MessageBox.Show("Please enter correct required data. Erroneus data is painted red");
+                MessageBox.Show("Please enter correct required data. Erroneus data is painted red.");
             }
             else
             {
