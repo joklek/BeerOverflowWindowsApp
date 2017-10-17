@@ -22,4 +22,4 @@ _ _ _
 _ _ _
 ## Screenshots
 
- ![Screenshot](https://i.imgur.com/ChNk0Is.png)
+ ![Screenshot](https://i.imgur.com/QHndtxs.png)
