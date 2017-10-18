@@ -10,6 +10,7 @@ namespace BeerOverflowWindowsApp
     {
         public BarDataModel BarsData { get; set; }
         private CompareType _lastCompare = CompareType.None;
+        private CompareType _reSortCompareType = CompareType.None;
 
         public BarRating()
         {
@@ -55,6 +56,7 @@ namespace BeerOverflowWindowsApp
 
         public void Sort(CompareType compareType)
         {
+            _reSortCompareType = compareType;
             switch (compareType)
             {
                 case CompareType.Title:
@@ -88,6 +90,28 @@ namespace BeerOverflowWindowsApp
                     _lastCompare = compareType;
                 }
             }
+        }
+
+        public void ReSort()
+        {
+            switch (_reSortCompareType)
+            {
+                case CompareType.Title:
+                    BarsData.Sort(new ComparerByTitle());
+                    break;
+                case CompareType.Rating:
+                    BarsData.Sort(new ComparerByRating());
+                    break;
+                case CompareType.Distance:
+                    BarsData.Sort(new ComparerByDistance());
+                    break;
+                case CompareType.None:                   
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(_lastCompare), _lastCompare, null);
+            }
+            if (_lastCompare == CompareType.None)
+                BarsData.Reverse();
         }
 
         public void ResetLastCompare()
