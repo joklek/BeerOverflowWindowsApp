@@ -157,6 +157,8 @@ namespace BeerOverflowWindowsApp
             if (barToRate != null && rating != "" && int.TryParse(rating, out var ratingNumber))
             {
                 _barRating.AddRating(barToRate ,ratingNumber);
+
+                _barRating.ReSort();
                 ReLoadDataGrid();
             }
         }
