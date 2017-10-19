@@ -14,9 +14,8 @@ namespace BeerOverflowWindowsApp
     public partial class MainWindow : Form
     {
         private BarRating _barRating = null;
-        private int _lastSortColumnIndex = -1;
         private BarData _selectedBar = null;
-        private readonly string defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
+        private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
 
         public MainWindow()
         {
@@ -28,7 +27,7 @@ namespace BeerOverflowWindowsApp
             var longitude = currentLocation.Longitude.ToString(CultureInfo.InvariantCulture);
             LatitudeTextBox.Text = latitude;
             LongitudeTextBox.Text = longitude;
-            RadiusTextBox.Text = defaultRadius;
+            RadiusTextBox.Text = _defaultRadius;
         }
 
         public void ReLoadDataGrid(bool completely = false)
@@ -96,9 +95,7 @@ namespace BeerOverflowWindowsApp
                 //_barRating = new BarRating();
                 _barRating.BarsData = result;
                 //_barRating.AddBars(result.BarsList);
-                _barRating.ResetLastCompare();
-                _lastSortColumnIndex = -1;
-                SortList(CompareType.Distance);
+                SortList(CompareType.Distance, SortOrder.Ascending);
                 Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
             }
@@ -150,7 +147,7 @@ namespace BeerOverflowWindowsApp
             return RadiusTextBox.Text;
         }
 
-        private void manualBarRating_Click(object sender, EventArgs e)
+        private void ManualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
             if (_selectedBar != null && rating != "" && int.TryParse(rating, out var ratingNumber))
@@ -226,30 +223,34 @@ namespace BeerOverflowWindowsApp
                 @"^[0-9]{1,3}$");
         }
 
-        private void SortList(CompareType sortType)
+        private void SortList(CompareType compareType, SortOrder sortOrder = SortOrder.Ascending)
         {
-            var columnIndex = (int) sortType - 1;
-            _barRating.Sort(sortType);
-            if (_lastSortColumnIndex == columnIndex)
-            {
-                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection =
-                    BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection == (SortOrder)1 ? (SortOrder)2 : (SortOrder)1;
-            }
-            else
-            {
-                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = (SortOrder)1;
-                if (_lastSortColumnIndex != -1)
-                {
-                    BarDataGridView.Columns[_lastSortColumnIndex].HeaderCell.SortGlyphDirection = (SortOrder)0;
-                }
-            }
-            _lastSortColumnIndex = columnIndex;
+            var columnIndex = (int)compareType - 1;
+            var isAscending = sortOrder == SortOrder.Ascending;
+
+            _barRating.Sort(compareType, isAscending);
+            BarDataGridView_ClearHeaderSortGlyphs();
+            BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = sortOrder;
             ReLoadDataGrid();
         }
 
         private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            SortList((CompareType) e.ColumnIndex + 1);
+            var currentSortOrder = BarDataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection;
+
+            var toBeSortOrder = currentSortOrder != SortOrder.None
+                ? (currentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)
+                : SortOrder.Ascending;
+
+            SortList((CompareType) e.ColumnIndex + 1, toBeSortOrder);
+        }
+
+        private void BarDataGridView_ClearHeaderSortGlyphs()
+        {
+            foreach (DataGridViewColumn column in BarDataGridView.Columns)
+            {
+                column.HeaderCell.SortGlyphDirection = SortOrder.None;
+            }
         }
     }
 }

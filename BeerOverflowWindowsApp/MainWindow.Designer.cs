@@ -39,12 +39,12 @@ namespace BeerOverflowWindowsApp
             this.GoButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.BarDataGridView = new System.Windows.Forms.DataGridView();
-            this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.manualBarRating = new BeerOverflowWindowsApp.BarRaters.ManualBarRating();
             this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.titleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ratingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BarDataGridView)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
@@ -162,35 +162,6 @@ namespace BeerOverflowWindowsApp
             this.BarDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.BarDataGridView_ColumnHeaderMouseClick);
             this.BarDataGridView.SelectionChanged += new System.EventHandler(this.BarDataGridView_SelectionChanged);
             // 
-            // titleColumn
-            // 
-            this.titleColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.titleColumn.FillWeight = 5F;
-            this.titleColumn.HeaderText = "Title";
-            this.titleColumn.Name = "titleColumn";
-            this.titleColumn.ReadOnly = true;
-            this.titleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.titleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
-            // ratingColumn
-            // 
-            this.ratingColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ratingColumn.FillWeight = 1F;
-            this.ratingColumn.HeaderText = "Rating";
-            this.ratingColumn.Name = "ratingColumn";
-            this.ratingColumn.ReadOnly = true;
-            this.ratingColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.ratingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
-            // Distance
-            // 
-            this.Distance.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Distance.FillWeight = 2F;
-            this.Distance.HeaderText = "Distance, (m)";
-            this.Distance.Name = "Distance";
-            this.Distance.ReadOnly = true;
-            this.Distance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.AutoSize = true;
@@ -225,7 +196,7 @@ namespace BeerOverflowWindowsApp
             this.manualBarRating.Name = "manualBarRating";
             this.manualBarRating.Size = new System.Drawing.Size(500, 100);
             this.manualBarRating.TabIndex = 12;
-            this.manualBarRating.Click += new System.EventHandler(this.manualBarRating_Click);
+            this.manualBarRating.Click += new System.EventHandler(this.ManualBarRating_Click);
             // 
             // progressBar
             // 
@@ -234,6 +205,35 @@ namespace BeerOverflowWindowsApp
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(507, 23);
             this.progressBar.TabIndex = 14;
+            // 
+            // titleColumn
+            // 
+            this.titleColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.titleColumn.FillWeight = 5F;
+            this.titleColumn.HeaderText = "Title";
+            this.titleColumn.Name = "titleColumn";
+            this.titleColumn.ReadOnly = true;
+            this.titleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.titleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            // 
+            // ratingColumn
+            // 
+            this.ratingColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ratingColumn.FillWeight = 2F;
+            this.ratingColumn.HeaderText = "Rating";
+            this.ratingColumn.Name = "ratingColumn";
+            this.ratingColumn.ReadOnly = true;
+            this.ratingColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ratingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            // 
+            // Distance
+            // 
+            this.Distance.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Distance.FillWeight = 2F;
+            this.Distance.HeaderText = "Distance, (m)";
+            this.Distance.Name = "Distance";
+            this.Distance.ReadOnly = true;
+            this.Distance.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // MainWindow
             // 

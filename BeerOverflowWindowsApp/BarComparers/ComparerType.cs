@@ -2,8 +2,7 @@
 {
     public enum CompareType
     {
-        None,
-        Title,
+        Title = 1,
         Rating,
         Distance
     }

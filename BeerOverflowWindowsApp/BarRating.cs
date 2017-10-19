@@ -9,7 +9,6 @@ namespace BeerOverflowWindowsApp
     class BarRating
     {
         public BarDataModel BarsData { get; set; }
-        private CompareType _lastCompare = CompareType.None;
 
         public BarRating()
         {
@@ -53,46 +52,26 @@ namespace BeerOverflowWindowsApp
             BarFileWriter.SaveData(BarsData);
         }
 
-        public void Sort(CompareType compareType)
+        public void Sort(CompareType compareType, bool ascending = true)
         {
             switch (compareType)
             {
                 case CompareType.Title:
-                    SortAndInvertIfNeeded(new ComparerByTitle(), CompareType.Title);
+                    BarsData.Sort(new ComparerByTitle());
                     break;
                 case CompareType.Rating:
-                    SortAndInvertIfNeeded(new ComparerByRating(), CompareType.Rating);
+                    BarsData.Sort(new ComparerByRating());
                     break;
                 case CompareType.Distance:
-                    SortAndInvertIfNeeded(new ComparerByDistance(), CompareType.Distance);
-                    break;
-                case CompareType.None:
+                    BarsData.Sort(new ComparerByDistance());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(compareType), compareType, null);
             }
-        }
-
-        private void SortAndInvertIfNeeded(IComparer<BarData> comparer, CompareType compareType)
-        { 
-            if (BarsData != null)
+            if (ascending == false)
             {
-                BarsData.Sort(comparer);
-                if (compareType == _lastCompare)
-                {
-                    BarsData.Reverse();
-                    _lastCompare = CompareType.None;
-                }
-                else
-                {
-                    _lastCompare = compareType;
-                }
+                BarsData.Reverse();
             }
-        }
-
-        public void ResetLastCompare()
-        {
-            _lastCompare = CompareType.None;
         }
     }
 }
