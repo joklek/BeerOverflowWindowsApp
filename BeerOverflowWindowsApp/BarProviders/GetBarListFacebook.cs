@@ -13,12 +13,13 @@ namespace BeerOverflowWindowsApp
     {
         private readonly string _fbApiLink = ConfigurationManager.AppSettings["FacebookAPILink"];
         private readonly string _fbAccessToken = ConfigurationManager.AppSettings["FacebookAccessToken"];
-        private const string Category = "FOOD_BEVERAGE";
+        private readonly string _category = ConfigurationManager.AppSettings["FacebookCategoryID"];
 
         private List<string> fieldList = new List<string>
         {
             "location",
-            "name"
+            "name",
+            "restaurant_specialties"
         };
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
@@ -52,7 +53,7 @@ namespace BeerOverflowWindowsApp
                 {
                     var webClient = new WebClient();
                     var response = webClient.DownloadString(
-                        string.Format(_fbApiLink, _fbAccessToken, latitude+","+longitude, radius, GetFields(), Category));
+                        string.Format(_fbApiLink, _fbAccessToken, latitude+","+longitude, radius, GetFields(), _category));
                     result = JsonConvert.DeserializeObject<PlacesResponse>(response);
                 }
                 catch (Exception exception)
@@ -69,13 +70,17 @@ namespace BeerOverflowWindowsApp
             
             foreach (var result in resultData.data)
             {
-                BarData newBar = new BarData()
+                if (result.restaurant_specialties == null ||
+                    result.restaurant_specialties.drinks == 1)
                 {
-                    Title = result.name,
-                    Latitude = result.location.latitude,
-                    Longitude = result.location.longitude
-                };
-                barList.Add(newBar);
+                    var newBar = new BarData()
+                    {
+                        Title = result.name,
+                        Latitude = result.location.latitude,
+                        Longitude = result.location.longitude
+                    };
+                    barList.Add(newBar);
+                }
             }
             return barList;
         }
