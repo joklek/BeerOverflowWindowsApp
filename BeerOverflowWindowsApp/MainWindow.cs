@@ -14,9 +14,8 @@ namespace BeerOverflowWindowsApp
     public partial class MainWindow : Form
     {
         private BarRating _barRating = null;
-        private int _lastRowIndex = 0;
         private int _lastSortColumnIndex = -1;
-        private BarData barToRate = null;
+        private BarData _selectedBar = null;
         private readonly string defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
 
         public MainWindow()
@@ -52,11 +51,10 @@ namespace BeerOverflowWindowsApp
                 var distance = currentLocation.GetDistanceTo(barLocation).ToString("0");
                 BarDataGridView.Rows.Add(bar.Title, rating, distance);               
             }
-            if (BarDataGridView.Rows.Count > 0)
+            if (BarDataGridView.Rows.Count > 0 && _selectedBar != null)
             {
-                BarDataGridView.Rows[_lastRowIndex].Selected = true;               
-                var val = BarDataGridView[0, _lastRowIndex].Value.ToString();
-                barToRate = _barRating.BarsData.First(bar => bar.Title == val);
+                var indexOfBar = _barRating.BarsData.FindIndex(x => x.Title == _selectedBar.Title);
+                BarDataGridView.Rows[indexOfBar].Selected = true;
             }
         }
 
@@ -68,6 +66,7 @@ namespace BeerOverflowWindowsApp
             }
             else
             {
+                _selectedBar = null;
                 var currentProgressValue = 0;
                 GoButton.Enabled = false;
 
@@ -154,20 +153,19 @@ namespace BeerOverflowWindowsApp
         private void manualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
-            if (barToRate != null && rating != "" && int.TryParse(rating, out var ratingNumber))
+            if (_selectedBar != null && rating != "" && int.TryParse(rating, out var ratingNumber))
             {
-                _barRating.AddRating(barToRate ,ratingNumber);
+                _barRating.AddRating(_selectedBar ,ratingNumber);
                 ReLoadDataGrid();
             }
         }
 
-        private void BarDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void BarDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (BarDataGridView.CurrentRow != null)
             {
-                _lastRowIndex = e.RowIndex;
-                var val = BarDataGridView[0, e.RowIndex].Value.ToString();
-                barToRate = _barRating.BarsData.First(bar => bar.Title == val);
+                var selectedBarName = (string) BarDataGridView.CurrentRow.Cells["titleColumn"].Value;
+                _selectedBar = _barRating.BarsData.Find(bar => bar.Title == selectedBarName);
             }
         }
 
