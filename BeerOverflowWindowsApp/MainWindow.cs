@@ -34,10 +34,9 @@ namespace BeerOverflowWindowsApp
         {
             if (completely)
             {
-                for(var index = 0; index< BarDataGridView.Columns.Count; index++) {
-                    BarDataGridView.Columns[index].HeaderCell.SortGlyphDirection = (SortOrder)0;
-                }
-            }            
+                BarDataGridView_ClearHeaderSortGlyphs();
+            }
+
             var barData = _barRating.BarsData;
             BarDataGridView.Rows.Clear();
             var currentLatitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
@@ -55,6 +54,7 @@ namespace BeerOverflowWindowsApp
                 var indexOfBar = _barRating.BarsData.FindIndex(x => x.Title == _selectedBar.Title);
                 BarDataGridView.Rows[indexOfBar].Selected = true;
             }
+            BarDataGridView.ClearSelection();
         }
 
         private void GoButton_Click(object sender, EventArgs e)
@@ -153,7 +153,8 @@ namespace BeerOverflowWindowsApp
             if (_selectedBar != null && rating != "" && int.TryParse(rating, out var ratingNumber))
             {
                 _barRating.AddRating(_selectedBar ,ratingNumber);
-                ReLoadDataGrid();
+                ReSort();
+                ReLoadDataGrid();   // This isn't really needed here, as it's also called in Sort, which is called in ReSort.
             }
         }
 
@@ -228,10 +229,34 @@ namespace BeerOverflowWindowsApp
             var columnIndex = (int)compareType - 1;
             var isAscending = sortOrder == SortOrder.Ascending;
 
-            _barRating.Sort(compareType, isAscending);
-            BarDataGridView_ClearHeaderSortGlyphs();
-            BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = sortOrder;
-            ReLoadDataGrid();
+            if (sortOrder != SortOrder.None)
+            {
+                _barRating.Sort(compareType, isAscending);
+                BarDataGridView_ClearHeaderSortGlyphs();
+                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = sortOrder;
+                ReLoadDataGrid();
+            }
+        }
+
+        private void ReSort()
+        {
+            var currentSortOrder = SortOrder.None;
+            var currentSortColumn = CompareType.None;
+
+            foreach (DataGridViewColumn column in BarDataGridView.Columns)
+            {
+                if (column.HeaderCell.SortGlyphDirection != SortOrder.None)
+                {
+                    currentSortOrder = column.HeaderCell.SortGlyphDirection;
+                    currentSortColumn = (CompareType) column.Index + 1;
+                    break;
+                }
+            }
+
+            if (currentSortOrder != SortOrder.None && currentSortColumn != CompareType.None)
+            {
+                SortList(currentSortColumn, currentSortOrder);
+            }
         }
 
         private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
