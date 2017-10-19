@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using BeerOverflowWindowsApp.DataModels;
@@ -19,7 +20,17 @@ namespace BeerOverflowWindowsApp
         {
             "location",
             "name",
-            "restaurant_specialties"
+            "restaurant_specialties",
+            "category_list"
+        };
+
+        private List<string> allowedCategories = new List<string>
+        {
+            "Concert Venue",
+            "Restaurant/Cafe",
+            "Bar",
+            "Club",
+            "Pub"
         };
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
@@ -70,19 +81,31 @@ namespace BeerOverflowWindowsApp
             
             foreach (var result in resultData.data)
             {
-                if (result.restaurant_specialties == null ||
-                    result.restaurant_specialties.drinks == 1)
+                if (result.restaurant_specialties != null && result.restaurant_specialties.drinks != 1) continue;
+                var barCategories = result.category_list.Select(category => category.name).ToList();
+
+                if (!HasAllowedCategories(barCategories)) continue;
+                var newBar = new BarData()
                 {
-                    var newBar = new BarData()
-                    {
-                        Title = result.name,
-                        Latitude = result.location.latitude,
-                        Longitude = result.location.longitude
-                    };
-                    barList.Add(newBar);
-                }
+                    Title = result.name,
+                    Latitude = result.location.latitude,
+                    Longitude = result.location.longitude
+                };
+                barList.Add(newBar);
             }
             return barList;
+        }
+
+        private bool HasAllowedCategories(IEnumerable<string> categories)
+        {
+            foreach (var category in categories)
+            {
+                if (allowedCategories.Any(allowed => category.ToLower().Contains(allowed.ToLower())))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

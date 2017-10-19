@@ -24,11 +24,18 @@ namespace BeerOverflowWindowsApp.DataModels
             public int lunch { get; set; }
         }
 
+        public class CategoryList
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+        }
+
         public class Datum
         {
             public string name { get; set; }
             public Location location { get; set; }
             public RestaurantSpecialties restaurant_specialties { get; set; }
+            public List<CategoryList> category_list { get; set; }
             public string id { get; set; }
         }
 
