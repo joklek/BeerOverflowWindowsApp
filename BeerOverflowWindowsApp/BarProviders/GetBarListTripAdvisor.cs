@@ -63,7 +63,7 @@ namespace BeerOverflowWindowsApp
 
         private List<BarData> ApiQueryResponseToBars(PlacesResponse resultData, string radius)
         {
-            List<string> groupList = _applicableGroupsString.Split(',').ToList();
+            var groupList = _applicableGroupsString.Split(',').ToList();
 
             var barList = new List<BarData>();
             foreach (var result in resultData.data)
@@ -78,7 +78,7 @@ namespace BeerOverflowWindowsApp
                             {
                                 if (result.locationResponse.groups.Exists(x => groupList.Contains(x.name)))
                                 {
-                                    addTripAdvisorPlaceToBars(barList, result);
+                                    AddTripAdvisorPlaceToBars(barList, result);
                                 }
                             }
                             break;
@@ -86,8 +86,10 @@ namespace BeerOverflowWindowsApp
                             if (result.locationResponse.subcategory == null ||
                                 result.locationResponse.subcategory.Exists(x => x.name == "sit_down"))
                             {
-                                addTripAdvisorPlaceToBars(barList, result);
+                                AddTripAdvisorPlaceToBars(barList, result);
                             }
+                            break;
+                        default:
                             break;
                     }
                 }
@@ -95,7 +97,7 @@ namespace BeerOverflowWindowsApp
             return barList;
         }
 
-        void addTripAdvisorPlaceToBars(List<BarData> barList, PlaceInfo place)
+        private void AddTripAdvisorPlaceToBars(ICollection<BarData> barList, PlaceInfo place)
         {
             var newBar = new BarData
             {

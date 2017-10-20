@@ -10,7 +10,7 @@ namespace BeerOverflowWindowsApp
     {
         private readonly string _clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
         private readonly string _clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
-        private readonly string _categoryIdBar = ConfigurationManager.AppSettings["FourSquareCategoryIdBar"];
+        private readonly string _categoryIdDs = ConfigurationManager.AppSettings["FourSquareCategoryIDs"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -20,19 +20,24 @@ namespace BeerOverflowWindowsApp
             return barList;
         }
 
-        private List<Venue> GetBarData (string latitude, string longitude, string radius)
+        private IEnumerable<Venue> GetBarData (string latitude, string longitude, string radius)
         {
             var sharpSquare = new SharpSquare(_clientId, _clientSecret);
+            var categoryIDs = _categoryIdDs.Split(',');
+            var venueList = new List<Venue>();
 
-            // let's build the query
-            Dictionary<string, string> parameters = new Dictionary<string, string>
+            foreach (var id in categoryIDs)
             {
-                { "ll", latitude + "," + longitude }, // Coords
-                { "radius", radius },
-                { "categoryId", _categoryIdBar } 
-            };
-
-            return sharpSquare.SearchVenues(parameters);
+                // let's build the query
+                var parameters = new Dictionary<string, string>
+                {
+                    { "ll", latitude + "," + longitude }, // Coords
+                    { "radius", radius },
+                    { "categoryId", id }
+                };
+                venueList.AddRange(sharpSquare.SearchVenues(parameters));
+            }
+            return venueList;
         }
 
         private List<BarData> VenueListToBars (IEnumerable<Venue> resultData)

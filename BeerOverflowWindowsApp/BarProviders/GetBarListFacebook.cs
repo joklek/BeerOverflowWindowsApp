@@ -27,7 +27,7 @@ namespace BeerOverflowWindowsApp
         private readonly List<string> _allowedCategories = new List<string>
         {
             "Concert Venue",
-            "Restaurant/Cafe",
+            "Restaurant",
             "Bar",
             "Club",
             "Pub"

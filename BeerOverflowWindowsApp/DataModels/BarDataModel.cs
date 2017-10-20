@@ -43,11 +43,11 @@ namespace BeerOverflowWindowsApp.DataModels
                         stringSimilarity >= _barNameSimilarThreshold ||
                         (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
                     {
-                        // Prints out merged bars, their string similarity score and the difference of coordinates
+                        // Prints out merged bars, their string similarity score, distance between and either one of them had the other in their name
                         // Commented for testing purposes, because this process needs to be improved
-                        /*Console.Write(this[i].Title + " = " + this[j].Title + " :" + stringSimilarity + " : " +
+                        /*Console.Write("REMOVED: " + this[i].Title + " = " + this[j].Title + " :" + stringSimilarity + " : " +
                                       GetDistanceBetweenBars(this[i].Latitude, this[i].Longitude,
-                                                             this[j].Latitude, this[j].Longitude).ToString("N3") + " meters away" + "+" +
+                                                             this[j].Latitude, this[j].Longitude).ToString("N3") + " meters away" +
                                                              "One bar had other in name?:" + OneNameContainsTheOther(this[i].Title, this[j].Title) + "\n\n");*/
                         this.Remove(this[j]);
                         j--; //? should we do it, as on the same index we are a new bar will appear
