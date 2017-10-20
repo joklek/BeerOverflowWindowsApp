@@ -8,9 +8,9 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListFourSquare : IBeerable
     {
-        private static readonly string clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
-        private static readonly string clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
-        private static readonly string categoryIdBar = ConfigurationManager.AppSettings["FourSquareCategoryIdBar"];
+        private readonly string _clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
+        private readonly string _clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
+        private readonly string _categoryIdBar = ConfigurationManager.AppSettings["FourSquareCategoryIdBar"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -22,14 +22,14 @@ namespace BeerOverflowWindowsApp
 
         private List<Venue> GetBarData (string latitude, string longitude, string radius)
         {
-            var sharpSquare = new SharpSquare(clientId, clientSecret);
+            var sharpSquare = new SharpSquare(_clientId, _clientSecret);
 
             // let's build the query
             Dictionary<string, string> parameters = new Dictionary<string, string>
             {
                 { "ll", latitude + "," + longitude }, // Coords
                 { "radius", radius },
-                { "categoryId", categoryIdBar } 
+                { "categoryId", _categoryIdBar } 
             };
 
             return sharpSquare.SearchVenues(parameters);

@@ -12,8 +12,8 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListGoogle : IBeerable
     {
-        private static readonly string _googleApiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
-        private static readonly string _googleApiLink = ConfigurationManager.AppSettings["GoogleAPILink"] + _googleApiKey;
+        private readonly string _apiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
+        private readonly string _apiLink = ConfigurationManager.AppSettings["GoogleAPILink"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -38,7 +38,7 @@ namespace BeerOverflowWindowsApp
                 try
                 {
                     var webClient = new WebClient {Encoding = Encoding.UTF8};
-                    var response = webClient.DownloadString(string.Format(_googleApiLink, latitude, longitude, radius));
+                    var response = webClient.DownloadString(string.Format(_apiLink, latitude, longitude, radius, _apiKey));
                     result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
                 }
                 catch (Exception exception)

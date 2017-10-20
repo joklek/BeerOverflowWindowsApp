@@ -13,11 +13,11 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListTripAdvisor : IBeerable
     {
-        private static readonly string _accessKey = ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
-        private static readonly string _mapperLink = ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
-        private static readonly string _locationApiLink = ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
-        private static readonly string _restaurantCategory = ConfigurationManager.AppSettings["TripAdvisorRestaurantsCode"];
-        private static readonly string _attractionsCategory = ConfigurationManager.AppSettings["TripAdvisorAttractionsCode"];
+        private readonly string _accessKey = ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
+        private readonly string _mapperLink = ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
+        private readonly string _locationApiLink = ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
+        private readonly string _restaurantCategory = ConfigurationManager.AppSettings["TripAdvisorRestaurantsCode"];
+        private readonly string _attractionsCategory = ConfigurationManager.AppSettings["TripAdvisorAttractionsCode"];
 
         private readonly string _applicableGroupsString =
             ConfigurationManager.AppSettings["TripAdvisorApplicableGroups"];
@@ -95,7 +95,7 @@ namespace BeerOverflowWindowsApp
             return barList;
         }
 
-        void addTripAdvisorPlaceToBars(List<BarData> barList, Datum place)
+        void addTripAdvisorPlaceToBars(List<BarData> barList, PlaceInfo place)
         {
             var newBar = new BarData
             {
@@ -111,7 +111,7 @@ namespace BeerOverflowWindowsApp
             return miles * 1.609344 * 1000;
         }
 
-        private void GetLocationForPlace(Datum place)
+        private void GetLocationForPlace(PlaceInfo place)
         {
             using (var client = new HttpClient())
             {

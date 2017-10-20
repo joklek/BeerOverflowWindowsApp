@@ -12,11 +12,11 @@ namespace BeerOverflowWindowsApp
 {
     class GetBarListFacebook : IBeerable
     {
-        private readonly string _fbApiLink = ConfigurationManager.AppSettings["FacebookAPILink"];
-        private readonly string _fbAccessToken = ConfigurationManager.AppSettings["FacebookAccessToken"];
+        private readonly string _apiLink = ConfigurationManager.AppSettings["FacebookAPILink"];
+        private readonly string _accessToken = ConfigurationManager.AppSettings["FacebookAccessToken"];
         private readonly string _category = ConfigurationManager.AppSettings["FacebookCategoryID"];
 
-        private List<string> fieldList = new List<string>
+        private readonly List<string> _fieldList = new List<string>
         {
             "location",
             "name",
@@ -24,7 +24,7 @@ namespace BeerOverflowWindowsApp
             "category_list"
         };
 
-        private List<string> allowedCategories = new List<string>
+        private readonly List<string> _allowedCategories = new List<string>
         {
             "Concert Venue",
             "Restaurant/Cafe",
@@ -44,7 +44,7 @@ namespace BeerOverflowWindowsApp
         private string GetFields()
         {
             var returned = "";
-            foreach (var field in fieldList)
+            foreach (var field in _fieldList)
             {
                 if (returned != "")
                 {
@@ -64,7 +64,7 @@ namespace BeerOverflowWindowsApp
                 {
                     var webClient = new WebClient();
                     var response = webClient.DownloadString(
-                        string.Format(_fbApiLink, _fbAccessToken, latitude+","+longitude, radius, GetFields(), _category));
+                        string.Format(_apiLink, _accessToken, latitude+","+longitude, radius, GetFields(), _category));
                     result = JsonConvert.DeserializeObject<PlacesResponse>(response);
                 }
                 catch (Exception exception)
@@ -100,7 +100,7 @@ namespace BeerOverflowWindowsApp
         {
             foreach (var category in categories)
             {
-                if (allowedCategories.Any(allowed => category.ToLower().Contains(allowed.ToLower())))
+                if (_allowedCategories.Any(allowed => category.ToLower().Contains(allowed.ToLower())))
                 {
                     return true;
                 }

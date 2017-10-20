@@ -43,7 +43,7 @@ namespace BeerOverflowWindowsApp.DataModels
             public List<Subcategory> subcategory { get; set; }
         }
 
-        public class Datum
+        public class PlaceInfo
         {
             public string location_id { get; set; }
             public string name { get; set; }
@@ -54,7 +54,7 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public class PlacesResponse
         {
-            public List<Datum> data { get; set; }
+            public List<PlaceInfo> data { get; set; }
         }
     }
 }

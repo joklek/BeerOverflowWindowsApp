@@ -30,7 +30,7 @@ namespace BeerOverflowWindowsApp.DataModels
             public string name { get; set; }
         }
 
-        public class Datum
+        public class PlaceInfo
         {
             public string name { get; set; }
             public Location location { get; set; }
@@ -41,7 +41,7 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public class PlacesResponse
         {
-            public List<Datum> data { get; set; }
+            public List<PlaceInfo> data { get; set; }
         }
     }
 }
