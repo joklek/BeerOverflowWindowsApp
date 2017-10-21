@@ -17,18 +17,17 @@ namespace BeerOverflowWindowsApp
     {
         private BarRating _barRating = null;
         private BarData _selectedBar = null;
+        private readonly string _defaultLatitude = ConfigurationManager.AppSettings["defaultLatitude"];
+        private readonly string _defaultLongitude = ConfigurationManager.AppSettings["defaultLongitude"];
         private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
 
         public MainWindow()
         {
             InitializeComponent();
             _barRating = new BarRating();
-            var location = new CurrentLocation();
-            var currentLocation = location.currentLocation;
-            var latitude = currentLocation.Latitude.ToString(CultureInfo.InvariantCulture);
-            var longitude = currentLocation.Longitude.ToString(CultureInfo.InvariantCulture);
-            LatitudeTextBox.Text = latitude;
-            LongitudeTextBox.Text = longitude;
+
+            LatitudeTextBox.Text = _defaultLatitude;
+            LongitudeTextBox.Text = _defaultLongitude;
             RadiusTextBox.Text = _defaultRadius;
         }
 
@@ -70,6 +69,9 @@ namespace BeerOverflowWindowsApp
             var latitude = GetLatitude();
             var longitude = GetLongitude();
             var radius = GetRadius();
+
+            CurrentLocation.currentLocation = new GeoCoordinate(double.Parse(latitude, CultureInfo.InvariantCulture),
+                                                                double.Parse(longitude, CultureInfo.InvariantCulture));
 
             if (!LatitudeTextIsCorrect() || !LongitudeTextIsCorrect() || !RadiusTextIsCorrect())
             {

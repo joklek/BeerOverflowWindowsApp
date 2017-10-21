@@ -11,8 +11,7 @@ namespace BeerOverflowWindowsApp.BarComparers
             int result;
             var coord1 = new GeoCoordinate(barData1.Latitude, barData1.Longitude);
             var coord2 = new GeoCoordinate(barData2.Latitude, barData2.Longitude);
-            var location = new CurrentLocation();
-            var coordStartingLocation = location.currentLocation;
+            var coordStartingLocation = CurrentLocation.currentLocation;
             var distance1 = coord1.GetDistanceTo(coordStartingLocation);
             var distance2 = coord2.GetDistanceTo(coordStartingLocation);
             if (distance1 == distance2)
