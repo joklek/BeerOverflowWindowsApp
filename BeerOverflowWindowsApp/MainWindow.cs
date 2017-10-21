@@ -92,9 +92,7 @@ namespace BeerOverflowWindowsApp
                 
                 // Display
                 result.GetRatings();
-                //_barRating = new BarRating();
                 _barRating.BarsData = result;
-                //_barRating.AddBars(result.BarsList);
                 SortList(CompareType.Distance, SortOrder.Ascending);
                 Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
@@ -154,7 +152,6 @@ namespace BeerOverflowWindowsApp
             {
                 _barRating.AddRating(_selectedBar ,ratingNumber);
                 ReSort();
-                ReLoadDataGrid();   // This isn't really needed here, as it's also called in Sort, which is called in ReSort.
             }
         }
 
