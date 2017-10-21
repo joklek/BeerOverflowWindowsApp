@@ -8,6 +8,7 @@ using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 using System.Device.Location;
 using System.Configuration;
+using BeerOverflowWindowsApp.BarProviders;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace BeerOverflowWindowsApp
@@ -136,7 +137,8 @@ namespace BeerOverflowWindowsApp
         {
             try
             {
-                barList.CombineLists(provider.GetBarsAround(latitude, longitude, radius));
+                barList.AddRange(provider.GetBarsAround(latitude, longitude, radius));
+                barList.CleanUpList(latitude, longitude, radius);
             }
             catch (Exception exception)
             {

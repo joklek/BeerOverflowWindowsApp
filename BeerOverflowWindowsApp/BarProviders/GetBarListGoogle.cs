@@ -8,7 +8,7 @@ using System.Net;
 using System.Text;
 using BeerOverflowWindowsApp.DataModels;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListGoogle : IBeerable
     {
@@ -33,27 +33,24 @@ namespace BeerOverflowWindowsApp
 
         private PlacesApiQueryResponse GetBarData(string latitude, string longitude, string radius)
         {
-            using (var client = new HttpClient())
-            {
-                var categoryList = _categoryList.Split(',');
-                var result = new PlacesApiQueryResponse {Results = new List<Result>()};
+            var categoryList = _categoryList.Split(',');
+            var result = new PlacesApiQueryResponse {Results = new List<Result>()};
 
-                foreach (var category in categoryList)
+            foreach (var category in categoryList)
+            {
+                try
                 {
-                    try
-                    {
-                        var webClient = new WebClient { Encoding = Encoding.UTF8 };
-                        var response = webClient.DownloadString(string.Format(_apiLink, latitude, longitude, radius, category, _apiKey));
-                        var deserialized = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
-                        result.Results.AddRange(deserialized.Results);
-                    }
-                    catch (Exception exception)
-                    {
-                        throw exception;
-                    }
+                    var webClient = new WebClient { Encoding = Encoding.UTF8 };
+                    var response = webClient.DownloadString(string.Format(_apiLink, latitude, longitude, radius, category, _apiKey));
+                    var deserialized = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
+                    result.Results.AddRange(deserialized.Results);
                 }
-                return result;
+                catch (Exception exception)
+                {
+                    throw exception;
+                }
             }
+            return result;
         }
 
         private List<BarData> PlacesApiQueryResponseToBars (PlacesApiQueryResponse resultData)

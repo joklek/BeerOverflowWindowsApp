@@ -4,7 +4,7 @@ using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
 using BeerOverflowWindowsApp.DataModels;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListFourSquare : IBeerable
     {
@@ -33,7 +33,8 @@ namespace BeerOverflowWindowsApp
                 {
                     { "ll", latitude + "," + longitude }, // Coords
                     { "radius", radius },
-                    { "categoryId", id }
+                    { "categoryId", id },
+                    { "intent", "browse" }
                 };
                 venueList.AddRange(sharpSquare.SearchVenues(parameters));
             }

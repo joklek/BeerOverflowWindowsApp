@@ -20,10 +20,12 @@ namespace BeerOverflowWindowsApp.DataModels
         private readonly int _maxSameBarDistanceErrorThresholdMeters =
             int.Parse(ConfigurationManager.AppSettings["maxSameBarDistanceErrorThresholdMeters"], CultureInfo.InvariantCulture);
 
-        public void CombineLists(List<BarData> secondaryList)
+        public void CleanUpList(string latitude, string longitude, string radius)
         {
-            this.AddRange(secondaryList);
             RemoveDuplicates();
+            RemoveBarsOutsideRadius(double.Parse(latitude, CultureInfo.InvariantCulture), 
+                                    double.Parse(longitude, CultureInfo.InvariantCulture), 
+                                    double.Parse(radius, CultureInfo.InvariantCulture));
         }
 
         private void RemoveDuplicates ()
@@ -134,6 +136,24 @@ namespace BeerOverflowWindowsApp.DataModels
             {
                 bar.Ratings = BarFileReader.GetBarRatings(bar);
             }
+        }
+
+        private void RemoveBarsOutsideRadius(double latitude, double longitude, double radius)
+        {
+            var barsToRemove = this.Where(bar => !IsWithinRadius(bar, latitude, longitude, radius)).ToList();
+
+            foreach (var bar in barsToRemove)
+            {
+                this.Remove(bar);
+            }
+        }
+
+        private bool IsWithinRadius(BarData bar, double latitude, double longitude, double radius)
+        {
+            var barLocation = new GeoCoordinate(bar.Latitude, bar.Longitude);
+            var currentLocation = new GeoCoordinate(latitude, longitude);
+            var distance = currentLocation.GetDistanceTo(barLocation);
+            return distance.CompareTo(radius) <= 0;
         }
     }
 }

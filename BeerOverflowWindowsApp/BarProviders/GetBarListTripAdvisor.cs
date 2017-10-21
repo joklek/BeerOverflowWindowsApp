@@ -9,18 +9,15 @@ using Newtonsoft.Json;
 using BeerOverflowWindowsApp.DataModels;
 using static BeerOverflowWindowsApp.DataModels.TripAdvisorDataModel;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListTripAdvisor : IBeerable
     {
         private readonly string _accessKey = ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
         private readonly string _mapperLink = ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
         private readonly string _locationApiLink = ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
-        private readonly string _restaurantCategory = ConfigurationManager.AppSettings["TripAdvisorRestaurantsCode"];
-        private readonly string _attractionsCategory = ConfigurationManager.AppSettings["TripAdvisorAttractionsCode"];
-
-        private readonly string _applicableGroupsString =
-            ConfigurationManager.AppSettings["TripAdvisorApplicableGroups"];
+        private readonly string _categoryListString = ConfigurationManager.AppSettings["TripAdvisorCategories"];
+        private readonly string _applicableGroupsString = ConfigurationManager.AppSettings["TripAdvisorApplicableGroups"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -39,26 +36,25 @@ namespace BeerOverflowWindowsApp
 
         private PlacesResponse GetBarData(string latitude, string longitude)
         {
-            using (var client = new HttpClient())
+            PlacesResponse result = null;
+            try
             {
-                PlacesResponse result = null;
-                try
-                {
-                    var webClient = new WebClient();
-                    var response = webClient.DownloadString(string.Format(_mapperLink, latitude, longitude, _accessKey, _restaurantCategory));
-                    result = JsonConvert.DeserializeObject<PlacesResponse>(response);
+                var categories = _categoryListString.Split(',');
+                var webClient = new WebClient();
+                result = new PlacesResponse() { data = new List<PlaceInfo>() };
 
-                    response = webClient.DownloadString(string.Format(_mapperLink, latitude, longitude, _accessKey, _attractionsCategory));
+                foreach (var category in categories)
+                {
+                    var response = webClient.DownloadString(string.Format(_mapperLink, latitude, longitude, _accessKey, category));
                     result.data.AddRange(JsonConvert.DeserializeObject<PlacesResponse>(response).data);
-
-                    FetchLocations(result);
                 }
-                catch (Exception exception)
-                {
-                    throw exception;
-                }
-                return result;
+                FetchLocations(result);
             }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            return result;
         }
 
         private List<BarData> ApiQueryResponseToBars(PlacesResponse resultData, string radius)
@@ -71,26 +67,17 @@ namespace BeerOverflowWindowsApp
                 var distanceMeters = ConvertMilesToMeters(double.Parse(result.distance, CultureInfo.InvariantCulture));
                 if ((int) distanceMeters <= int.Parse(radius))
                 {
-                    switch (result.locationResponse.category.name)
+                    if (result.locationResponse.groups != null)
                     {
-                        case "attraction":
-                            if (result.locationResponse.groups != null)
-                            {
-                                if (result.locationResponse.groups.Exists(x => groupList.Contains(x.name)))
-                                {
-                                    AddTripAdvisorPlaceToBars(barList, result);
-                                }
-                            }
-                            break;
-                        case "restaurant":
-                            if (result.locationResponse.subcategory == null ||
-                                result.locationResponse.subcategory.Exists(x => x.name == "sit_down"))
-                            {
-                                AddTripAdvisorPlaceToBars(barList, result);
-                            }
-                            break;
-                        default:
-                            break;
+                        if (result.locationResponse.groups.Exists(x => groupList.Contains(x.name)))
+                        {
+                            AddTripAdvisorPlaceToBars(barList, result);
+                        }
+                    }
+                    else if (result.locationResponse.subcategory == null ||
+                        result.locationResponse.subcategory.Exists(x => x.name == "sit_down"))
+                    {
+                        AddTripAdvisorPlaceToBars(barList, result);
                     }
                 }
             }
