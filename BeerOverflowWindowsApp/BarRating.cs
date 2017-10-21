@@ -3,6 +3,7 @@ using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Device.Location;
 
 namespace BeerOverflowWindowsApp
 {
@@ -52,7 +53,7 @@ namespace BeerOverflowWindowsApp
             BarFileWriter.SaveData(BarsData);
         }
 
-        public void Sort(CompareType compareType, bool ascending = true)
+        public void Sort(CompareType compareType, GeoCoordinate currentLocation, bool ascending = true)
         {
             switch (compareType)
             {
@@ -63,7 +64,7 @@ namespace BeerOverflowWindowsApp
                     BarsData.Sort(new ComparerByRating());
                     break;
                 case CompareType.Distance:
-                    BarsData.Sort(new ComparerByDistance());
+                    BarsData.Sort(new ComparerByDistance(currentLocation));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(compareType), compareType, null);
