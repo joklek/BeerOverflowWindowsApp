@@ -159,8 +159,8 @@ namespace BeerOverflowWindowsApp
             this.BarDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.BarDataGridView.Size = new System.Drawing.Size(507, 265);
             this.BarDataGridView.TabIndex = 15;
-            this.BarDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BarDataGridView_CellClick);
             this.BarDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.BarDataGridView_ColumnHeaderMouseClick);
+            this.BarDataGridView.SelectionChanged += new System.EventHandler(this.BarDataGridView_SelectionChanged);
             // 
             // tableLayoutPanel3
             // 
@@ -196,7 +196,7 @@ namespace BeerOverflowWindowsApp
             this.manualBarRating.Name = "manualBarRating";
             this.manualBarRating.Size = new System.Drawing.Size(500, 100);
             this.manualBarRating.TabIndex = 12;
-            this.manualBarRating.Click += new System.EventHandler(this.manualBarRating_Click);
+            this.manualBarRating.Click += new System.EventHandler(this.ManualBarRating_Click);
             // 
             // progressBar
             // 
@@ -219,7 +219,7 @@ namespace BeerOverflowWindowsApp
             // ratingColumn
             // 
             this.ratingColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ratingColumn.FillWeight = 1F;
+            this.ratingColumn.FillWeight = 2F;
             this.ratingColumn.HeaderText = "Rating";
             this.ratingColumn.Name = "ratingColumn";
             this.ratingColumn.ReadOnly = true;

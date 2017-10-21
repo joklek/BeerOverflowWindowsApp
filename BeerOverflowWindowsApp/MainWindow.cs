@@ -14,10 +14,8 @@ namespace BeerOverflowWindowsApp
     public partial class MainWindow : Form
     {
         private BarRating _barRating = null;
-        private int _lastRowIndex = 0;
-        private int _lastSortColumnIndex = -1;
-        private BarData barToRate = null;
-        private readonly string defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
+        private BarData _selectedBar = null;
+        private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
 
         public MainWindow()
         {
@@ -29,17 +27,16 @@ namespace BeerOverflowWindowsApp
             var longitude = currentLocation.Longitude.ToString(CultureInfo.InvariantCulture);
             LatitudeTextBox.Text = latitude;
             LongitudeTextBox.Text = longitude;
-            RadiusTextBox.Text = defaultRadius;
+            RadiusTextBox.Text = _defaultRadius;
         }
 
         public void ReLoadDataGrid(bool completely = false)
         {
             if (completely)
             {
-                for(var index = 0; index< BarDataGridView.Columns.Count; index++) {
-                    BarDataGridView.Columns[index].HeaderCell.SortGlyphDirection = (SortOrder)0;
-                }
-            }            
+                BarDataGridView_ClearHeaderSortGlyphs();
+            }
+
             var barData = _barRating.BarsData;
             BarDataGridView.Rows.Clear();
             var currentLatitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
@@ -52,12 +49,12 @@ namespace BeerOverflowWindowsApp
                 var distance = currentLocation.GetDistanceTo(barLocation).ToString("0");
                 BarDataGridView.Rows.Add(bar.Title, rating, distance);               
             }
-            if (BarDataGridView.Rows.Count > 0)
+            if (BarDataGridView.Rows.Count > 0 && _selectedBar != null)
             {
-                BarDataGridView.Rows[_lastRowIndex].Selected = true;               
-                var val = BarDataGridView[0, _lastRowIndex].Value.ToString();
-                barToRate = _barRating.BarsData.First(bar => bar.Title == val);
+                var indexOfBar = _barRating.BarsData.FindIndex(x => x.Title == _selectedBar.Title);
+                BarDataGridView.Rows[indexOfBar].Selected = true;
             }
+            BarDataGridView.ClearSelection();
         }
 
         private void GoButton_Click(object sender, EventArgs e)
@@ -68,6 +65,7 @@ namespace BeerOverflowWindowsApp
             }
             else
             {
+                _selectedBar = null;
                 var currentProgressValue = 0;
                 GoButton.Enabled = false;
 
@@ -94,12 +92,8 @@ namespace BeerOverflowWindowsApp
                 
                 // Display
                 result.GetRatings();
-                //_barRating = new BarRating();
                 _barRating.BarsData = result;
-                //_barRating.AddBars(result.BarsList);
-                _barRating.ResetLastCompare();
-                _lastSortColumnIndex = -1;
-                SortList(CompareType.Distance);
+                SortList(CompareType.Distance, SortOrder.Ascending);
                 Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
             }
@@ -151,23 +145,22 @@ namespace BeerOverflowWindowsApp
             return RadiusTextBox.Text;
         }
 
-        private void manualBarRating_Click(object sender, EventArgs e)
+        private void ManualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
-            if (barToRate != null && rating != "" && int.TryParse(rating, out var ratingNumber))
+            if (_selectedBar != null && rating != "" && int.TryParse(rating, out var ratingNumber))
             {
-                _barRating.AddRating(barToRate ,ratingNumber);
-                ReLoadDataGrid();
+                _barRating.AddRating(_selectedBar ,ratingNumber);
+                ReSort();
             }
         }
 
-        private void BarDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void BarDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (BarDataGridView.CurrentRow != null)
             {
-                _lastRowIndex = e.RowIndex;
-                var val = BarDataGridView[0, e.RowIndex].Value.ToString();
-                barToRate = _barRating.BarsData.First(bar => bar.Title == val);
+                var selectedBarName = (string) BarDataGridView.CurrentRow.Cells["titleColumn"].Value;
+                _selectedBar = _barRating.BarsData.Find(bar => bar.Title == selectedBarName);
             }
         }
 
@@ -228,30 +221,58 @@ namespace BeerOverflowWindowsApp
                 @"^[0-9]{1,3}$");
         }
 
-        private void SortList(CompareType sortType)
+        private void SortList(CompareType compareType, SortOrder sortOrder = SortOrder.Ascending)
         {
-            var columnIndex = (int) sortType - 1;
-            _barRating.Sort(sortType);
-            if (_lastSortColumnIndex == columnIndex)
+            var columnIndex = (int)compareType - 1;
+            var isAscending = sortOrder == SortOrder.Ascending;
+
+            if (sortOrder != SortOrder.None)
             {
-                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection =
-                    BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection == (SortOrder)1 ? (SortOrder)2 : (SortOrder)1;
+                _barRating.Sort(compareType, isAscending);
+                BarDataGridView_ClearHeaderSortGlyphs();
+                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = sortOrder;
+                ReLoadDataGrid();
             }
-            else
+        }
+
+        private void ReSort()
+        {
+            var currentSortOrder = SortOrder.None;
+            var currentSortColumn = CompareType.None;
+
+            foreach (DataGridViewColumn column in BarDataGridView.Columns)
             {
-                BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = (SortOrder)1;
-                if (_lastSortColumnIndex != -1)
+                if (column.HeaderCell.SortGlyphDirection != SortOrder.None)
                 {
-                    BarDataGridView.Columns[_lastSortColumnIndex].HeaderCell.SortGlyphDirection = (SortOrder)0;
+                    currentSortOrder = column.HeaderCell.SortGlyphDirection;
+                    currentSortColumn = (CompareType) column.Index + 1;
+                    break;
                 }
             }
-            _lastSortColumnIndex = columnIndex;
-            ReLoadDataGrid();
+
+            if (currentSortOrder != SortOrder.None && currentSortColumn != CompareType.None)
+            {
+                SortList(currentSortColumn, currentSortOrder);
+            }
         }
 
         private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            SortList((CompareType) e.ColumnIndex + 1);
+            var currentSortOrder = BarDataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection;
+
+            var toBeSortOrder = currentSortOrder != SortOrder.None
+                ? (currentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)
+                : SortOrder.Ascending;
+
+            SortList((CompareType) e.ColumnIndex + 1, toBeSortOrder);
+        }
+
+        private void BarDataGridView_ClearHeaderSortGlyphs()
+        {
+            foreach (DataGridViewColumn column in BarDataGridView.Columns)
+            {
+                column.HeaderCell.SortGlyphDirection = SortOrder.None;
+            }
         }
     }
 }
