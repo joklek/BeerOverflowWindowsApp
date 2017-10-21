@@ -56,7 +56,13 @@ namespace BeerOverflowWindowsApp
                 var indexOfBar = _barRating.BarsData.FindIndex(x => x.Title == _selectedBar.Title);
                 BarDataGridView.Rows[indexOfBar].Selected = true;
             }
+            ClearSelection();
+        }
+
+        private void ClearSelection()
+        {
             BarDataGridView.ClearSelection();
+            _selectedBar = null;
         }
 
         private void GoButton_Click(object sender, EventArgs e)
@@ -81,8 +87,7 @@ namespace BeerOverflowWindowsApp
                 var providerCount = providerList.Count;
                 var progressStep = 100 / providerCount;
                 var result = new BarDataModel();
-
-                _selectedBar = null;
+                
                 var currentProgressValue = 0;
                 GoButton.Enabled = false;
                 InitiateProgressBars();

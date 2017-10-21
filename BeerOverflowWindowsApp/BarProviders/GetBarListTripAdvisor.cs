@@ -18,6 +18,7 @@ namespace BeerOverflowWindowsApp.BarProviders
         private readonly string _locationApiLink = ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
         private readonly string _categoryListString = ConfigurationManager.AppSettings["TripAdvisorCategories"];
         private readonly string _applicableGroupsString = ConfigurationManager.AppSettings["TripAdvisorApplicableGroups"];
+        private readonly string _applicableGroupCategories = ConfigurationManager.AppSettings["TripAdvisorApplicableGroupCategories"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -60,6 +61,7 @@ namespace BeerOverflowWindowsApp.BarProviders
         private List<BarData> ApiQueryResponseToBars(PlacesResponse resultData, string radius)
         {
             var groupList = _applicableGroupsString.Split(',').ToList();
+            var groupCategoryList = _applicableGroupCategories.Split(',').ToList();
 
             var barList = new List<BarData>();
             foreach (var result in resultData.data)
@@ -71,7 +73,14 @@ namespace BeerOverflowWindowsApp.BarProviders
                     {
                         if (result.locationResponse.groups.Exists(x => groupList.Contains(x.name)))
                         {
-                            AddTripAdvisorPlaceToBars(barList, result);
+                            foreach (var group in result.locationResponse.groups)
+                            {
+                                if (group.categories.Exists(x => groupCategoryList.Contains(x.name)))
+                                {
+                                    AddTripAdvisorPlaceToBars(barList, result);
+                                    break;
+                                }
+                            }
                         }
                     }
                     else if (result.locationResponse.subcategory == null ||
