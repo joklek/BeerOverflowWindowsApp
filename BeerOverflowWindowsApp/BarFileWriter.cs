@@ -20,7 +20,7 @@ namespace BeerOverflowWindowsApp
                 {
                     var barOccurenceInFile = barsInFile[barInListIndex];
                     if (barOccurenceInFile.Ratings == null
-                        || barsInFile[barInListIndex].Ratings.SequenceEqual(bar.Ratings))
+                        || !barsInFile[barInListIndex].Ratings.SequenceEqual(bar.Ratings))
                     {
                         barsInFile[barInListIndex].Ratings = bar.Ratings;
                     }
