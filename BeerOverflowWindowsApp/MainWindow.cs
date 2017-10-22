@@ -20,8 +20,6 @@ namespace BeerOverflowWindowsApp
         private readonly string _defaultLatitude = ConfigurationManager.AppSettings["defaultLatitude"];
         private readonly string _defaultLongitude = ConfigurationManager.AppSettings["defaultLongitude"];
         private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
-        private readonly string _defaultLatitude = ConfigurationManager.AppSettings["defaultLatitude"];
-        private readonly string _defaultLongitude = ConfigurationManager.AppSettings["defaultLongitude"];
         public MainWindow()
         {
             InitializeComponent();
@@ -69,9 +67,6 @@ namespace BeerOverflowWindowsApp
             var latitude = GetLatitude();
             var longitude = GetLongitude();
             var radius = GetRadius();
-
-            CurrentLocation.currentLocation = new GeoCoordinate(double.Parse(latitude, CultureInfo.InvariantCulture),
-                                                                double.Parse(longitude, CultureInfo.InvariantCulture));
 
             if (!LatitudeTextIsCorrect() || !LongitudeTextIsCorrect() || !RadiusTextIsCorrect())
             {
