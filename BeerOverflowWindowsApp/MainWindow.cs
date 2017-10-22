@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -7,6 +8,7 @@ using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 using System.Device.Location;
 using System.Configuration;
+using BeerOverflowWindowsApp.BarProviders;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace BeerOverflowWindowsApp
@@ -15,18 +17,17 @@ namespace BeerOverflowWindowsApp
     {
         private BarRating _barRating = null;
         private BarData _selectedBar = null;
+        private readonly string _defaultLatitude = ConfigurationManager.AppSettings["defaultLatitude"];
+        private readonly string _defaultLongitude = ConfigurationManager.AppSettings["defaultLongitude"];
         private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
 
         public MainWindow()
         {
             InitializeComponent();
             _barRating = new BarRating();
-            var location = new CurrentLocation();
-            var currentLocation = location.currentLocation;
-            var latitude = currentLocation.Latitude.ToString(CultureInfo.InvariantCulture);
-            var longitude = currentLocation.Longitude.ToString(CultureInfo.InvariantCulture);
-            LatitudeTextBox.Text = latitude;
-            LongitudeTextBox.Text = longitude;
+
+            LatitudeTextBox.Text = _defaultLatitude;
+            LongitudeTextBox.Text = _defaultLongitude;
             RadiusTextBox.Text = _defaultRadius;
         }
 
@@ -54,40 +55,53 @@ namespace BeerOverflowWindowsApp
                 var indexOfBar = _barRating.BarsData.FindIndex(x => x.Title == _selectedBar.Title);
                 BarDataGridView.Rows[indexOfBar].Selected = true;
             }
+            ClearSelection();
+        }
+
+        private void ClearSelection()
+        {
             BarDataGridView.ClearSelection();
+            _selectedBar = null;
         }
 
         private void GoButton_Click(object sender, EventArgs e)
         {
+            var latitude = GetLatitude();
+            var longitude = GetLongitude();
+            var radius = GetRadius();
+
+            CurrentLocation.currentLocation = new GeoCoordinate(double.Parse(latitude, CultureInfo.InvariantCulture),
+                                                                double.Parse(longitude, CultureInfo.InvariantCulture));
+
             if (!LatitudeTextIsCorrect() || !LongitudeTextIsCorrect() || !RadiusTextIsCorrect())
             {
                 MessageBox.Show("Please enter correct required data. Erroneus data is painted red.");
             }
             else
             {
-                _selectedBar = null;
+                var providerList = new List<object>
+                {
+                    new GetBarListGoogle(),
+                    new GetBarListFourSquare(),
+                    new GetBarListFacebook(),
+                    new GetBarListTripAdvisor()
+                };
+                var providerCount = providerList.Count;
+                var progressStep = 100 / providerCount;
+                var result = new BarDataModel();
+                
                 var currentProgressValue = 0;
                 GoButton.Enabled = false;
-
                 InitiateProgressBars();
                 UpdateProgressBars(currentProgressValue);
 
-                var result = new BarDataModel ();
-                CollectBarsFromProvider(new GetBarListGoogle(), result, GetLatitude(), GetLongitude(), GetRadius());
-                currentProgressValue += 25;
-                UpdateProgressBars(currentProgressValue);
+                foreach (IBeerable provider in providerList)
+                {
+                    CollectBarsFromProvider(provider, result, latitude, longitude, radius);
+                    currentProgressValue += progressStep;
+                    UpdateProgressBars(currentProgressValue);
+                }
 
-                CollectBarsFromProvider(new GetBarListFourSquare(), result, GetLatitude(), GetLongitude(), GetRadius());
-                currentProgressValue += 25;
-                UpdateProgressBars(currentProgressValue);
-
-                CollectBarsFromProvider(new GetBarListFacebook(), result, GetLatitude(), GetLongitude(), GetRadius());
-                currentProgressValue += 25;
-                UpdateProgressBars(currentProgressValue);
-
-                CollectBarsFromProvider(new GetBarListTripAdvisor(), result, GetLatitude(), GetLongitude(), GetRadius());
-                currentProgressValue += 25;
-                UpdateProgressBars(currentProgressValue);
                 HideProgressBars();
                 
                 // Display
@@ -114,7 +128,12 @@ namespace BeerOverflowWindowsApp
         private void UpdateProgressBars(int currentValue)
         {
             TaskbarManager.Instance.SetProgressValue(currentValue, 100);
+            // this is a big workaround for progressbar not updating as fast as we need it. 
+            // TODO: Fix this when we do threads
+            progressBar.Maximum = 101;
+            progressBar.Value = currentValue + 1;
             progressBar.Value = currentValue;
+            progressBar.Maximum = 100;
         }
 
         private void CollectBarsFromProvider(IBeerable provider, BarDataModel barList,
@@ -122,7 +141,8 @@ namespace BeerOverflowWindowsApp
         {
             try
             {
-                barList.CombineLists(provider.GetBarsAround(latitude, longitude, radius));
+                barList.AddRange(provider.GetBarsAround(latitude, longitude, radius));
+                barList.CleanUpList(latitude, longitude, radius);
             }
             catch (Exception exception)
             {

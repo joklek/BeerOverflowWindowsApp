@@ -15,24 +15,46 @@ namespace BeerOverflowWindowsApp.DataModels
             public string address_string { get; set; }
         }
 
-        public class Datum
+        public class Subcategory
+        {
+            public string name { get; set; }
+            public string localized_name { get; set; }
+        }
+
+        public class Category
+        {
+            public string name { get; set; }
+            public string localized_name { get; set; }
+        }
+
+        public class Group
+        {
+            public string name { get; set; }
+            public List<Category> categories { get; set; }
+            public string localized_name { get; set; }
+        }
+
+        public class LocationResponse
+        {
+            public string latitude { get; set; }
+            public string longitude { get; set; }
+            public List<Group> groups { get; set; }
+            public Category category { get; set; }
+            public List<Subcategory> subcategory { get; set; }
+        }
+
+        public class PlaceInfo
         {
             public string location_id { get; set; }
             public string name { get; set; }
             public string distance { get; set; }
-            public Location location { get; set; }
+            public LocationResponse locationResponse { get; set; }
             public AddressObj address_obj { get; set; }
         }
 
         public class PlacesResponse
         {
-            public List<Datum> data { get; set; }
-        }
-
-        public class Location
-        {
-            public string latitude { get; set; }
-            public string longitude { get; set; }
+            public List<PlaceInfo> data { get; set; }
         }
     }
 }

@@ -2,27 +2,31 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 using BeerOverflowWindowsApp.DataModels;
 using static BeerOverflowWindowsApp.DataModels.TripAdvisorDataModel;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListTripAdvisor : IBeerable
     {
-        private static readonly string _tripAdvisorAccessKey = ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
-        private static readonly string _tripAdvisorMapperLink = ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
-        private readonly string _tripAdvisorLocationApiLink = ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
+        private readonly string _accessKey = ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
+        private readonly string _mapperLink = ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
+        private readonly string _locationApiLink = ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
+        private readonly string _categoryListString = ConfigurationManager.AppSettings["TripAdvisorCategories"];
+        private readonly string _applicableGroupsString = ConfigurationManager.AppSettings["TripAdvisorApplicableGroups"];
+        private readonly string _applicableGroupCategories = ConfigurationManager.AppSettings["TripAdvisorApplicableGroupCategories"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
             List<BarData> barList = null;
             try
             {
-                var result = GetBarData(latitude, longitude, radius);
-                barList = PlacesApiQueryResponseToBars(result, radius);
+                var result = GetBarData(latitude, longitude);
+                barList = ApiQueryResponseToBars(result, radius);
             }
             catch (Exception exception)
             {
@@ -31,53 +35,81 @@ namespace BeerOverflowWindowsApp
             return barList;
         }
 
-        private PlacesResponse GetBarData(string latitude, string longitude, string radius)
+        private PlacesResponse GetBarData(string latitude, string longitude)
         {
-            using (var client = new HttpClient())
+            PlacesResponse result = null;
+            try
             {
-                PlacesResponse result = null;
-                try
-                {
-                    var webClient = new WebClient();
-                    var response = webClient.DownloadString(string.Format(_tripAdvisorMapperLink, latitude, longitude, _tripAdvisorAccessKey));
-                    result = JsonConvert.DeserializeObject<PlacesResponse>(response);
+                var categories = _categoryListString.Split(',');
+                var webClient = new WebClient();
+                result = new PlacesResponse() { data = new List<PlaceInfo>() };
 
-                    FetchLocations(result);
-                }
-                catch (Exception exception)
+                foreach (var category in categories)
                 {
-                    throw exception;
+                    var response = webClient.DownloadString(string.Format(_mapperLink, latitude, longitude, _accessKey, category));
+                    result.data.AddRange(JsonConvert.DeserializeObject<PlacesResponse>(response).data);
                 }
-                return result;
+                FetchLocations(result);
             }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            return result;
         }
 
-        private List<BarData> PlacesApiQueryResponseToBars(PlacesResponse resultData, string radius)
+        private List<BarData> ApiQueryResponseToBars(PlacesResponse resultData, string radius)
         {
+            var groupList = _applicableGroupsString.Split(',').ToList();
+            var groupCategoryList = _applicableGroupCategories.Split(',').ToList();
+
             var barList = new List<BarData>();
             foreach (var result in resultData.data)
             {
-                var distanceMeters = convertMilesToMeters(double.Parse(result.distance, CultureInfo.InvariantCulture));
+                var distanceMeters = ConvertMilesToMeters(double.Parse(result.distance, CultureInfo.InvariantCulture));
                 if ((int) distanceMeters <= int.Parse(radius))
                 {
-                    var newBar = new BarData
+                    if (result.locationResponse.groups != null)
                     {
-                        Title = result.name,
-                        Latitude = double.Parse(result.location.latitude, CultureInfo.InvariantCulture),
-                        Longitude = double.Parse(result.location.longitude, CultureInfo.InvariantCulture)
-                    };
-                    barList.Add(newBar);
+                        if (result.locationResponse.groups.Exists(x => groupList.Contains(x.name)))
+                        {
+                            foreach (var group in result.locationResponse.groups)
+                            {
+                                if (group.categories.Exists(x => groupCategoryList.Contains(x.name)))
+                                {
+                                    AddTripAdvisorPlaceToBars(barList, result);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if (result.locationResponse.subcategory == null ||
+                        result.locationResponse.subcategory.Exists(x => x.name == "sit_down"))
+                    {
+                        AddTripAdvisorPlaceToBars(barList, result);
+                    }
                 }
             }
             return barList;
         }
 
-        private double convertMilesToMeters(double miles)
+        private void AddTripAdvisorPlaceToBars(ICollection<BarData> barList, PlaceInfo place)
+        {
+            var newBar = new BarData
+            {
+                Title = place.name,
+                Latitude = double.Parse(place.locationResponse.latitude, CultureInfo.InvariantCulture),
+                Longitude = double.Parse(place.locationResponse.longitude, CultureInfo.InvariantCulture)
+            };
+            barList.Add(newBar);
+        }
+
+        private static double ConvertMilesToMeters(double miles)
         {
             return miles * 1.609344 * 1000;
         }
 
-        private void GetLocationForPlace(Datum place)
+        private void GetLocationForPlace(PlaceInfo place)
         {
             using (var client = new HttpClient())
             {
@@ -85,9 +117,9 @@ namespace BeerOverflowWindowsApp
                 {
                     var webClient = new WebClient();
                     var response =
-                        webClient.DownloadString(string.Format(_tripAdvisorLocationApiLink, place.location_id, _tripAdvisorAccessKey));
-                    var result = JsonConvert.DeserializeObject<Location>(response);
-                    place.location = result;
+                        webClient.DownloadString(string.Format(_locationApiLink, place.location_id, _accessKey));
+                    var result = JsonConvert.DeserializeObject<LocationResponse>(response);
+                    place.locationResponse = result;
                 }
                 catch (Exception exception)
                 {
