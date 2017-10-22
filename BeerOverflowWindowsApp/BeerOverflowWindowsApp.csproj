@@ -91,7 +91,6 @@
     <Compile Include="BarProviders\GetBarListFacebook.cs" />
     <Compile Include="BarProviders\GetBarListFourSquare.cs" />
     <Compile Include="BarProviders\GetBarListGoogle.cs" />
-    <Compile Include="CurrentLocation.cs" />
     <Compile Include="IBeerable.cs" />
     <Compile Include="DataModels\GoogleDataModel.cs" />
     <Compile Include="MainWindow.cs">

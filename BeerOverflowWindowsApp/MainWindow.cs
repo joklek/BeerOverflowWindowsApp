@@ -20,12 +20,10 @@ namespace BeerOverflowWindowsApp
         private readonly string _defaultLatitude = ConfigurationManager.AppSettings["defaultLatitude"];
         private readonly string _defaultLongitude = ConfigurationManager.AppSettings["defaultLongitude"];
         private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
-
         public MainWindow()
         {
             InitializeComponent();
             _barRating = new BarRating();
-
             LatitudeTextBox.Text = _defaultLatitude;
             LongitudeTextBox.Text = _defaultLongitude;
             RadiusTextBox.Text = _defaultRadius;
@@ -70,9 +68,6 @@ namespace BeerOverflowWindowsApp
             var longitude = GetLongitude();
             var radius = GetRadius();
 
-            CurrentLocation.currentLocation = new GeoCoordinate(double.Parse(latitude, CultureInfo.InvariantCulture),
-                                                                double.Parse(longitude, CultureInfo.InvariantCulture));
-
             if (!LatitudeTextIsCorrect() || !LongitudeTextIsCorrect() || !RadiusTextIsCorrect())
             {
                 MessageBox.Show("Please enter correct required data. Erroneus data is painted red.");
@@ -107,7 +102,7 @@ namespace BeerOverflowWindowsApp
                 // Display
                 result.GetRatings();
                 _barRating.BarsData = result;
-                SortList(CompareType.Distance, SortOrder.Ascending);
+                SortList(CompareType.Distance, GetCurrentLocation(), SortOrder.Ascending);
                 Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
             }
@@ -241,14 +236,14 @@ namespace BeerOverflowWindowsApp
                 @"^[0-9]{1,3}$");
         }
 
-        private void SortList(CompareType compareType, SortOrder sortOrder = SortOrder.Ascending)
+        private void SortList(CompareType compareType, GeoCoordinate currentLocation, SortOrder sortOrder = SortOrder.Ascending)
         {
             var columnIndex = (int)compareType - 1;
             var isAscending = sortOrder == SortOrder.Ascending;
 
             if (sortOrder != SortOrder.None)
             {
-                _barRating.Sort(compareType, isAscending);
+                _barRating.Sort(compareType, currentLocation, isAscending);
                 BarDataGridView_ClearHeaderSortGlyphs();
                 BarDataGridView.Columns[columnIndex].HeaderCell.SortGlyphDirection = sortOrder;
                 ReLoadDataGrid();
@@ -272,7 +267,7 @@ namespace BeerOverflowWindowsApp
 
             if (currentSortOrder != SortOrder.None && currentSortColumn != CompareType.None)
             {
-                SortList(currentSortColumn, currentSortOrder);
+                SortList(currentSortColumn, GetCurrentLocation(), currentSortOrder);
             }
         }
 
@@ -284,7 +279,7 @@ namespace BeerOverflowWindowsApp
                 ? (currentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)
                 : SortOrder.Ascending;
 
-            SortList((CompareType) e.ColumnIndex + 1, toBeSortOrder);
+            SortList((CompareType) e.ColumnIndex + 1, GetCurrentLocation(), toBeSortOrder);
         }
 
         private void BarDataGridView_ClearHeaderSortGlyphs()
@@ -293,6 +288,12 @@ namespace BeerOverflowWindowsApp
             {
                 column.HeaderCell.SortGlyphDirection = SortOrder.None;
             }
+        }
+        private GeoCoordinate GetCurrentLocation()
+        {
+            var latitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
+            var longitude = Convert.ToDouble(GetLongitude(), CultureInfo.InvariantCulture);
+            return new GeoCoordinate(latitude, longitude);
         }
     }
 }

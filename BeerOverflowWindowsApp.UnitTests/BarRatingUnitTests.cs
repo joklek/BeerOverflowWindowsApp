@@ -37,7 +37,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             BarRating rating = new BarRating();
 
             // Act
-            rating.Sort((CompareType) 99999);
+            rating.Sort((CompareType) 99999, new System.Device.Location.GeoCoordinate());
             
             // Assert
         }
