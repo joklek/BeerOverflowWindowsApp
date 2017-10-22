@@ -3,6 +3,8 @@ using BeerOverflowWindowsApp.DataModels;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace BeerOverflowWindowsApp
 {
@@ -10,28 +12,37 @@ namespace BeerOverflowWindowsApp
     {
         private static string _filePath = ConfigurationManager.AppSettings["filePath"];
 
-        public static void SaveData(BarDataModel barData)
+        public static void SaveData(BarDataModel localBarData)
         {
             var barsInFile = BarFileReader.GetAllBarData();
-            foreach (var bar in barData)
+            foreach (BarData localBar in localBarData)
             {
-                var barInListIndex = barsInFile.FindIndex(x => x.Title == bar.Title);
-                if (barInListIndex != -1)
+                int barInFileIndex = barsInFile.FindIndex(x => x.Title == localBar.Title);
+                if (barInFileIndex != -1)
                 {
-                    var barOccurenceInFile = barsInFile[barInListIndex];
-                    if (barOccurenceInFile.Ratings == null
-                        || barsInFile[barInListIndex].Ratings.SequenceEqual(bar.Ratings))
+                    BarData barOccurenceInFile = barsInFile[barInFileIndex];
+                    if (barOccurenceInFile.Ratings == null)
                     {
-                        barsInFile[barInListIndex].Ratings = bar.Ratings;
+                        barOccurenceInFile.Ratings = new List<int>();
+                    }
+                    if (localBar.Ratings != null && !barOccurenceInFile.Ratings.SequenceEqual(localBar.Ratings))
+                    {
+                        barOccurenceInFile.Ratings = localBar.Ratings;
                     }
                 }
                 else
                 {
-                    barsInFile.Add(bar);
+                    barsInFile.Add(localBar);
                 }
             }
-            var barsDataJson = JsonConvert.SerializeObject(barData);
-            File.WriteAllText(_filePath, barsDataJson);
+            List<string> barsDataJson = new List<string>();
+            foreach (var bar in barsInFile)
+            {
+
+                barsDataJson.Add(JsonConvert.SerializeObject(bar));
+                
+            }
+            File.WriteAllLines(_filePath, barsDataJson);
         }
     }
 }

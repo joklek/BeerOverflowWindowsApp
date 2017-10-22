@@ -8,6 +8,9 @@ using BeerOverflowWindowsApp.DataModels;
 using System.Device.Location;
 using System.Configuration;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace BeerOverflowWindowsApp
 {
@@ -44,7 +47,11 @@ namespace BeerOverflowWindowsApp
             var currentLocation = new GeoCoordinate(currentLatitude, currentLongitude);
             foreach (var bar in barData)
             {
-                var rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
+                string rating = null;
+                if (bar.Ratings != null && bar.Ratings.Any())
+                    rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
+                else rating = "0";
+
                 var barLocation = new GeoCoordinate(bar.Latitude, bar.Longitude);
                 var distance = currentLocation.GetDistanceTo(barLocation).ToString("0");
                 BarDataGridView.Rows.Add(bar.Title, rating, distance);               

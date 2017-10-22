@@ -1,5 +1,7 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -12,13 +14,18 @@ namespace BeerOverflowWindowsApp
 
         public static BarDataModel GetAllBarData()
         {
-            BarDataModel result = null;
+             BarDataModel result = new BarDataModel();
+
             if (File.Exists(_filePath))
             {
-                var barsData = File.ReadAllText(_filePath);
-                result = JsonConvert.DeserializeObject<BarDataModel>(barsData);
+                List<string> barsDataJson = new List<string>(File.ReadAllLines(_filePath));
+                foreach(string bar in barsDataJson)
+                    result.Add(JsonConvert.DeserializeObject<BarData>(bar)); 
             }
-            if (result == null) { result = new BarDataModel(); }
+            if (result == null)
+            {
+                result = new BarDataModel();
+            }
             return result;
         }
 
