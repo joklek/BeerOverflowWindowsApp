@@ -48,7 +48,7 @@ namespace BeerOverflowWindowsApp
             foreach (var bar in barData)
             {
                 string rating = null;
-                if (bar.Ratings != null && bar.Ratings.Any())
+                if (bar.Ratings.Any())
                     rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
                 else rating = "0";
 
