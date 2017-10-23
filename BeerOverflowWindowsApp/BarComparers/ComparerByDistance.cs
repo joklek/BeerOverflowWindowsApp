@@ -9,12 +9,8 @@ namespace BeerOverflowWindowsApp.BarComparers
         public int Compare(BarData barData1, BarData barData2)
         {
             int result;
-            var coord1 = new GeoCoordinate(barData1.Latitude, barData1.Longitude);
-            var coord2 = new GeoCoordinate(barData2.Latitude, barData2.Longitude);
-            var location = new CurrentLocation();
-            var coordStartingLocation = location.currentLocation;
-            var distance1 = coord1.GetDistanceTo(coordStartingLocation);
-            var distance2 = coord2.GetDistanceTo(coordStartingLocation);
+            var distance1 = barData1.DistanceToCurrentLocation;
+            var distance2 = barData2.DistanceToCurrentLocation;
             if (distance1 == distance2)
             {
                 result = 0;

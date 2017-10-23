@@ -16,13 +16,16 @@ namespace BeerOverflowWindowsApp.DataModels
             double.Parse(ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barNearnessThresholdInMeters = 
             double.Parse(ConfigurationManager.AppSettings["barNearnessInMetersThreshold"], CultureInfo.InvariantCulture);
-        private readonly double _barCoordSimilarThreshold =
-            double.Parse(ConfigurationManager.AppSettings["barCoordSimilarThreshold"], CultureInfo.InvariantCulture);
 
-        public void CombineLists(List<BarData> secondaryList)
+        private readonly int _maxSameBarDistanceErrorThresholdMeters =
+            int.Parse(ConfigurationManager.AppSettings["maxSameBarDistanceErrorThresholdMeters"], CultureInfo.InvariantCulture);
+
+        public void CleanUpList(string latitude, string longitude, string radius)
         {
-            this.AddRange(secondaryList);
             RemoveDuplicates();
+            RemoveBarsOutsideRadius(double.Parse(latitude, CultureInfo.InvariantCulture), 
+                                    double.Parse(longitude, CultureInfo.InvariantCulture), 
+                                    double.Parse(radius, CultureInfo.InvariantCulture));
         }
 
         private void RemoveDuplicates ()
@@ -34,29 +37,26 @@ namespace BeerOverflowWindowsApp.DataModels
                 for (var j = i + 1; j < length; j++)
                 {
                     var stringSimilarity = CalculateStringSimilarity(this[i].Title, this[j].Title);
-                    var coordCheck = DistaceIsLessThanThreshold(this[i].Latitude, this[i].Longitude,
-                        this[j].Latitude, this[j].Longitude);
-                    if (stringSimilarity >= _barNameSimilarThreshold ||
+                    var distanceBetweenBars = GetDistanceBetweenBars(this[i].Latitude, this[i].Longitude,
+                                                                this[j].Latitude, this[j].Longitude);
+                    var coordCheck = distanceBetweenBars <= _barNearnessThresholdInMeters;
+                    if (OneNameContainsTheOther(this[i].Title, this[j].Title) ||
+                        distanceBetweenBars <= _maxSameBarDistanceErrorThresholdMeters &&
+                        stringSimilarity >= _barNameSimilarThreshold ||
                         (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
                     {
-                        // Prints out merged bars, their string similarity score and the difference of coordinates
+                        // Prints out merged bars, their string similarity score, distance between and either one of them had the other in their name
                         // Commented for testing purposes, because this process needs to be improved
-                        /*Console.Write(BarsList[i].Title + " = " + BarsList[j].Title + " :" + stringSimilarity + " : " +
-                                      GetDistanceBetweenBars(BarsList[i].Latitude, BarsList[i].Longitude,
-                                                             BarsList[j].Latitude, BarsList[j].Longitude).ToString("N3") + "\n\n");*/
+                        /*Console.Write("REMOVED: " + this[i].Title + " = " + this[j].Title + " :" + stringSimilarity + " : " +
+                                      GetDistanceBetweenBars(this[i].Latitude, this[i].Longitude,
+                                                             this[j].Latitude, this[j].Longitude).ToString("N3") + " meters away" +
+                                                             "One bar had other in name?:" + OneNameContainsTheOther(this[i].Title, this[j].Title) + "\n\n");*/
                         this.Remove(this[j]);
+                        j--; //? should we do it, as on the same index we are a new bar will appear
                         length--;
                     }
                 }
             }
-        }
-
-        private bool DistaceIsLessThanThreshold(double lat1, double lon1, double lat2, double lon2)
-        {
-            var coord1 = new GeoCoordinate(lat1, lon1);
-            var coord2 = new GeoCoordinate(lat2, lon2);
-            var distance = coord1.GetDistanceTo(coord2);
-            return distance <= _barNearnessThresholdInMeters;
         }
 
         private double GetDistanceBetweenBars(double lat1, double lon1, double lat2, double lon2)
@@ -77,8 +77,17 @@ namespace BeerOverflowWindowsApp.DataModels
 
             var asciifiedNormalizedSource = ToASCII(source.ToLower());
             var asciifiedNormalizedTarget = ToASCII(target.ToLower());
+
             double stepsToSame = ComputeLevenshteinDistance(asciifiedNormalizedSource, asciifiedNormalizedTarget);
             return (1.0 - (stepsToSame / Math.Max(source.Length, target.Length)));
+        }
+
+        private bool OneNameContainsTheOther(string name1, string name2)
+        {
+            var asciifiedNormalizedName1 = ToASCII(name1.ToLower());
+            var asciifiedNormalizedName2 = ToASCII(name2.ToLower());
+            return asciifiedNormalizedName1.Contains(asciifiedNormalizedName2) ||
+                   asciifiedNormalizedName2.Contains(asciifiedNormalizedName1);
         }
 
         private static int ComputeLevenshteinDistance(string source, string target)
@@ -127,6 +136,24 @@ namespace BeerOverflowWindowsApp.DataModels
             {
                 bar.Ratings = BarFileReader.GetBarRatings(bar);
             }
+        }
+
+        private void RemoveBarsOutsideRadius(double latitude, double longitude, double radius)
+        {
+            var barsToRemove = this.Where(bar => !IsWithinRadius(bar, latitude, longitude, radius)).ToList();
+
+            foreach (var bar in barsToRemove)
+            {
+                this.Remove(bar);
+            }
+        }
+
+        private bool IsWithinRadius(BarData bar, double latitude, double longitude, double radius)
+        {
+            var barLocation = new GeoCoordinate(bar.Latitude, bar.Longitude);
+            var currentLocation = new GeoCoordinate(latitude, longitude);
+            var distance = currentLocation.GetDistanceTo(barLocation);
+            return distance.CompareTo(radius) <= 0;
         }
     }
 }

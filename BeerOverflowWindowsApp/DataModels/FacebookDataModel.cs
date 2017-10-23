@@ -15,16 +15,33 @@ namespace BeerOverflowWindowsApp.DataModels
             public double longitude { get; set; }
         }
 
-        public class Datum
+        public class RestaurantSpecialties
+        {
+            public int breakfast { get; set; }
+            public int coffee { get; set; }
+            public int dinner { get; set; }
+            public int drinks { get; set; }
+            public int lunch { get; set; }
+        }
+
+        public class CategoryList
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+        }
+
+        public class PlaceInfo
         {
             public string name { get; set; }
             public Location location { get; set; }
+            public RestaurantSpecialties restaurant_specialties { get; set; }
+            public List<CategoryList> category_list { get; set; }
             public string id { get; set; }
         }
 
         public class PlacesResponse
         {
-            public List<Datum> data { get; set; }
+            public List<PlaceInfo> data { get; set; }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using BeerOverflowWindowsApp.BarProviders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BeerOverflowWindowsApp.UnitTests
