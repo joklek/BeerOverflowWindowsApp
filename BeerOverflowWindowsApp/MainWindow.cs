@@ -293,6 +293,7 @@ namespace BeerOverflowWindowsApp
                 column.HeaderCell.SortGlyphDirection = SortOrder.None;
             }
         }
+
         private GeoCoordinate GetCurrentLocation()
         {
             var currentLatitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
