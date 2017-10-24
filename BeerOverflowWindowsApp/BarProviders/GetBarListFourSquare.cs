@@ -3,6 +3,7 @@ using System.Configuration;
 using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
 using BeerOverflowWindowsApp.DataModels;
+using BeerOverflowWindowsApp.Exceptions;
 
 namespace BeerOverflowWindowsApp.BarProviders
 {
@@ -14,10 +15,21 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
+            CheckInputData(latitude, longitude, radius);
             List<BarData> barList = null;
             var result = GetBarData(latitude, longitude, radius);
             barList = VenueListToBars(result);
             return barList;
+        }
+
+        private void CheckInputData(string latitude, string longitude, string radius)
+        {
+            var latitudeIsCorrect = RegexTools.LatitudeTextIsCorrect(latitude);
+            var longitudeIsCorrect = RegexTools.LongitudeTextIsCorrect(longitude);
+            var radiusIsCorrect = RegexTools.RadiusTextIsCorrect(radius);
+
+            if (latitudeIsCorrect && longitudeIsCorrect && radiusIsCorrect) return;
+            throw new ArgumentsForProvidersException("Invalid arguments GetBarListFourSquare", latitude, longitude, radius);
         }
 
         private IEnumerable<Venue> GetBarData (string latitude, string longitude, string radius)

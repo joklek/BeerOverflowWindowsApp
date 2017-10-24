@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using BeerOverflowWindowsApp.DataModels;
+using BeerOverflowWindowsApp.Exceptions;
 using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.FacebookDataModel;
 
@@ -21,9 +21,21 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
+            CheckInputData(latitude, longitude, radius);
+
             var result = GetBarData(latitude, longitude, radius);
             var barList = FacebookDataToBars(result);
             return barList;
+        }
+
+        private void CheckInputData(string latitude, string longitude, string radius)
+        {
+            var latitudeIsCorrect = RegexTools.LatitudeTextIsCorrect(latitude);
+            var longitudeIsCorrect = RegexTools.LongitudeTextIsCorrect(longitude);
+            var radiusIsCorrect = RegexTools.RadiusTextIsCorrect(radius);
+
+            if (latitudeIsCorrect && longitudeIsCorrect && radiusIsCorrect) return;
+            throw new ArgumentsForProvidersException("Invalid arguments GetBarListFacebook", latitude, longitude, radius);
         }
 
         private PlacesResponse GetBarData(string latitude, string longitude, string radius)

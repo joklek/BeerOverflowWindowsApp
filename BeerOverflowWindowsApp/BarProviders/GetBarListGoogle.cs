@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.Configuration;
 using System.Net;
 using System.Text;
 using BeerOverflowWindowsApp.DataModels;
+using BeerOverflowWindowsApp.Exceptions;
 
 namespace BeerOverflowWindowsApp.BarProviders
 {
@@ -18,6 +18,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
+            CheckInputData(latitude, longitude, radius);
             List<BarData> barList = null;
             try
             {
@@ -29,6 +30,16 @@ namespace BeerOverflowWindowsApp.BarProviders
                 throw exception;
             }
             return barList;
+        }
+
+        private void CheckInputData(string latitude, string longitude, string radius)
+        {
+            var latitudeIsCorrect = RegexTools.LatitudeTextIsCorrect(latitude);
+            var longitudeIsCorrect = RegexTools.LongitudeTextIsCorrect(longitude);
+            var radiusIsCorrect = RegexTools.RadiusTextIsCorrect(radius);
+
+            if (latitudeIsCorrect && longitudeIsCorrect && radiusIsCorrect) return;
+            throw new ArgumentsForProvidersException("Invalid arguments GetBarListGoogle", latitude, longitude, radius);
         }
 
         private PlacesApiQueryResponse GetBarData(string latitude, string longitude, string radius)

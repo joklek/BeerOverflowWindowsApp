@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace BeerOverflowWindowsApp
 {
-    class RegexTools
+    static class RegexTools
     {
         public static bool LongitudeTextIsCorrect(string longitude)
         {
-            return System.Text.RegularExpressions.Regex.IsMatch(longitude,
-                @"^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,})?|180(?:\.0{1,})?)$");
+            return Regex.IsMatch(longitude,
+                @"^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,})?|-?180(?:\.0{1,})?)$");
         }
 
         public static bool LatitudeTextIsCorrect(string latitude)
         {
-            return System.Text.RegularExpressions.Regex.IsMatch(latitude,
-                @"^(-?[1-8]?\d(?:\.\d{1,})?|90(?:\.0{1,})?)$");
+            return Regex.IsMatch(latitude,
+                @"^(-?[1-8]?\d(?:\.\d{1,})?|-?90(?:\.0{1,})?)$");
         }
 
         public static bool RadiusTextIsCorrect(string radius)
         {
-            return System.Text.RegularExpressions.Regex.IsMatch(radius,
+            return Regex.IsMatch(radius,
                 @"^[0-9]{1,3}$");
         }
     }
