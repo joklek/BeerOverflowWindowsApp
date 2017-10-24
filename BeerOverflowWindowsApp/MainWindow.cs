@@ -284,5 +284,11 @@ namespace BeerOverflowWindowsApp
             var currentLocation = new GeoCoordinate(currentLatitude, currentLongitude);
             return currentLocation;
         }
+
+        private void MapButton_Click(object sender, EventArgs e)
+        {
+            MapWindow frm2 = new MapWindow();
+            frm2.Show();
+        }
     }
 }

@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="BeerOverflowWindowsApp.MapControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF">
+    <Grid>
+        <m:Map Name="Map" 
+               CredentialsProvider="D0D1Lgede4i57w5QzaRc~2au_CDaqppVK-NBTLRNVIw~AjGeU4vBGNoTvPi97hPUTuieFXffaeZNcqhN-5ViTRP7z0I8hImL_mkm8VF7igLz"
+               Center="54.684815,25.288464" ZoomLevel="13" Mode="AerialWithLabels"/>
+    </Grid>
+</UserControl>
