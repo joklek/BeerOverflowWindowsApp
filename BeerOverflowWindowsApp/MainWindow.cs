@@ -25,7 +25,6 @@ namespace BeerOverflowWindowsApp
         {
             InitializeComponent();
             _barRating = new BarRating();
-
             LatitudeTextBox.Text = _defaultLatitude;
             LongitudeTextBox.Text = _defaultLongitude;
             RadiusTextBox.Text = _defaultRadius;
@@ -40,14 +39,10 @@ namespace BeerOverflowWindowsApp
 
             var barData = _barRating.BarsData;
             BarDataGridView.Rows.Clear();
-            var currentLatitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
-            var currentLongitude = Convert.ToDouble(GetLongitude(), CultureInfo.InvariantCulture);
-            var currentLocation = new GeoCoordinate(currentLatitude, currentLongitude);
             foreach (var bar in barData)
             {
-                var rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
-                var barLocation = new GeoCoordinate(bar.Latitude, bar.Longitude);
-                var distance = currentLocation.GetDistanceTo(barLocation).ToString("0");
+                var rating = bar.Ratings?.Average().ToString("0.00") ?? "0";               
+                var distance = bar.DistanceToCurrentLocation.ToString("0");
                 BarDataGridView.Rows.Add(bar.Title, rating, distance);               
             }
             if (BarDataGridView.Rows.Count > 0 && _selectedBar != null)
@@ -70,10 +65,8 @@ namespace BeerOverflowWindowsApp
             var longitude = GetLongitude();
             var radius = GetRadius();
 
-            CurrentLocation.currentLocation = new GeoCoordinate(double.Parse(latitude, CultureInfo.InvariantCulture),
-                                                                double.Parse(longitude, CultureInfo.InvariantCulture));
-
             if (!RegexTools.LatitudeTextIsCorrect(LatitudeTextBox.Text) || !RegexTools.LongitudeTextIsCorrect(LongitudeTextBox.Text) || !RegexTools.RadiusTextIsCorrect(RadiusTextBox.Text))
+
             {
                 MessageBox.Show("Please enter correct required data. Erroneus data is painted red.");
             }
@@ -107,6 +100,12 @@ namespace BeerOverflowWindowsApp
                 // Display
                 result.GetRatings();
                 _barRating.BarsData = result;
+
+                var currentLocation = GetCurrentLocation();
+                foreach(var bar in _barRating.BarsData)
+                {
+                    bar.DistanceToCurrentLocation = currentLocation.GetDistanceTo(new GeoCoordinate(bar.Latitude, bar.Longitude));
+                }
                 SortList(CompareType.Distance, SortOrder.Ascending);
                 Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
@@ -168,7 +167,8 @@ namespace BeerOverflowWindowsApp
         private void ManualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
-            if (_selectedBar != null && rating != "" && int.TryParse(rating, out var ratingNumber))
+            int ratingNumber;
+            if (_selectedBar != null && rating != "" && int.TryParse(rating, out ratingNumber))
             {
                 _barRating.AddRating(_selectedBar ,ratingNumber);
                 ReSort();
@@ -275,6 +275,14 @@ namespace BeerOverflowWindowsApp
             {
                 column.HeaderCell.SortGlyphDirection = SortOrder.None;
             }
+        }
+
+        private GeoCoordinate GetCurrentLocation()
+        {
+            var currentLatitude = Convert.ToDouble(GetLatitude(), CultureInfo.InvariantCulture);
+            var currentLongitude = Convert.ToDouble(GetLongitude(), CultureInfo.InvariantCulture);
+            var currentLocation = new GeoCoordinate(currentLatitude, currentLongitude);
+            return currentLocation;
         }
     }
 }
