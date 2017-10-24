@@ -123,20 +123,17 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private void GetLocationForPlace(PlaceInfo place)
         {
-            using (var client = new HttpClient())
+            try
             {
-                try
-                {
-                    var webClient = new WebClient();
-                    var response =
-                        webClient.DownloadString(string.Format(_locationApiLink, place.location_id, _accessKey));
-                    var result = JsonConvert.DeserializeObject<LocationResponse>(response);
-                    place.locationResponse = result;
-                }
-                catch (Exception exception)
-                {
-                    throw exception;
-                }
+                var webClient = new WebClient();
+                var response =
+                    webClient.DownloadString(string.Format(_locationApiLink, place.location_id, _accessKey));
+                var result = JsonConvert.DeserializeObject<LocationResponse>(response);
+                place.locationResponse = result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
             }
         }
 

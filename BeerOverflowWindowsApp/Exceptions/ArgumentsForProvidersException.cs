@@ -24,7 +24,7 @@ namespace BeerOverflowWindowsApp.Exceptions
             if (!latitudeIsCorrect) { badArguments.Add("latitude"); }
             if (!longitudeIsCorrect) { badArguments.Add("longitude"); }
             if (!radiusIsCorrect) { badArguments.Add("radius"); }
-            InvalidArguments = string.Join(", ", badArguments);
+            InvalidArguments = string.Join(",", badArguments);
         }
 
         protected ArgumentsForProvidersException(System.Runtime.Serialization.SerializationInfo info,

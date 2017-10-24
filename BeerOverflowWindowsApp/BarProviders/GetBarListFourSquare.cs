@@ -16,6 +16,15 @@ namespace BeerOverflowWindowsApp.BarProviders
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
             CheckInputData(latitude, longitude, radius);
+
+            // FourSquare doesn't like when the coordinates are (0,0), so we change it to something close.
+            // Should this be done with exceptions?
+            if (double.Parse(latitude) == 0 && double.Parse(longitude) == 0)
+            {
+                latitude = "0.000001";
+                longitude = "0.000001";
+            }
+
             List<BarData> barList = null;
             var result = GetBarData(latitude, longitude, radius);
             barList = VenueListToBars(result);
