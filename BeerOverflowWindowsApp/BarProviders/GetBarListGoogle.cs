@@ -8,13 +8,12 @@ using System.Net;
 using System.Text;
 using BeerOverflowWindowsApp.DataModels;
 
-namespace BeerOverflowWindowsApp.BarProviders
+namespace BeerOverflowWindowsApp
 {
     class GetBarListGoogle : IBeerable
     {
-        private readonly string _apiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
-        private readonly string _apiLink = ConfigurationManager.AppSettings["GoogleAPILink"];
-        private readonly string _categoryList = ConfigurationManager.AppSettings["GoogleAPICategories"];
+        private static readonly string _googleApiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
+        private static readonly string _googleApiLink = ConfigurationManager.AppSettings["GoogleAPILink"] + _googleApiKey;
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -33,24 +32,21 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private PlacesApiQueryResponse GetBarData(string latitude, string longitude, string radius)
         {
-            var categoryList = _categoryList.Split(',');
-            var result = new PlacesApiQueryResponse {Results = new List<Result>()};
-
-            foreach (var category in categoryList)
+            using (var client = new HttpClient())
             {
+                PlacesApiQueryResponse result = null;
                 try
                 {
-                    var webClient = new WebClient { Encoding = Encoding.UTF8 };
-                    var response = webClient.DownloadString(string.Format(_apiLink, latitude, longitude, radius, category, _apiKey));
-                    var deserialized = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
-                    result.Results.AddRange(deserialized.Results);
+                    var webClient = new WebClient {Encoding = Encoding.UTF8};
+                    var response = webClient.DownloadString(string.Format(_googleApiLink, latitude, longitude, radius));
+                    result = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(response);
                 }
                 catch (Exception exception)
                 {
                     throw exception;
                 }
+                return result;
             }
-            return result;
         }
 
         private List<BarData> PlacesApiQueryResponseToBars (PlacesApiQueryResponse resultData)

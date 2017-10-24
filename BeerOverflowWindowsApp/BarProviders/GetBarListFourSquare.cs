@@ -4,13 +4,13 @@ using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
 using BeerOverflowWindowsApp.DataModels;
 
-namespace BeerOverflowWindowsApp.BarProviders
+namespace BeerOverflowWindowsApp
 {
     class GetBarListFourSquare : IBeerable
     {
-        private readonly string _clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
-        private readonly string _clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
-        private readonly string _categoryIdDs = ConfigurationManager.AppSettings["FourSquareCategoryIDs"];
+        private static readonly string clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
+        private static readonly string clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
+        private static readonly string categoryIdBar = ConfigurationManager.AppSettings["FourSquareCategoryIdBar"];
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -20,25 +20,19 @@ namespace BeerOverflowWindowsApp.BarProviders
             return barList;
         }
 
-        private IEnumerable<Venue> GetBarData (string latitude, string longitude, string radius)
+        private List<Venue> GetBarData (string latitude, string longitude, string radius)
         {
-            var sharpSquare = new SharpSquare(_clientId, _clientSecret);
-            var categoryIDs = _categoryIdDs.Split(',');
-            var venueList = new List<Venue>();
+            var sharpSquare = new SharpSquare(clientId, clientSecret);
 
-            foreach (var id in categoryIDs)
+            // let's build the query
+            Dictionary<string, string> parameters = new Dictionary<string, string>
             {
-                // let's build the query
-                var parameters = new Dictionary<string, string>
-                {
-                    { "ll", latitude + "," + longitude }, // Coords
-                    { "radius", radius },
-                    { "categoryId", id },
-                    { "intent", "browse" }
-                };
-                venueList.AddRange(sharpSquare.SearchVenues(parameters));
-            }
-            return venueList;
+                { "ll", latitude + "," + longitude }, // Coords
+                { "radius", radius },
+                { "categoryId", categoryIdBar } 
+            };
+
+            return sharpSquare.SearchVenues(parameters);
         }
 
         private List<BarData> VenueListToBars (IEnumerable<Venue> resultData)

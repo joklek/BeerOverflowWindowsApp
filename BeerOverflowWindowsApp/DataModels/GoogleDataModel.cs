@@ -50,7 +50,6 @@ namespace BeerOverflowWindowsApp.DataModels
             public List<object> Html_attributions { get; set; }
             public List<Result> Results { get; set; }
             public string Status { get; set; }
-            public string next_page_token { get; set; }
         }
     }
 }

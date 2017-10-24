@@ -2,8 +2,18 @@
 
 namespace BeerOverflowWindowsApp
 {
-    static class CurrentLocation
+    class CurrentLocation
     {
-        public static GeoCoordinate currentLocation { get; set; }
+        private const double latitude = 54.684815;
+        private const double longitude = 25.288464;
+        public GeoCoordinate currentLocation { get; set; }
+        public CurrentLocation()
+        {
+            GetCurrentLocation();
+        }
+        public void GetCurrentLocation() //TODO implement
+        {
+            currentLocation = new GeoCoordinate(latitude, longitude);
+        }
     }
 }

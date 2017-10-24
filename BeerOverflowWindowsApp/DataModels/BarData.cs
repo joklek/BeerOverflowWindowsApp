@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
@@ -15,7 +14,5 @@ namespace BeerOverflowWindowsApp.DataModels
         {
             Ratings = new List<int>();
         }
-        [JsonIgnore]
-        public double DistanceToCurrentLocation { get; set; }
     }
 }
