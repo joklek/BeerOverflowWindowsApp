@@ -65,7 +65,8 @@ namespace BeerOverflowWindowsApp
             var longitude = GetLongitude();
             var radius = GetRadius();
 
-            if (!LatitudeTextIsCorrect() || !LongitudeTextIsCorrect() || !RadiusTextIsCorrect())
+            if (!RegexTools.LatitudeTextIsCorrect(LatitudeTextBox.Text) || !RegexTools.LongitudeTextIsCorrect(LongitudeTextBox.Text) || !RegexTools.RadiusTextIsCorrect(RadiusTextBox.Text))
+
             {
                 MessageBox.Show("Please enter correct required data. Erroneus data is painted red.");
             }
@@ -185,37 +186,25 @@ namespace BeerOverflowWindowsApp
 
         private void LongitudeTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!LongitudeTextIsCorrect())
+            if (!RegexTools.LongitudeTextIsCorrect(LongitudeTextBox.Text))
             {
                 PaintTextBoxIncorrect(LongitudeTextBox);
             }
             else { ResetTextBoxColor(LongitudeTextBox); }
         }
 
-        private bool LongitudeTextIsCorrect()
-        {
-            return System.Text.RegularExpressions.Regex.IsMatch(LongitudeTextBox.Text,
-                @"^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,})?|180(?:\.0{1,})?)$");
-        }
-
         private void LatitudeTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!LatitudeTextIsCorrect())
+            if (!RegexTools.LatitudeTextIsCorrect(LatitudeTextBox.Text))
             {
                 PaintTextBoxIncorrect(LatitudeTextBox);
             }
             else { ResetTextBoxColor(LatitudeTextBox); }
         }
 
-        private bool LatitudeTextIsCorrect()
-        {
-            return System.Text.RegularExpressions.Regex.IsMatch(LatitudeTextBox.Text,
-                @"^(-?[1-8]?\d(?:\.\d{1,})?|90(?:\.0{1,})?)$");
-        }
-
         private void RadiusTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!RadiusTextIsCorrect())
+            if (!RegexTools.RadiusTextIsCorrect(RadiusTextBox.Text))
             {
                 PaintTextBoxIncorrect(RadiusTextBox);
             }
@@ -232,12 +221,6 @@ namespace BeerOverflowWindowsApp
         {
             textBox.ResetForeColor();
             textBox.ResetBackColor();
-        }
-
-        private bool RadiusTextIsCorrect()
-        {
-            return System.Text.RegularExpressions.Regex.IsMatch(RadiusTextBox.Text,
-                @"^[0-9]{1,3}$");
         }
 
         private void SortList(CompareType compareType, SortOrder sortOrder = SortOrder.Ascending)
