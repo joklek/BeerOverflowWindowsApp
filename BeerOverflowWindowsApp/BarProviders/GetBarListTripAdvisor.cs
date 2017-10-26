@@ -38,11 +38,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private void CheckInputData(string latitude, string longitude, string radius)
         {
-            var latitudeIsCorrect = RegexTools.LatitudeTextIsCorrect(latitude);
-            var longitudeIsCorrect = RegexTools.LongitudeTextIsCorrect(longitude);
-            var radiusIsCorrect = RegexTools.RadiusTextIsCorrect(radius);
-
-            if (latitudeIsCorrect && longitudeIsCorrect && radiusIsCorrect) return;
+            if (RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius)) return;
             throw new ArgumentsForProvidersException("Invalid arguments GetBarListTripAdvisor", latitude, longitude, radius);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
 using BeerOverflowWindowsApp.DataModels;
@@ -19,7 +20,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
             // FourSquare doesn't like when the coordinates are (0,0), so we change it to something close.
             // Should this be done with exceptions?
-            if (double.Parse(latitude) == 0 && double.Parse(longitude) == 0)
+            if (double.Parse(latitude, CultureInfo.InvariantCulture) == 0 && double.Parse(longitude, CultureInfo.InvariantCulture) == 0)
             {
                 latitude = "0.000001";
                 longitude = "0.000001";
@@ -33,11 +34,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private void CheckInputData(string latitude, string longitude, string radius)
         {
-            var latitudeIsCorrect = RegexTools.LatitudeTextIsCorrect(latitude);
-            var longitudeIsCorrect = RegexTools.LongitudeTextIsCorrect(longitude);
-            var radiusIsCorrect = RegexTools.RadiusTextIsCorrect(radius);
-
-            if (latitudeIsCorrect && longitudeIsCorrect && radiusIsCorrect) return;
+            if (RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius)) return;
             throw new ArgumentsForProvidersException("Invalid arguments GetBarListFourSquare", latitude, longitude, radius);
         }
 

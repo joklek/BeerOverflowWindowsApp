@@ -11,7 +11,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         private const int timesToRepeatTests = 1;
 
         [Test]
-        public void ComparerByDistance_firstIsCloser([Random(0.0, 50.0, timesToRepeatTests)]double distanceToCurrentLocation1, [Random(50.1, 100.0, timesToRepeatTests)] double distanceToCurrentLocation2)
+        public void ComparerByDistance_Compare_FirstIsCloser([Random(0.0, 50.0, timesToRepeatTests)]double distanceToCurrentLocation1, [Random(50.1, 100.0, timesToRepeatTests)] double distanceToCurrentLocation2)
         {
             // Arrange
             var bar1 = new BarData { DistanceToCurrentLocation = distanceToCurrentLocation1 };
@@ -24,7 +24,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        public void ComparerByDistance_secondIsCloser([Random(50.1, 100.0, timesToRepeatTests)] double distanceToCurrentLocation1, [Random(0.0, 50.0, timesToRepeatTests)] double distanceToCurrentLocation2)
+        public void ComparerByDistance_Compare_SecondIsCloser([Random(50.1, 100.0, timesToRepeatTests)] double distanceToCurrentLocation1, [Random(0.0, 50.0, timesToRepeatTests)] double distanceToCurrentLocation2)
         {
             // Arrange
             var bar1 = new BarData { DistanceToCurrentLocation = distanceToCurrentLocation1 };
@@ -37,7 +37,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        public void ComparerByDistance_distanceEqual([Random(0.0, 200.0, timesToRepeatTests)] double distanceToCurrentLocation)
+        public void ComparerByDistance_Compare_DistanceEqual([Random(0.0, 200.0, timesToRepeatTests)] double distanceToCurrentLocation)
         {
             // Arrange
             var bar1 = new BarData { DistanceToCurrentLocation = distanceToCurrentLocation };
@@ -50,7 +50,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        public void ComparerByDistance_BarsAreNull()
+        public void ComparerByDistance_Compare_BarsAreNull()
         {
             // Arrange
             var comparer = new ComparerByDistance();

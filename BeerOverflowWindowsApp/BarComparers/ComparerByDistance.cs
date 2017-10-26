@@ -29,7 +29,16 @@ namespace BeerOverflowWindowsApp.BarComparers
             }
             else
             {
-                throw new ArgumentNullException("barData1==null:" + (barData1 == null) + ",barData2==null:" + (barData2 == null));
+                var nullArguments = new List<string>();
+                if (barData1 == null)
+                {
+                    nullArguments.Add(nameof(barData1)); 
+                }
+                if (barData2 == null)
+                {
+                    nullArguments.Add(nameof(barData2));
+                }
+                throw new ArgumentNullException(string.Join(",", nullArguments));
             }
         }
     }

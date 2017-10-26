@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace BeerOverflowWindowsApp.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class ComparerByRatingUnitTests
     {
-        [TestMethod]
-        public void ComparerByRating_RatingsFirstBigger()
+        [Test]
+        public void ComparerByRating_Compare_RatingsFirstBigger()
         {
             // arrange  
             var barData1 = new BarData { Ratings = new List<int>()};
@@ -28,8 +29,8 @@ namespace BeerOverflowWindowsApp.UnitTests
             Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod]
-        public void ComparerByRating_RatingsFirstNotNullSecondNull()
+        [Test]
+        public void ComparerByRating_Compare_RatingsFirstNotNullSecondNull()
         {
             // arrange  
             var barData1 = new BarData { Ratings = new List<int>() }; ;
@@ -44,8 +45,8 @@ namespace BeerOverflowWindowsApp.UnitTests
             Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod]
-        public void ComparerByRating_RatingsFirstSmaller()
+        [Test]
+        public void ComparerByRating_Compare_RatingsFirstSmaller()
         {
             // arrange  
             var barData1 = new BarData { Ratings = new List<int>()};
@@ -64,8 +65,8 @@ namespace BeerOverflowWindowsApp.UnitTests
             Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod]
-        public void ComparerByRating_RatingsFirstNullSecondNotNull()
+        [Test]
+        public void ComparerByRating_Compare_RatingsFirstNullSecondNotNull()
         {
             // arrange  
             var barData1 = new BarData { Ratings = null };
@@ -80,8 +81,8 @@ namespace BeerOverflowWindowsApp.UnitTests
             Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod]
-        public void ComparerByRating_RatingsEqual()
+        [Test]
+        public void ComparerByRating_Compare_RatingsEqual()
         {
             // arrange  
             var barData1 = new BarData { Ratings = new List<int>()};
@@ -100,8 +101,8 @@ namespace BeerOverflowWindowsApp.UnitTests
             Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod]
-        public void ComparerByRating_RatingsBothNull()
+        [Test]
+        public void ComparerByRating_Compare_RatingsBothNull()
         {
             // arrange  
             var barData1 = new BarData { Ratings = null };
@@ -116,45 +117,39 @@ namespace BeerOverflowWindowsApp.UnitTests
             Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(System.ArgumentNullException))]
-        public void ComparerByRating_BarsFirstNull()
+        [Test]
+        public void ComparerByRating_Compare_BarsFirstNull()
         {
             // arrange  
-            BarData barData2 = new BarData();
+            var barData2 = new BarData();
             var comparer = new ComparerByRating();
 
             // act  
-            var result = comparer.Compare(null, barData2);
-
             // assert  
+            Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, barData2));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(System.ArgumentNullException))]
-        public void ComparerByRating_BarsSecondNull()
+        [Test]
+        public void ComparerByRating_Compare_BarsSecondNull()
         {
             // arrange  
-            BarData barData1 = new BarData();
+            var barData1 = new BarData();
             var comparer = new ComparerByRating();
 
             // act  
-            var result = comparer.Compare(barData1, null);
-
             // assert  
+            Assert.Throws<ArgumentNullException>(() => comparer.Compare(barData1, null));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(System.ArgumentNullException))]
-        public void ComparerByRating_BarsBothNull()
+        [Test]
+        public void ComparerByRating_Compare_BarsBothNull()
         {
             // arrange  
             var comparer = new ComparerByRating();
 
             // act  
-            var result = comparer.Compare(null, null);
-
             // assert  
+            Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, null));
         }
     }
 }

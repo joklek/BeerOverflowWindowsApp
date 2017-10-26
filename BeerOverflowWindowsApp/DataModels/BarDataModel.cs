@@ -5,6 +5,7 @@ using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using BeerOverflowWindowsApp.Exceptions;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
@@ -22,10 +23,17 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public void CleanUpList(string latitude, string longitude, string radius)
         {
+            CheckInputData(latitude, longitude, radius);
             RemoveDuplicates();
             RemoveBarsOutsideRadius(double.Parse(latitude, CultureInfo.InvariantCulture), 
                                     double.Parse(longitude, CultureInfo.InvariantCulture), 
                                     double.Parse(radius, CultureInfo.InvariantCulture));
+        }
+
+        private void CheckInputData(string latitude, string longitude, string radius)
+        {
+            if (RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius)) return;
+            throw new ArgumentsForProvidersException("Invalid arguments BarDataModel.CheckInputData", latitude, longitude, radius);
         }
 
         private void RemoveDuplicates ()

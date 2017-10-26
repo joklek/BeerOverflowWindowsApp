@@ -11,7 +11,7 @@ namespace BeerOverflowWindowsApp.BarRaters
 {
     public sealed partial class ManualBarRating : Control
     {
-        List<Rectangle> beerGlassList;
+        private List<Rectangle> beerGlassList;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         private int imageSize;
         public int ImageSize
@@ -36,7 +36,8 @@ namespace BeerOverflowWindowsApp.BarRaters
             get { return numberOfGlasses + 1 + ""; }
             private set { }
         }
-        ToolTip toolTip;
+
+        private ToolTip toolTip;
         public ManualBarRating()
         {
             this.DoubleBuffered = true;
@@ -54,8 +55,8 @@ namespace BeerOverflowWindowsApp.BarRaters
             Refresh();
         }
 
-        Image selectedImage;
-        Image unSelectedImage;
+        private Image selectedImage;
+        private Image unSelectedImage;
         protected override void OnPaint(PaintEventArgs pe)
         {
             var g = pe.Graphics;
@@ -69,7 +70,7 @@ namespace BeerOverflowWindowsApp.BarRaters
             }
         }
 
-        bool mouseEntered = false;
+        private bool mouseEntered = false;
         private int numberOfGlasses = 0;
         private void ManualBarRating_MouseEnter(object sender, EventArgs e)
         {
@@ -82,7 +83,7 @@ namespace BeerOverflowWindowsApp.BarRaters
         private const string toolTipMessage4 = "Good enough";
         private const string toolTipMessage5 = "Beeroverflow!";
         private string[] toolTipMessages = new string[] {toolTipMessage1, toolTipMessage2, toolTipMessage3, toolTipMessage4, toolTipMessage5 };
-        int lastLocation = -1;
+        private int lastLocation = -1;
         private void ManualBarRating_MouseMove(object sender, MouseEventArgs e)
         {
             if (ClientRectangle.Contains(e.Location))

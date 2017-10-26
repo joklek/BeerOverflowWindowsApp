@@ -1,45 +1,53 @@
 ﻿using System;
 using BeerOverflowWindowsApp.BarComparers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace BeerOverflowWindowsApp.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class BarRatingUnitTests
     {
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void BarRating_AddRatingToNullBarList()
+        [Test]
+        public void BarRating_AddRating_ToNullBarList()
         {
             // Arrange
-            BarRating rating = new BarRating();
-            // Act
-            rating.AddRating(null, 100);
+            var rating = new BarRating();
+            // Act 
             // Assert
+            var ex = Assert.Throws<ArgumentNullException>(() => rating.AddRating(null, 100));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void BarRating_AddEmptyBarList()
+        [Test]
+        public void BarRating_AddBar_EmptyBar()
         {
             // Arrange
-            BarRating rating = new BarRating();
+            var rating = new BarRating();
             // Act
-            rating.AddBars(null);
             // Assert
+            var ex = Assert.Throws<ArgumentNullException>(() => rating.AddBars(null));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void BarRating_SortUnknownEnum()
+        [Test]
+        public void BarRating_Sort_UnknownEnum()
         {
             // Arrange
-            BarRating rating = new BarRating();
+            var rating = new BarRating();
 
             // Act
-            rating.Sort((CompareType) 99999);
-            
             // Assert
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => rating.Sort((CompareType)99999));
+        }
+
+        [Test]
+        public void BarRating_Sort_NormalEnum([Range(0, 3, 1)] CompareType compareType)
+        {
+            // Arrange
+            var rating = new BarRating();
+
+            // Act
+            rating.Sort(compareType);
+            // Assert, should be no exceptions. 
+            //Not sure if should test if sorting was successful. Maybe it's covered in Comparers unit testing?
         }
     }
 }

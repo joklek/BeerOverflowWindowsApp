@@ -17,6 +17,11 @@ namespace BeerOverflowWindowsApp
 
         public void AddRating(BarData barData, int rating)
         {
+            if (barData == null)
+            {
+                throw new ArgumentNullException(nameof(barData), "BarRating.AddRating null parameter");
+            }
+
             var allBars = BarFileReader.GetAllBarData();
 
             if (barData.Ratings == null)
@@ -42,6 +47,11 @@ namespace BeerOverflowWindowsApp
 
         public void AddBars(List<BarData> barsList)
         {
+            if (barsList == null)
+            {
+                throw new ArgumentNullException(nameof(barsList), "BarRating.AddBars null parameter");
+            }
+
             foreach (var bar in barsList)
             {
                 if (BarsData.Count(x => x.Title == bar.Title) == 0)
@@ -64,6 +74,8 @@ namespace BeerOverflowWindowsApp
                     break;
                 case CompareType.Distance:
                     BarsData.Sort(new ComparerByDistance());
+                    break;
+                case CompareType.None:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(compareType), compareType, null);

@@ -34,7 +34,7 @@ namespace BeerOverflowWindowsApp.BarRaters
             get { return this.marker.Width; }
         }
 
-        Rectangle cr;
+        private Rectangle cr;
         public ManualBeerMeter()
         {
             InitializeComponent();
@@ -75,7 +75,7 @@ namespace BeerOverflowWindowsApp.BarRaters
             base.OnPaintBackground(pevent);
         }
 
-        int difference = 0;
+        private int difference = 0;
         private Boolean mousePressed = false;
         private void ManualBeerMeter_MouseDown(object sender, MouseEventArgs e)
         {
