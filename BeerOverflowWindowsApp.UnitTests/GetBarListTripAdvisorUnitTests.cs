@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿using System;
 using BeerOverflowWindowsApp.BarProviders;
 using BeerOverflowWindowsApp.Exceptions;
 using NUnit.Framework;
@@ -28,11 +28,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        [TestCase("T", "0", "1")]
-        [TestCase("", "0", "1")]
-        [TestCase("-91", "1", "50")]
-        [TestCase("91", "1", "50")]
-        public void GetBarsTripAdvisor_InvalidLatidute(string latitude, string longitude, string radius)
+        public void GetBarsTripAdvisor_InvalidLatidute([Values("T", "", "-91", "91")] string latitude, 
+                                                       [Values("1")] string longitude, 
+                                                       [Values("1")] string radius)
         {
             // Arrange
             var getBars = new GetBarListTripAdvisor();
@@ -43,11 +41,22 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        [TestCase("0", "T", "1")]
-        [TestCase("0", "", "1")]
-        [TestCase("1", "-181", "50")]
-        [TestCase("1", "181", "50")]
-        public void GetBarsTripAdvisor_InvalidLongitude(string latitude, string longitude, string radius)
+        [TestCase(null, "0", "0")]
+        [TestCase("0", null, "0")]
+        [TestCase("0", "0", null)]
+        public void GetBarsTripAdvisor_NullData(string latitude, string longitude, string radius)
+        {
+            // Arrange
+            var getBars = new GetBarListTripAdvisor();
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() => getBars.GetBarsAround(latitude, longitude, radius));
+            // now we can test the exception itself
+        }
+
+        [Test]
+        public void GetBarsTripAdvisor_InvalidLongitude([Values("1")] string latitude, 
+                                                        [Values("T", "", "-181", "181")]string longitude, 
+                                                        [Values("1")] string radius)
         {
             // Arrange
             var getBars = new GetBarListTripAdvisor();
@@ -58,12 +67,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        [TestCase("0", "0", "T")]
-        [TestCase("0", "0", "-")]
-        [TestCase("0", "0", "-1")]
-        [TestCase("0", "0", "")]
-        [TestCase("0", "0", "999999")]
-        public void GetBarsTripAdvisor_InvalidRadius(string latitude, string longitude, string radius)
+        public void GetBarsTripAdvisor_InvalidRadius([Values("1")] string latitude, 
+                                                     [Values("1")] string longitude, 
+                                                     [Values("T", "-", "-1", "", "999999")] string radius)
         {
             // Arrange
             var getBars = new GetBarListTripAdvisor();

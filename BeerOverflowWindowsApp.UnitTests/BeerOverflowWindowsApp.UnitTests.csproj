@@ -53,6 +53,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComparerByDistanceUnitTests.cs" />
     <Compile Include="GetBarListFacebookUnitTests.cs" />
     <Compile Include="GetBarListGoogleUnitTests.cs" />
     <Compile Include="ComparerByRatingUnitTests.cs" />

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using BeerOverflowWindowsApp.BarProviders;
+﻿using BeerOverflowWindowsApp.BarProviders;
 using BeerOverflowWindowsApp.Exceptions;
 using NUnit.Framework;
 
@@ -27,11 +26,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        [TestCase("T", "0", "1")]
-        [TestCase("", "0", "1")]
-        [TestCase("-91", "1", "50")]
-        [TestCase("91", "1", "50")]
-        public void GetBarsFacebook_InvalidLatidute(string latitude, string longitude, string radius)
+        public void GetBarsFacebook_InvalidLatidute([Values("T", "", "-91", "91")] string latitude, 
+                                                    [Values("1")] string longitude, 
+                                                    [Values("1")] string radius)
         {
             // Arrange
             var getBars = new GetBarListFacebook();
@@ -42,11 +39,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        [TestCase("0", "T", "1")]
-        [TestCase("0", "", "1")]
-        [TestCase("1", "-181", "50")]
-        [TestCase("1", "181", "50")]
-        public void GetBarsFacebook_InvalidLongitude(string latitude, string longitude, string radius)
+        public void GetBarsFacebook_InvalidLongitude([Values("1")] string latitude, 
+                                                     [Values("T", "", "-181", "181")]string longitude, 
+                                                     [Values("1")] string radius)
         {
             // Arrange
             var getBars = new GetBarListFacebook();
@@ -57,12 +52,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        [TestCase("0", "0", "T")]
-        [TestCase("0", "0", "-")]
-        [TestCase("0", "0", "-1")]
-        [TestCase("0", "0", "")]
-        [TestCase("0", "0", "999999")]
-        public void GetBarsFacebook_InvalidRadius(string latitude, string longitude, string radius)
+        public void GetBarsFacebook_InvalidRadius([Values("1")] string latitude, 
+                                                  [Values("1")] string longitude, 
+                                                  [Values("T", "-", "-1", "", "999999")] string radius)
         {
             // Arrange
             var getBars = new GetBarListFacebook();
