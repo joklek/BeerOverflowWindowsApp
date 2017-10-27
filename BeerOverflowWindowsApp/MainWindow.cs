@@ -10,7 +10,6 @@ using System.Device.Location;
 using System.Configuration;
 using BeerOverflowWindowsApp.BarProviders;
 using Microsoft.WindowsAPICodePack.Taskbar;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -45,7 +44,7 @@ namespace BeerOverflowWindowsApp
             foreach (var bar in barData)
             {
                 string rating = null;
-                if (bar.Ratings.Any())
+                if (bar.Ratings != null && bar.Ratings.Any())
                     rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
                 else rating = "0";
                 var distance = bar.DistanceToCurrentLocation.ToString("0");
@@ -172,8 +171,7 @@ namespace BeerOverflowWindowsApp
         private void ManualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
-            int ratingNumber;
-            if (_selectedBar != null && rating != "" && int.TryParse(rating, out ratingNumber))
+            if (_selectedBar != null && rating != "" && int.TryParse(rating, out int ratingNumber))
             {
                 _barRating.AddRating(_selectedBar ,ratingNumber);
                 ReSort();
