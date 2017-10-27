@@ -22,7 +22,7 @@ namespace BeerOverflowWindowsApp
                 barData.Ratings = new List<int>();
             }
             BarsData.Find(x => x.Title == barData.Title).Ratings.Add(rating);
-            BarFileWriter.SaveData(BarsData);
+            BarFileWriter.SaveData(barData);
         }
 
         public void AddBars(List<BarData> barsList)

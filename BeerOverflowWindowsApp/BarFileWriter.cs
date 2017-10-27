@@ -38,9 +38,24 @@ namespace BeerOverflowWindowsApp
             List<string> barsDataJson = new List<string>();
             foreach (var bar in barsInFile)
             {
+                barsDataJson.Add(JsonConvert.SerializeObject(bar));             
+            }
+            File.WriteAllLines(_filePath, barsDataJson);
+        }
 
+        public static void SaveData(BarData localBar)
+        {
+            BarDataModel barsInFile;
+            barsInFile = BarFileReader.GetAllBarData();
+            BarData barInFile;
+            if ((barInFile = barsInFile.Find(bar => bar.Title == localBar.Title)) != null)
+                barInFile.Ratings = localBar.Ratings;
+            else
+                barsInFile.Add(localBar);
+            List<string> barsDataJson = new List<string>();
+            foreach (var bar in barsInFile)
+            {
                 barsDataJson.Add(JsonConvert.SerializeObject(bar));
-                
             }
             File.WriteAllLines(_filePath, barsDataJson);
         }

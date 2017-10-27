@@ -100,6 +100,7 @@ namespace BeerOverflowWindowsApp
                 // Display
                 result.GetRatings();
                 _barRating.BarsData = result;
+                BarFileWriter.SaveData(result);
                 SortList(CompareType.Distance, SortOrder.Ascending);
                 Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
