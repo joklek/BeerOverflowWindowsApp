@@ -35,7 +35,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         {
             // Arrange
             var getBars = new GetBarListTripAdvisor();
-            // Act
+            // Act && Assert
             var ex = Assert.Throws<ArgumentNullException>(() => getBars.GetBarsAround(latitude, longitude, radius));
         }
 

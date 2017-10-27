@@ -21,8 +21,8 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Arrange
             var barData = new BarDataModel();
             // Act
+            // Assert
             var ex = Assert.Throws<ArgumentNullException>(() => barData.CleanUpList(latitude, longitude, radius));
-            // now we can test the exception itself
         }
 
         [Test]

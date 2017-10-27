@@ -12,8 +12,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         {
             // Arrange
             var rating = new BarRating();
-            // Act 
-            // Assert
+            // Act && Assert  
             var ex = Assert.Throws<ArgumentNullException>(() => rating.AddRating(null, 100));
         }
 
@@ -22,8 +21,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         {
             // Arrange
             var rating = new BarRating();
-            // Act
-            // Assert
+            // Act && Assert  
             var ex = Assert.Throws<ArgumentNullException>(() => rating.AddBars(null));
         }
 
@@ -33,8 +31,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Arrange
             var rating = new BarRating();
 
-            // Act
-            // Assert
+            // Act && Assert  
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => rating.Sort((CompareType)99999));
         }
 

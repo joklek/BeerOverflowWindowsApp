@@ -67,8 +67,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Arrange
             var comparer = new ComparerByTitle();
             var newBar = new BarData { Title = "" };   // Investigate mocking
-            // Act
-            // Assert
+            // Act && Assert
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, newBar));
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(newBar, null));
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, null));
@@ -85,8 +84,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Investigate mocking
             var bar1 = new BarData { Title = title1 };
             var bar2 = new BarData { Title = title2 };  
-            // Act
-            // Assert
+            // Act && Assert
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(bar1, bar2));
         }
     }

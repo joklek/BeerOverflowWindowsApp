@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BeerOverflowWindowsApp.BarComparers
 {
-    internal class ComparerByDistance : IComparer<BarData>
+    class ComparerByDistance : IComparer<BarData>
     {
         public int Compare(BarData barData1, BarData barData2)
         {

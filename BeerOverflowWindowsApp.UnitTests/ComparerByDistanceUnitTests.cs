@@ -55,8 +55,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Arrange
             var comparer = new ComparerByDistance();
             var newBar = new BarData {DistanceToCurrentLocation = 0};   // Investigate mocking
-            // Act
-            // Assert
+            // Act && Assert  
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, newBar));
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(newBar, null));
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, null));

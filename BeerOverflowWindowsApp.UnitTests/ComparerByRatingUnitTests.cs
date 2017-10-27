@@ -12,7 +12,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         [Test]
         public void ComparerByRating_Compare_RatingsFirstBigger()
         {
-            // arrange  
+            // Arrange  
             var barData1 = new BarData { Ratings = new List<int>()};
             barData1.Ratings.Add(10);
             barData1.Ratings.Add(20);
@@ -22,33 +22,33 @@ namespace BeerOverflowWindowsApp.UnitTests
             var expectedResult = 1;
             var comparer = new ComparerByRating();
 
-            // act  
+            // Act  
             var result = comparer.Compare(barData1, barData2);
 
-            // assert  
+            // Assert  
             Assert.AreEqual(expectedResult, result);
         }
 
         [Test]
         public void ComparerByRating_Compare_RatingsFirstNotNullSecondNull()
         {
-            // arrange  
+            // Arrange  
             var barData1 = new BarData { Ratings = new List<int>() }; ;
             var barData2 = new BarData { Ratings = null }; ;
             var expectedResult = 1;
             var comparer = new ComparerByRating();
 
-            // act  
+            // Act  
             var result = comparer.Compare(barData1, barData2);
 
-            // assert  
+            // Assert  
             Assert.AreEqual(expectedResult, result);
         }
 
         [Test]
         public void ComparerByRating_Compare_RatingsFirstSmaller()
         {
-            // arrange  
+            // Arrange  
             var barData1 = new BarData { Ratings = new List<int>()};
             barData1.Ratings.Add(5);
             barData1.Ratings.Add(10);
@@ -58,33 +58,33 @@ namespace BeerOverflowWindowsApp.UnitTests
             var expectedResult = -1;
             var comparer = new ComparerByRating();
 
-            // act  
+            // Act  
             var result = comparer.Compare(barData1, barData2);
 
-            // assert  
+            // Assert  
             Assert.AreEqual(expectedResult, result);
         }
 
         [Test]
         public void ComparerByRating_Compare_RatingsFirstNullSecondNotNull()
         {
-            // arrange  
+            // Arrange  
             var barData1 = new BarData { Ratings = null };
             var barData2 = new BarData { Ratings = new List<int>() }; ;
             var expectedResult = -1;
             var comparer = new ComparerByRating();
 
-            // act  
+            // Act  
             var result = comparer.Compare(barData1, barData2);
 
-            // assert  
+            // Assert  
             Assert.AreEqual(expectedResult, result);
         }
 
         [Test]
         public void ComparerByRating_Compare_RatingsEqual()
         {
-            // arrange  
+            // Arrange  
             var barData1 = new BarData { Ratings = new List<int>()};
             barData1.Ratings.Add(5);
             barData1.Ratings.Add(10);
@@ -94,61 +94,58 @@ namespace BeerOverflowWindowsApp.UnitTests
             var expectedResult = 0;
             var comparer = new ComparerByRating();
 
-            // act  
+            // Act  
             var result = comparer.Compare(barData1, barData2);
 
-            // assert  
+            // Assert  
             Assert.AreEqual(expectedResult, result);
         }
 
         [Test]
         public void ComparerByRating_Compare_RatingsBothNull()
         {
-            // arrange  
+            // Arrange  
             var barData1 = new BarData { Ratings = null };
             var barData2 = new BarData { Ratings = null }; ;
             var expectedResult = 0;
             var comparer = new ComparerByRating();
 
-            // act  
+            // Act  
             var result = comparer.Compare(barData1, barData2);
 
-            // assert  
+            // Assert  
             Assert.AreEqual(expectedResult, result);
         }
 
         [Test]
         public void ComparerByRating_Compare_BarsFirstNull()
         {
-            // arrange  
+            // Arrange  
             var barData2 = new BarData();
             var comparer = new ComparerByRating();
 
-            // act  
-            // assert  
+            // Act && Assert  
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, barData2));
         }
 
         [Test]
         public void ComparerByRating_Compare_BarsSecondNull()
         {
-            // arrange  
+            // Arrange  
             var barData1 = new BarData();
             var comparer = new ComparerByRating();
 
-            // act  
-            // assert  
+            // Act && Assert    
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(barData1, null));
         }
 
         [Test]
         public void ComparerByRating_Compare_BarsBothNull()
         {
-            // arrange  
+            // Arrange  
             var comparer = new ComparerByRating();
 
-            // act  
-            // assert  
+            // Act && Assert  
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, null));
         }
     }
