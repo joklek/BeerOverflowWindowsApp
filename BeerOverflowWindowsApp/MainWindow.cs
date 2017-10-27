@@ -287,8 +287,8 @@ namespace BeerOverflowWindowsApp
 
         private void MapButton_Click(object sender, EventArgs e)
         {
-            MapWindow frm2 = new MapWindow();
-            frm2.Show();
+            MapWindow frame2 = new MapWindow();
+            frame2.Show();
         }
     }
 }
