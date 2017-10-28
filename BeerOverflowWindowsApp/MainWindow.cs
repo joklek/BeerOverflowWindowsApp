@@ -149,7 +149,8 @@ namespace BeerOverflowWindowsApp
             try
             {
                 barList.AddRange(provider.GetBarsAround(latitude, longitude, radius));
-                barList.CleanUpList(latitude, longitude, radius);
+                barList.RemoveDuplicates();
+                barList.RemoveBarsOutsideRadius(radius);
             }
             catch (ArgumentsForProvidersException)
             {

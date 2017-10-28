@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using BeerOverflowWindowsApp.DataModels;
-using BeerOverflowWindowsApp.Exceptions;
 using static BeerOverflowWindowsApp.DataModels.TripAdvisorDataModel;
 
 namespace BeerOverflowWindowsApp.BarProviders
@@ -22,7 +21,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
-            CheckInputData(latitude, longitude, radius);
+            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
             List<BarData> barList = null;
             try
             {
@@ -34,12 +33,6 @@ namespace BeerOverflowWindowsApp.BarProviders
                 throw exception;
             }
             return barList;
-        }
-
-        private void CheckInputData(string latitude, string longitude, string radius)
-        {
-            if (RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius)) return;
-            throw new ArgumentsForProvidersException("Invalid arguments GetBarListTripAdvisor", latitude, longitude, radius);
         }
 
         private PlacesResponse GetBarData(string latitude, string longitude)

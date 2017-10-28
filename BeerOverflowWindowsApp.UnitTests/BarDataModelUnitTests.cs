@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using BeerOverflowWindowsApp.DataModels;
 using BeerOverflowWindowsApp.Exceptions;
 using NUnit.Framework;
@@ -9,59 +10,96 @@ namespace BeerOverflowWindowsApp.UnitTests
     public class BarDataModelUnitTests
     {
         [Test]
-        [TestCase(null, "90.0", "50")]
-        [TestCase("45.0", null, "50")]
-        [TestCase("45.0", "90.0", null)]
-        [TestCase("45.0", null, null)]
-        [TestCase(null, null, "50")]
-        [TestCase(null, "90.0", null)]
-        [TestCase(null, null, null)]
-        public void BarDataModel_CleanUpList_NullStrings(string latitude, string longitude, string radius)
+        public void BarDataModel_RemoveBarsOutsideRadius_NullRadius()
         {
             // Arrange
             var barData = new BarDataModel();
             // Act
             // Assert
-            var ex = Assert.Throws<ArgumentNullException>(() => barData.CleanUpList(latitude, longitude, radius));
+            var ex = Assert.Throws<ArgumentNullException>(() => barData.RemoveBarsOutsideRadius(null));
         }
 
         [Test]
-        public void BarDataModel_CleanUpList_InvalidLatidute([Values("T", "", "-91.0", "91.0")] string latitude,
-                                                             [Values("1.0")] string longitude,
-                                                             [Values("1")] string radius)
+        [TestCase("TEST", "test")]
+        [TestCase("testing", "TEST")]
+        [TestCase("TEST", "test name")]
+        public void BarDataModel_RemoveDuplicates_RemoveBarContainingOthersTitle(string name1, string name2)
+        {
+            // Arrange
+            var barData = new BarDataModel();
+            barData.Add(new BarData { Title = name1 });
+            barData.Add(new BarData { Title = name2 });
+            // Act
+            barData.RemoveDuplicates();
+            // Assert
+            Assert.AreEqual(barData.Count, 1);
+        }
+
+        [Test]
+        [TestCase("TESTs", 0.0, 0.0, "test", 0.0, 0.0)]
+        [TestCase("testing", 0.0, 0.0, "1TESTing", 0.0, 0.0)]
+        public void BarDataModel_RemoveDuplicates_RemoveSimilarBarsNear(string name1, double lat1, double lon1,
+                                                                        string name2, double lat2, double lon2)
+        {
+            // Arrange
+            var barData = new BarDataModel();
+            barData.Add(new BarData { Title = name1, Latitude = lat1, Longitude = lon1 });
+            barData.Add(new BarData { Title = name2, Latitude = lat2, Longitude = lon2 });
+            // Act
+            barData.RemoveDuplicates();
+            // Assert
+            Assert.AreEqual(barData.Count, 1);
+        }
+
+        [Test]
+        [TestCase("TESTs", 0.0, 0.0, "test", 0.0, 0.0)]
+        [TestCase("testing", 0.0, 0.0, "1TESTing", 0.0, 0.0)]
+        public void BarDataModel_RemoveDuplicates_DoNotRemoveSimilarBarsFar(string name1, double lat1, double lon1,
+            string name2, double lat2, double lon2)
+        {
+            // Arrange
+            var barData = new BarDataModel();
+            barData.Add(new BarData { Title = name1, Latitude = lat1, Longitude = lon1 });
+            barData.Add(new BarData { Title = name2, Latitude = lat2, Longitude = lon2 });
+            // Act
+            barData.RemoveDuplicates();
+            // Assert
+            Assert.AreEqual(barData.Count, 1);
+        }
+
+        [Test]
+        public void BarDataModel_RemoveBarsOutsideRadius_InvalidRadius([Values("T", "-", "-1", "", "999999.0")] string radius)
         {
             // Arrange
             var barData = new BarDataModel();
             // Act
-            var ex = Assert.Throws<ArgumentsForProvidersException>(() => barData.CleanUpList(latitude, longitude, radius));
-            // now we can test the exception itself
-            Assert.That(ex.InvalidArguments == "latitude");
-        }
-
-        [Test]
-        public void BarDataModel_CleanUpList_InvalidLongitude([Values("1.0")] string latitude,
-                                                              [Values("T", "", "-181.0", "181.0")]string longitude,
-                                                              [Values("1")] string radius)
-        {
-            // Arrange
-            var barData = new BarDataModel();
-            // Act
-            var ex = Assert.Throws<ArgumentsForProvidersException>(() => barData.CleanUpList(latitude, longitude, radius));
-            // now we can test the exception itself
-            Assert.That(ex.InvalidArguments == "longitude");
-        }
-
-        [Test]
-        public void BarDataModel_CleanUpList_InvalidRadius([Values("1.0")] string latitude,
-                                                           [Values("1.0")] string longitude,
-                                                           [Values("T", "-", "-1", "", "999999.0")] string radius)
-        {
-            // Arrange
-            var barData = new BarDataModel();
-            // Act
-            var ex = Assert.Throws<ArgumentsForProvidersException>(() => barData.CleanUpList(latitude, longitude, radius));
+            var ex = Assert.Throws<ArgumentsForProvidersException>(() => barData.RemoveBarsOutsideRadius(radius));
             // now we can test the exception itself
             Assert.That(ex.InvalidArguments == "radius");
+        }
+
+        [Test]
+        public void BarDataModel_RemoveBarsOutsideRadius_RemoveBarsOutside([Random(0, 900, 2)] int radius)
+        {
+            // Arrange
+            var numberOfBarsToRemove = 10;
+            var numberOfBarsToStay = 5;
+            var barData = new BarDataModel();
+
+            for (var i = 0; i < numberOfBarsToStay; i++)
+            {
+                barData.Add(new BarData { DistanceToCurrentLocation = radius - i });
+            }
+
+            for (var i = 1; i <= numberOfBarsToRemove; i++)
+            {
+                barData.Add(new BarData { DistanceToCurrentLocation = radius + i });
+            }
+
+            // Act
+            barData.RemoveBarsOutsideRadius(radius.ToString("0", CultureInfo.InvariantCulture));
+            // Assert
+            Assert.AreEqual(barData.Count, numberOfBarsToStay);
         }
     }
 }

@@ -12,19 +12,10 @@ namespace BeerOverflowWindowsApp.Exceptions
         public ArgumentsForProvidersException(string message) : base(message) { }
         public ArgumentsForProvidersException(string message, Exception inner) : base(message, inner) { }
 
-        public ArgumentsForProvidersException(string message, string latitude, string longitude, string radius) :
+        public ArgumentsForProvidersException(string message, string invalidArguments) :
             base(message)
         {
-            var latitudeIsCorrect = RegexTools.LatitudeTextIsCorrect(latitude);
-            var longitudeIsCorrect = RegexTools.LongitudeTextIsCorrect(longitude);
-            var radiusIsCorrect = RegexTools.RadiusTextIsCorrect(radius);
-
-            var badArguments = new List<string>();
-
-            if (!latitudeIsCorrect) { badArguments.Add("latitude"); }
-            if (!longitudeIsCorrect) { badArguments.Add("longitude"); }
-            if (!radiusIsCorrect) { badArguments.Add("radius"); }
-            InvalidArguments = string.Join(",", badArguments);
+            InvalidArguments = invalidArguments;
         }
 
         protected ArgumentsForProvidersException(System.Runtime.Serialization.SerializationInfo info,
