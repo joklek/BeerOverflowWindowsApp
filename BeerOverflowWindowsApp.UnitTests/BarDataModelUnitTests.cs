@@ -32,12 +32,13 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Act
             barData.RemoveDuplicates();
             // Assert
-            Assert.AreEqual(barData.Count, 1);
+            Assert.AreEqual(1, barData.Count);
         }
 
         [Test]
         [TestCase("TESTs", 0.0, 0.0, "test", 0.0, 0.0)]
-        [TestCase("testing", 0.0, 0.0, "1TESTing", 0.0, 0.0)]
+        [TestCase("TE5Ts", 0.0, 0.0, "tests", 0.0, 0.0)]      // same name as in DoNotRemoveSimilarBarsFar, with different coordinates
+        [TestCase("test1ng", 0.0, 0.0, "1TESTing", 0.0, 0.0)] // same name as in DoNotRemoveSimilarBarsFar, with different coordinates
         public void BarDataModel_RemoveDuplicates_RemoveSimilarBarsNear(string name1, double lat1, double lon1,
                                                                         string name2, double lat2, double lon2)
         {
@@ -48,12 +49,12 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Act
             barData.RemoveDuplicates();
             // Assert
-            Assert.AreEqual(barData.Count, 1);
+            Assert.AreEqual(1, barData.Count);
         }
 
         [Test]
-        [TestCase("TESTs", 0.0, 0.0, "test", 0.0, 0.0)]
-        [TestCase("testing", 0.0, 0.0, "1TESTing", 0.0, 0.0)]
+        [TestCase("TE5Ts", 0.0, 0.0, "tests", 10.0, 10.0)]      // same name as in RemoveSimilarBarsNear, with different coordinates
+        [TestCase("test1ng", 0.0, 0.0, "1TESTing", 10.0, 10.0)] // same name as in RemoveSimilarBarsNear, with different coordinates
         public void BarDataModel_RemoveDuplicates_DoNotRemoveSimilarBarsFar(string name1, double lat1, double lon1,
             string name2, double lat2, double lon2)
         {
@@ -64,7 +65,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Act
             barData.RemoveDuplicates();
             // Assert
-            Assert.AreEqual(barData.Count, 1);
+            Assert.AreEqual(2, barData.Count);
         }
 
         [Test]
@@ -99,7 +100,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Act
             barData.RemoveBarsOutsideRadius(radius.ToString("0", CultureInfo.InvariantCulture));
             // Assert
-            Assert.AreEqual(barData.Count, numberOfBarsToStay);
+            Assert.AreEqual(numberOfBarsToStay, barData.Count);
         }
     }
 }
