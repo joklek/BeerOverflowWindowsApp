@@ -36,7 +36,6 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        [TestCase("TESTs", 0.0, 0.0, "test", 0.0, 0.0)]
         [TestCase("TE5Ts", 0.0, 0.0, "tests", 0.0, 0.0)]      // same name as in DoNotRemoveSimilarBarsFar, with different coordinates
         [TestCase("test1ng", 0.0, 0.0, "1TESTing", 0.0, 0.0)] // same name as in DoNotRemoveSimilarBarsFar, with different coordinates
         public void BarDataModel_RemoveDuplicates_RemoveSimilarBarsNear(string name1, double lat1, double lon1,
