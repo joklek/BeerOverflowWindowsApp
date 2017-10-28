@@ -9,22 +9,30 @@ namespace BeerOverflowWindowsApp.UnitTests
     public class GetBarListTripAdvisorUnitTests
     {
         [Test]
-        [TestCase("0.0", "0.0", "1")]
         [TestCase("0.0", "0.0", "0")]
-        [TestCase("10", "10", "999")]
         [TestCase("-90.0", "-180.0", "50")]
         [TestCase("90.0", "180.0", "50")]
-        [TestCase("90.0", "180.0", "5")]
         [TestCase("-90.0", "180.0", "50")]
         [TestCase("90.0", "-180.0", "50")]
-        [TestCase("50.0", "50.0", "50")]
+        [TestCase("54.67933", "25.283960", "999")]
         public void GetBarsTripAdvisor_GetBarsAround_ValidData(string latitude, string longitude, string radius)
         {
             // Arrange
             var getBars = new GetBarListTripAdvisor();
             // Act
-            // Assert, should not throw exception
-            Assert.NotNull(getBars.GetBarsAround(latitude, longitude, radius));
+            var barList = getBars.GetBarsAround(latitude, longitude, radius);
+            // Assert
+            Assert.NotNull(barList);
+            foreach (var bar in barList)
+            {
+                Assert.NotNull(bar);
+                Assert.NotNull(bar.Ratings);
+                Assert.NotNull(bar.DistanceToCurrentLocation);
+                Assert.GreaterOrEqual(bar.DistanceToCurrentLocation, 0.0);
+                Assert.NotNull(bar.Latitude);
+                Assert.NotNull(bar.Longitude);
+                Assert.NotNull(bar.Title);
+            }
         }
 
         [Test]

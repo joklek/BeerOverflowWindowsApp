@@ -13,12 +13,8 @@ namespace BeerOverflowWindowsApp.UnitTests
         public void ComparerByRating_Compare_RatingsFirstBigger()
         {
             // Arrange  
-            var barData1 = new BarData { Ratings = new List<int>()};
-            barData1.Ratings.Add(10);
-            barData1.Ratings.Add(20);
-            var barData2 = new BarData { Ratings = new List<int>()};
-            barData2.Ratings.Add(5);
-            barData2.Ratings.Add(10);
+            var barData1 = new BarData { Ratings = new List<int>{10,20}};
+            var barData2 = new BarData { Ratings = new List<int>{5,10}};
             var expectedResult = 1;
             var comparer = new ComparerByRating();
 
@@ -49,12 +45,8 @@ namespace BeerOverflowWindowsApp.UnitTests
         public void ComparerByRating_Compare_RatingsFirstSmaller()
         {
             // Arrange  
-            var barData1 = new BarData { Ratings = new List<int>()};
-            barData1.Ratings.Add(5);
-            barData1.Ratings.Add(10);
-            var barData2 = new BarData { Ratings = new List<int>()};
-            barData2.Ratings.Add(10);
-            barData2.Ratings.Add(20);
+            var barData1 = new BarData { Ratings = new List<int> { 5, 10 } };
+            var barData2 = new BarData { Ratings = new List<int> { 10, 20 } };
             var expectedResult = -1;
             var comparer = new ComparerByRating();
 
@@ -85,12 +77,9 @@ namespace BeerOverflowWindowsApp.UnitTests
         public void ComparerByRating_Compare_RatingsEqual()
         {
             // Arrange  
-            var barData1 = new BarData { Ratings = new List<int>()};
-            barData1.Ratings.Add(5);
-            barData1.Ratings.Add(10);
-            var barData2 = new BarData { Ratings = new List<int>()};
-            barData2.Ratings.Add(10);
-            barData2.Ratings.Add(5);
+            var newRatings = new List<int> { 10, 20 };
+            var barData1 = new BarData { Ratings = newRatings };
+            var barData2 = new BarData { Ratings = newRatings };
             var expectedResult = 0;
             var comparer = new ComparerByRating();
 
