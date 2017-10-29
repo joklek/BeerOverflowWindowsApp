@@ -78,20 +78,21 @@ namespace BeerOverflowWindowsApp.UnitTests
             Assert.That(ex.InvalidArguments == "radius");
         }
 
+        private const int _maximumRadius = 999;
+        private const int _numberOfBarsToRemove = 10;
+        private const int _numberOfBarsToStay = 5;
         [Test]
-        public void BarDataModel_RemoveBarsOutsideRadius_RemoveBarsOutside([Random(0, 900, 2)] int radius)
+        public void BarDataModel_RemoveBarsOutsideRadius_RemoveBarsOutside([Random(_numberOfBarsToStay, _maximumRadius, 2)] int radius)
         {
             // Arrange
-            var numberOfBarsToRemove = 10;
-            var numberOfBarsToStay = 5;
             var barData = new BarDataModel();
 
-            for (var i = 0; i < numberOfBarsToStay; i++)
+            for (var i = 0; i < _numberOfBarsToStay; i++)
             {
                 barData.Add(new BarData { DistanceToCurrentLocation = radius - i });
             }
 
-            for (var i = 1; i <= numberOfBarsToRemove; i++)
+            for (var i = 1; i <= _numberOfBarsToRemove; i++)
             {
                 barData.Add(new BarData { DistanceToCurrentLocation = radius + i });
             }
@@ -99,7 +100,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Act
             barData.RemoveBarsOutsideRadius(radius.ToString("0", CultureInfo.InvariantCulture));
             // Assert
-            Assert.AreEqual(numberOfBarsToStay, barData.Count);
+            Assert.AreEqual(_numberOfBarsToStay, barData.Count);
         }
     }
 }
