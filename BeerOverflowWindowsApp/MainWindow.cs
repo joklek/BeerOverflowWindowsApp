@@ -201,31 +201,34 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        private void LongitudeTextBox_TextChanged(object sender, EventArgs e)
+        private void DataTextBoxChanged(TextBox textbox, Func<string, bool> textValidate)
         {
-            if (!RegexTools.LongitudeTextIsCorrect(LongitudeTextBox.Text))
+            var textIsCorrect = false;
+            try
             {
-                PaintTextBoxIncorrect(LongitudeTextBox);
+                textIsCorrect = textValidate(textbox.Text);
             }
-            else { ResetTextBoxColor(LongitudeTextBox); }
+            catch (ArgumentsForProvidersException)
+            {
+                PaintTextBoxIncorrect(textbox);
+            }
+            if (textIsCorrect)
+            { ResetTextBoxColor(textbox); }
         }
 
         private void LatitudeTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!RegexTools.LatitudeTextIsCorrect(LatitudeTextBox.Text))
-            {
-                PaintTextBoxIncorrect(LatitudeTextBox);
-            }
-            else { ResetTextBoxColor(LatitudeTextBox); }
+            DataTextBoxChanged(LatitudeTextBox, RegexTools.LatitudeTextIsCorrect);
+        }
+
+        private void LongitudeTextBox_TextChanged(object sender, EventArgs e)
+        {
+            DataTextBoxChanged(LongitudeTextBox, RegexTools.LongitudeTextIsCorrect);
         }
 
         private void RadiusTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!RegexTools.RadiusTextIsCorrect(RadiusTextBox.Text))
-            {
-                PaintTextBoxIncorrect(RadiusTextBox);
-            }
-            else { ResetTextBoxColor(RadiusTextBox); }
+            DataTextBoxChanged(RadiusTextBox, RegexTools.RadiusTextIsCorrect);
         }
 
         private void PaintTextBoxIncorrect(TextBox textBox)

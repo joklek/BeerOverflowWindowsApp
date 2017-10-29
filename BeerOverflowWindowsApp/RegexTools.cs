@@ -7,8 +7,8 @@ namespace BeerOverflowWindowsApp
     static class RegexTools
     {
         private static string _invalidDataMessage = "Invalid data entered";
-        private static string _latitudeRegex = @"^(-?[1-8]?\d(?:\.\d{1,})?|-?90(?:\.0{1,})?)$";
-        private static string _longitudeRegex = @"^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,})?|-?180(?:\.0{1,})?)$";
+        private static string _latitudeRegex = @"^(-?[1-8]?\d(\.\d{1,})?|-?90(\.0{1,})?)$";
+        private static string _longitudeRegex = @"^(-?(1[0-7]|[1-9])?\d(\.\d{1,})?|-?180(\.0{1,})?)$";
         private static string _radiusRegex = @"^[0-9]{1,3}$";
 
         public static bool LocationDataTextIsCorrect(string latitude, string longitude, string radius)
