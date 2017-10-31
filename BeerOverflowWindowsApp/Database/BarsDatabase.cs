@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.Entity;
+using BeerOverflowWindowsApp.DataModels;
+
+namespace BeerOverflowWindowsApp
+{
+    public class BarsDatabase : DbContext
+    {
+        public DbSet<BarData> Bars { get; set; }
+    }
+}

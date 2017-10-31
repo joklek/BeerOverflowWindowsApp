@@ -17,7 +17,8 @@ namespace BeerOverflowWindowsApp
 
         public void AddRating(BarData barData, int rating)
         {
-            var allBars = BarFileReader.GetAllBarData();
+            //var allBars = BarFileReader.GetAllBarData();
+            var allBars = new DatabaseManager().GetAllBarData();
 
             if (barData.Ratings == null)
             {
@@ -37,7 +38,8 @@ namespace BeerOverflowWindowsApp
                 allBars.Add(barData);
             }
 
-            BarFileWriter.SaveData(allBars);
+            //BarFileWriter.SaveData(allBars);
+            new DatabaseManager().SaveData(allBars);
         }
 
         public void AddBars(List<BarData> barsList)
@@ -49,7 +51,8 @@ namespace BeerOverflowWindowsApp
                     BarsData.Add( bar );
                 }
             }
-            BarFileWriter.SaveData(BarsData);
+            //BarFileWriter.SaveData(BarsData);
+            new DatabaseManager().SaveData(BarsData);
         }
 
         public void Sort(CompareType compareType, bool ascending = true)

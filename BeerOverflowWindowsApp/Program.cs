@@ -1,5 +1,9 @@
-﻿using System;
+﻿using BeerOverflowWindowsApp.DataModels;
+using System;
 using System.Windows.Forms;
+using System.Linq;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 
 namespace BeerOverflowWindowsApp
 {
@@ -10,7 +14,7 @@ namespace BeerOverflowWindowsApp
         /// </summary>
         [STAThread]
         static void Main()
-        {
+        {       
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());
