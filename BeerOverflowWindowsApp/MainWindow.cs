@@ -154,13 +154,13 @@ namespace BeerOverflowWindowsApp
 
         private string GetLatitude()
         {
-            CurrentLocation.currentLocation.Latitude = Convert.ToDouble(LatitudeTextBox.Text);
+            CurrentLocation.currentLocation.Latitude = Convert.ToDouble(LatitudeTextBox.Text, CultureInfo.InvariantCulture);
             return LatitudeTextBox.Text;
         }
 
         private string GetLongitude()
         {
-            CurrentLocation.currentLocation.Longitude = Convert.ToDouble(LongitudeTextBox.Text);
+            CurrentLocation.currentLocation.Longitude = Convert.ToDouble(LongitudeTextBox.Text, CultureInfo.InvariantCulture);
             return LongitudeTextBox.Text;
         }
 

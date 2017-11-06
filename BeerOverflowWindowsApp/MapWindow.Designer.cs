@@ -40,7 +40,6 @@
             this.elementMap.Size = new System.Drawing.Size(459, 453);
             this.elementMap.TabIndex = 0;
             this.elementMap.Text = "elementMap";
-            this.elementMap.ChildChanged += new System.EventHandler<System.Windows.Forms.Integration.ChildChangedEventArgs>(this.elementMap_ChildChanged);
             this.elementMap.Child = this.mapControl;
             // 
             // MapWindow
@@ -52,7 +51,6 @@
             this.Name = "MapWindow";
             this.Text = "MapWindow";
             this.ResumeLayout(false);
-
         }
 
         #endregion

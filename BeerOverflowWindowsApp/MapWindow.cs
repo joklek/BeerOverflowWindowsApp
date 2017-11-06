@@ -8,10 +8,5 @@ namespace BeerOverflowWindowsApp
         {
             InitializeComponent();
         }
-
-        private void elementMap_ChildChanged(object sender, System.Windows.Forms.Integration.ChildChangedEventArgs e)
-        {
-
-        }
     }
 }
