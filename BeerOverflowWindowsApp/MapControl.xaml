@@ -26,8 +26,7 @@
                Mode="AerialWithLabels"
                Grid.ColumnSpan="3"
                MouseDoubleClick="MapWithPushpins_MouseDoubleClick"/>
-        <Button x:Name="btnCurrentUserLocation" 
-                Tag="54.684815,25.288464,0.0000 16.0000"              
+        <Button x:Name="btnCurrentUserLocation"              
                 VerticalAlignment="Center" 
                 Grid.IsSharedSizeScope="True" 
                 UseLayoutRounding="True" 

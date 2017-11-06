@@ -27,6 +27,7 @@ namespace BeerOverflowWindowsApp
             _barRating = new BarRating();
             LatitudeTextBox.Text = _defaultLatitude;
             LongitudeTextBox.Text = _defaultLongitude;
+            CurrentLocation.currentLocation = new GeoCoordinate(Convert.ToDouble(_defaultLatitude), Convert.ToDouble(_defaultLongitude));
             RadiusTextBox.Text = _defaultRadius;
         }
 
@@ -95,6 +96,14 @@ namespace BeerOverflowWindowsApp
                     UpdateProgressBars(currentProgressValue);
                 }
 
+                //foreach (var bar in result)
+                //{
+                  //  bar.Longitude;
+                  //  bar.Latitude;
+                  //  bar.Title;
+                  //  bar.Ratings;
+                //}
+
                 HideProgressBars();
                 
                 // Display
@@ -151,11 +160,13 @@ namespace BeerOverflowWindowsApp
 
         private string GetLatitude()
         {
+            CurrentLocation.currentLocation.Latitude = Convert.ToDouble(LatitudeTextBox.Text);
             return LatitudeTextBox.Text;
         }
 
         private string GetLongitude()
         {
+            CurrentLocation.currentLocation.Longitude = Convert.ToDouble(LongitudeTextBox.Text);
             return LongitudeTextBox.Text;
         }
 
@@ -285,7 +296,7 @@ namespace BeerOverflowWindowsApp
             return currentLocation;
         }
 
-        private void MapButton_Click(object sender, EventArgs e)
+        public void MapButton_Click(object sender, EventArgs e)
         {
             MapWindow frame2 = new MapWindow();
             frame2.Show();

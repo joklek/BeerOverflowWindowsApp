@@ -5,7 +5,6 @@ using Microsoft.Maps.MapControl.WPF.Design;
 using System.Windows.Input;
 using System.Configuration;
 using System;
-using BeerOverflowWindowsApp;
 
 namespace BeerOverflowWindowsApp
 {
@@ -14,24 +13,24 @@ namespace BeerOverflowWindowsApp
     /// </summary>
     public partial class MapControl : UserControl
     {
-        LocationConverter locConverter = new LocationConverter();
+        double latitude = CurrentLocation.currentLocation.Latitude;
+        double longitude = CurrentLocation.currentLocation.Longitude;
+
         public MapControl()
         {
             InitializeComponent();
-            string latitude = ConfigurationManager.AppSettings["defaultLatitude"];
-            string longitude = ConfigurationManager.AppSettings["defaultLongitude"];
-            Map.Focus();
-            Map.Mode = new AerialMode(true);
             Pushpin pin = new Pushpin();
-            pin.Location = new Location(Convert.ToDouble(latitude), Convert.ToDouble(longitude));
+            pin.Location = new Location(latitude, longitude);
+            Location center = new Location(latitude, longitude);
             Map.Children.Add(pin);
+            double zoom = 13.000;
+            Map.SetView(center, zoom);
         }
 
         private void ShowCurrentLocation_Click(object sender, RoutedEventArgs e)
         {
-            string[] tagInfo = ((Button)sender).Tag.ToString().Split(' ');
-            Location center = (Location)locConverter.ConvertFrom(tagInfo[0]);
-            double zoom = System.Convert.ToDouble(tagInfo[1]);
+            Location center = new Location(latitude, longitude);
+            double zoom = 16.000;
             Map.SetView(center, zoom);
         }
 

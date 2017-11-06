@@ -28,26 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.mapControl1 = new BeerOverflowWindowsApp.MapControl();
+            this.elementMap = new System.Windows.Forms.Integration.ElementHost();
+            this.mapControl = new BeerOverflowWindowsApp.MapControl();
             this.SuspendLayout();
             // 
-            // elementHost1
+            // elementMap
             // 
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost1.Location = new System.Drawing.Point(0, 0);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(459, 453);
-            this.elementHost1.TabIndex = 0;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.mapControl1;
+            this.elementMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.elementMap.Location = new System.Drawing.Point(0, 0);
+            this.elementMap.Name = "elementMap";
+            this.elementMap.Size = new System.Drawing.Size(459, 453);
+            this.elementMap.TabIndex = 0;
+            this.elementMap.Text = "elementMap";
+            this.elementMap.ChildChanged += new System.EventHandler<System.Windows.Forms.Integration.ChildChangedEventArgs>(this.elementMap_ChildChanged);
+            this.elementMap.Child = this.mapControl;
             // 
             // MapWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(459, 453);
-            this.Controls.Add(this.elementHost1);
+            this.Controls.Add(this.elementMap);
             this.Name = "MapWindow";
             this.Text = "MapWindow";
             this.ResumeLayout(false);
@@ -55,8 +56,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Integration.ElementHost elementHost1;
-        private MapControl mapControl1;
+        private System.Windows.Forms.Integration.ElementHost elementMap;
+        private MapControl mapControl;
     }
 }
