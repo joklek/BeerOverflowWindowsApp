@@ -1,10 +1,9 @@
 ﻿using Microsoft.Maps.MapControl.WPF;
 using System.Windows.Controls;
 using System.Windows;
-using Microsoft.Maps.MapControl.WPF.Design;
 using System.Windows.Input;
-using System.Configuration;
-using System;
+using BeerOverflowWindowsApp.DataModels;
+using System.Device.Location;
 
 namespace BeerOverflowWindowsApp
 {
@@ -21,8 +20,16 @@ namespace BeerOverflowWindowsApp
             InitializeComponent();
             Pushpin pin = new Pushpin();
             pin.Location = new Location(latitude, longitude);
-            Location center = new Location(latitude, longitude);
             Map.Children.Add(pin);
+            var BarData = new BarDataModel();
+
+            foreach (var bar in BarData)
+            { 
+                Pushpin barPin = new Pushpin();
+                Map.Children.Add(barPin);
+            }
+
+            Location center = new Location(latitude, longitude);
             double zoom = 13.000;
             Map.SetView(center, zoom);
         }
@@ -33,6 +40,8 @@ namespace BeerOverflowWindowsApp
             double zoom = 16.000;
             Map.SetView(center, zoom);
         }
+
+        
 
         private void MapWithPushpins_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
