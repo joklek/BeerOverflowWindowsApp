@@ -17,42 +17,7 @@ namespace BeerOverflowWindowsApp
 
         public void AddRating(BarData barData, int rating)
         {
-            //var allBars = BarFileReader.GetAllBarData();
-            var allBars = new DatabaseManager().GetAllBarData();
-
-            if (barData.Ratings == null)
-            {
-                barData.Ratings = new List<int>();
-            }
-            barData.Ratings.Add(rating);
-            // Update local copy of list
-            BarsData.Find(x => x == barData).Ratings = barData.Ratings;
-
-            var foundBar = allBars.FindIndex(x => x.Title == barData.Title);
-            if (foundBar != -1)
-            {
-                allBars[foundBar].Ratings = barData.Ratings;
-            }
-            else
-            {
-                allBars.Add(barData);
-            }
-
-            //BarFileWriter.SaveData(allBars);
-            new DatabaseManager().SaveData(allBars);
-        }
-
-        public void AddBars(List<BarData> barsList)
-        {
-            foreach (var bar in barsList)
-            {
-                if (BarsData.Count(x => x.Title == bar.Title) == 0)
-                {
-                    BarsData.Add( bar );
-                }
-            }
-            //BarFileWriter.SaveData(BarsData);
-            new DatabaseManager().SaveData(BarsData);
+            new DatabaseManager().SaveBarRating(barData, rating);
         }
 
         public void Sort(CompareType compareType, bool ascending = true)

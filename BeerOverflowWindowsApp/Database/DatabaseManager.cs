@@ -3,6 +3,8 @@ using BeerOverflowWindowsApp.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,90 +13,51 @@ namespace BeerOverflowWindowsApp
 {
     public class DatabaseManager
     {
-        static BarsDatabase db = new BarsDatabase();
-        public void SaveData(BarDataModel barData)
+        public void SaveBarRating(BarData barToRate, int rating)
         {
-           // using (var db = new BarsDatabase())
-            {
-                /*
-                var barNames = db.Bars.Select(x => x.Title);
-
-                foreach (var bar in barData)
+            using (var db = new BarsDatabase())
+            {              
+                var userInDb = db.Users.FirstOrDefault<User>(user => user.Username == Program.defaultUser.Username);
+                if (userInDb == null)
+                    userInDb = new User { Username = Program.defaultUser.Username };
+                var barInDb = db.Bars.FirstOrDefault<BarData>(bar => bar.BarId == barToRate.BarId);
+                if (barInDb != null)
                 {
-                    if(!barNames.Contains(bar.Title))
-                        db.Bars.Add(bar);
-                }             
-                */
-
-                foreach (var bar in barData)
-                {
-                    var result = db.Bars.SingleOrDefault(b => b.Title == bar.Title);
-                    if (result != null)
+                    var barRating = db.UserRatings.Find(new Object[] { barInDb.BarId, userInDb.Username });
+                    if (barRating != null)
                     {
-                        result.Ratings = bar.Ratings;
-                        db.SaveChanges();
+                        barRating.Rating = rating;
                     }
                     else
                     {
-                        db.Bars.Add(bar);
-                        db.SaveChanges();
+                        db.UserRatings.Add(new UsersRatingToBar(barInDb, userInDb, rating));
                     }
-
-                    /*
-                                        BarData barInDb;
-                                        if((barInDb = db.Bars.Find(bar.Title)) != null)
-                                        {
-                                            barInDb.Ratings = bar.Ratings;
-                                        } else
-                                        {
-                                            db.Bars.Add(bar);
-                                        }
-                    */
                 }
-                //db.SaveChanges();
-               // RefreshAll(db);
-               // var a = db.ChangeTracker.Entries();
-                //db.Entry(Bars).State = EntityState.Detached;
-  /*              var query = from b in db.Bars
-                            orderby b.Title
-                            select b;
-
-                Console.WriteLine("All bars in the database:");
-                foreach (var item in query)
+                else
                 {
-                    Console.WriteLine(item.Title);
-                }  //db.Database.Delete();*/
+                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
+                }
+                db.SaveChanges();              
             }
         }
 
-        public BarDataModel GetAllBarData()
+        public BarDataModel GetAllBarData(BarDataModel localBars)
         {
-            BarDataModel barsData = new BarDataModel();
-           // using (var db = new BarsDatabase())
-            {              
-                barsData.AddRange(db.Bars);              
+            using (var db = new BarsDatabase())
+            {
+                localBars.ForEach(bar => bar.Ratings = db.UserRatings.Where<UsersRatingToBar>(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList<int>());
             }
-            return barsData;
+            return localBars;
         }
 
         public List<int> GetBarRatings(BarData bar)
         {
-            List<int> ratings;
-           // using (var db = new BarsDatabase())
+            List<int> list;
+            using (var db = new BarsDatabase())
             {
-                ratings = db.Bars.FirstOrDefault(x => x.Title == bar.Title)?.Ratings ?? new List<int>();
+                list = db.UserRatings.Where<UsersRatingToBar>(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList<int>();
             }
-            return ratings;
+            return list;
         }
-
-        public void RefreshAll(BarsDatabase db)
-        {
-            foreach (var entity in db.ChangeTracker.Entries())
-            {
-                //entity.Reload();
-                db.Entry(entity).State = EntityState.Detached;
-            }
-        }
-
     }
 }

@@ -100,6 +100,8 @@ namespace BeerOverflowWindowsApp
                 }
 
                 HideProgressBars();
+
+                result.ForEach(bar => bar.BarId = bar.Title); // Temporary solution until we decide on BarId 
                 
                 // Display
                 result.GetRatings();
@@ -174,6 +176,7 @@ namespace BeerOverflowWindowsApp
             if (_selectedBar != null && rating != "" && int.TryParse(rating, out int ratingNumber))
             {
                 _barRating.AddRating(_selectedBar ,ratingNumber);
+                _selectedBar.Ratings = new DatabaseManager().GetBarRatings(_selectedBar);
                 ReSort();
             }
         }

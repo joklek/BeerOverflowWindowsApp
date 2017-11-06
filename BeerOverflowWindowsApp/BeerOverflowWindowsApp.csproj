@@ -93,8 +93,8 @@
     <Compile Include="RegexTools.cs" />
     <Compile Include="DataModels\BarData.cs" />
     <Compile Include="DataModels\BarDataModel.cs" />
-    <Compile Include="BarFileReader.cs" />
-    <Compile Include="BarFileWriter.cs" />
+    <Compile Include="FileIO\BarFileReader.cs" />
+    <Compile Include="FileIO\BarFileWriter.cs" />
     <Compile Include="DataModels\TripAdvisorDataModel.cs" />
     <Compile Include="BarProviders\GetBarListTripAdvisor.cs" />
     <Compile Include="DataModels\FacebookDataModel.cs" />
@@ -124,6 +124,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Database\User.cs" />
+    <Compile Include="Database\UsersRatingToBar.cs" />
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>

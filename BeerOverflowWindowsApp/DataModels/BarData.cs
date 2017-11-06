@@ -3,26 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
+    [Table("Bar")]
     public class BarData : IEquatable<BarData>
     {
-        [Key]
+        public BarData() { }
+
         public string Title { get; set; }
-        public string Id { get; set; }
+        [Key]
+        public string BarId { get; set; }
         public List<int> Ratings { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        public BarData()
-        {
-            Ratings = new List<int>();
-        }
+        public virtual ICollection<UsersRatingToBar> UserRatings { get; set; }
 
         [NotMapped]
-        [JsonIgnore]
         public double DistanceToCurrentLocation { get; set; }
 
         public bool Equals(BarData other)
