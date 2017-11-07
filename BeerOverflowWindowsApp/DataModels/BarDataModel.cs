@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BeerOverflowWindowsApp.Database;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Device.Location;

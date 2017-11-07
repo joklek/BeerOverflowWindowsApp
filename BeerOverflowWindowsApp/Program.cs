@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
+using BeerOverflowWindowsApp.Database;
 
 namespace BeerOverflowWindowsApp
 {

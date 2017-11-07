@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.Database
 {
     public class DatabaseManager
     {

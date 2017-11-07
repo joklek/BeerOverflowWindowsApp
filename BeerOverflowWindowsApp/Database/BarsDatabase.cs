@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using BeerOverflowWindowsApp.DataModels;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.Database
 {
     public class BarsDatabase : DbContext
     {

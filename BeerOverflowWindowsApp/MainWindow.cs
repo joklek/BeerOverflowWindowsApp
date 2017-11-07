@@ -10,6 +10,7 @@ using System.Device.Location;
 using System.Configuration;
 using BeerOverflowWindowsApp.BarProviders;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using BeerOverflowWindowsApp.Database;
 
 namespace BeerOverflowWindowsApp
 {
