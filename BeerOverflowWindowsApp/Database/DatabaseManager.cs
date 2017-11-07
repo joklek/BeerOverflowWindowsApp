@@ -23,7 +23,7 @@ namespace BeerOverflowWindowsApp.Database
                 var barInDb = db.Bars.FirstOrDefault<BarData>(bar => bar.BarId == barToRate.BarId);
                 if (barInDb != null)
                 {
-                    var barRating = db.UserRatings.Find(new { barInDb.BarId, userInDb.Username });
+                    var barRating = db.UserRatings.Find(new[] { barInDb.BarId, userInDb.Username });
                     if (barRating != null)
                     {
                         barRating.Rating = rating;
