@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -70,7 +69,7 @@ namespace BeerOverflowWindowsApp.BarRaters
             }
         }
 
-        Boolean mouseEntered = false;
+        bool mouseEntered = false;
         private int numberOfGlasses = 0;
         private void ManualBarRating_MouseEnter(object sender, System.EventArgs e)
         {
