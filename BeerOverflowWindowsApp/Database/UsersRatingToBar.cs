@@ -32,5 +32,6 @@ namespace BeerOverflowWindowsApp.Database
         public virtual User User { get; set; }
 
         public int Rating { get; set; }
+        public string Comment { get; set; }
     }
 }

@@ -94,6 +94,10 @@
     <Compile Include="Migrations\201711071344345_InitialCreate.Designer.cs">
       <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711072027400_AddUserComments.cs" />
+    <Compile Include="Migrations\201711072027400_AddUserComments.Designer.cs">
+      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="RegexTools.cs" />
     <Compile Include="DataModels\BarData.cs" />
@@ -142,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711071344345_InitialCreate.resx">
       <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711072027400_AddUserComments.resx">
+      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
