@@ -20,6 +20,7 @@ namespace BeerOverflowWindowsApp
         private readonly string _defaultLatitude = ConfigurationManager.AppSettings["defaultLatitude"];
         private readonly string _defaultLongitude = ConfigurationManager.AppSettings["defaultLongitude"];
         private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
+        MapWindow mapForm;
 
         public MainWindow()
         {
@@ -294,8 +295,19 @@ namespace BeerOverflowWindowsApp
         {
             var latitude = GetLatitude();
             var longitude = GetLongitude();
-            MapWindow frame2 = new MapWindow();
-            frame2.Show();
+            if (mapForm == null)
+            {
+                mapForm = new MapWindow();
+                mapForm.FormClosed += mapForm_FormClosed;
+            }
+            mapForm.Show(this);
+            Hide();
+        }
+
+        void mapForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            mapForm = null;
+            Show();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Maps.MapControl.WPF;
 using System.Windows;
 using System.Windows.Input;
-using BeerOverflowWindowsApp.DataModels;
+using System;
 
 namespace BeerOverflowWindowsApp
 {
@@ -10,6 +10,7 @@ namespace BeerOverflowWindowsApp
     /// </summary>
     public partial class MapControl
     {
+
         public MapControl()
         {
             InitializeComponent();
@@ -22,21 +23,6 @@ namespace BeerOverflowWindowsApp
                 Map.Children.Add(pin);
                 var zoom = 13.000;
                 Map.SetView(center, zoom);
-            }
-
-            var BarData = new BarDataModel();
-
-            foreach (var bar in BarData)
-            {
-                var barPin = new Pushpin
-                {
-                    Location =
-                    {
-                        Latitude = bar.Latitude,
-                        Longitude = bar.Longitude
-                    }
-                };
-                Map.Children.Add(barPin);
             }
         }
 
@@ -55,7 +41,26 @@ namespace BeerOverflowWindowsApp
             var mousePosition = e.GetPosition(this);
             var pinLocation = Map.ViewportPointToLocation(mousePosition);
             var pin = new Pushpin {Location = pinLocation};
+            Console.WriteLine(pinLocation);
             Map.Children.Add(pin);
+        }
+
+        private void ChangeMapMode_Click(object sender, RoutedEventArgs e)
+        {
+            if (Map.Mode.ToString() == "Microsoft.Maps.MapControl.WPF.RoadMode")
+            {
+                Map.Mode = new AerialMode(true);
+            }
+            else if (Map.Mode.ToString() == "Microsoft.Maps.MapControl.WPF.AerialMode")
+            {
+                Map.Mode = new RoadMode();
+            }
+        }
+
+        private void BackToMainWindow_Click(object sender, RoutedEventArgs e)
+        {
+            MapWindow close = new MapWindow();
+            close.MapWindowForm();
         }
     }
 }

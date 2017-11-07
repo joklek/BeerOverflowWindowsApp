@@ -8,5 +8,10 @@ namespace BeerOverflowWindowsApp
         {
             InitializeComponent();
         }
+
+        public void MapWindowForm()
+        {
+            ActiveForm.Close();
+        }
     }
 }
