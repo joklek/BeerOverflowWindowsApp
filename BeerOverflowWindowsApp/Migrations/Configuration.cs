@@ -1,11 +1,8 @@
 namespace BeerOverflowWindowsApp.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<BeerOverflowWindowsApp.Database.BarsDatabase>
+    internal sealed class Configuration : DbMigrationsConfiguration<Database.BarsDatabase>
     {
         public Configuration()
         {
@@ -13,7 +10,7 @@ namespace BeerOverflowWindowsApp.Migrations
             ContextKey = "BeerOverflowWindowsApp.Database.BarsDatabase";
         }
 
-        protected override void Seed(BeerOverflowWindowsApp.Database.BarsDatabase context)
+        protected override void Seed(Database.BarsDatabase context)
         {
             //  This method will be called after migrating to the latest version.
 

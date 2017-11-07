@@ -1,16 +1,12 @@
-﻿using BeerOverflowWindowsApp.DataModels;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using System.Linq;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
 using BeerOverflowWindowsApp.Database;
 
 namespace BeerOverflowWindowsApp
 {
     static class Program
     {
-        public static User defaultUser = new User { Username = "admin" };
+        public static User defaultUser = new User { Username = "admin1" };
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

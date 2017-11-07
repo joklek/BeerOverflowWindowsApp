@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BeerOverflowWindowsApp.DataModels;
 
@@ -28,7 +23,7 @@ namespace BeerOverflowWindowsApp.Database
         [ForeignKey("User")]
         [Key]
         [Column(Order = 1)]
-        public String Username { get; set; }
+        public string Username { get; set; }
         public virtual User User { get; set; }
 
         public int Rating { get; set; }

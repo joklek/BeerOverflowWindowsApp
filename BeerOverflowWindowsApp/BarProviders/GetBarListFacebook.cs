@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using BeerOverflowWindowsApp.DataModels;
 using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.FacebookDataModel;

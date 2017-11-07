@@ -1,13 +1,6 @@
-﻿using BeerOverflowWindowsApp.BarComparers;
-using BeerOverflowWindowsApp.DataModels;
-using System;
+﻿using BeerOverflowWindowsApp.DataModels;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BeerOverflowWindowsApp.Database
 {
@@ -17,13 +10,13 @@ namespace BeerOverflowWindowsApp.Database
         {
             using (var db = new BarsDatabase())
             {              
-                var userInDb = db.Users.FirstOrDefault<User>(user => user.Username == Program.defaultUser.Username);
+                var userInDb = db.Users.FirstOrDefault(user => user.Username == Program.defaultUser.Username);
                 if (userInDb == null)
                     userInDb = new User { Username = Program.defaultUser.Username };
-                var barInDb = db.Bars.FirstOrDefault<BarData>(bar => bar.BarId == barToRate.BarId);
+                var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == barToRate.BarId);
                 if (barInDb != null)
                 {
-                    var barRating = db.UserRatings.Find(new[] { barInDb.BarId, userInDb.Username });
+                    var barRating = db.UserRatings.Find(barInDb.BarId, userInDb.Username);
                     if (barRating != null)
                     {
                         barRating.Rating = rating;
@@ -45,7 +38,7 @@ namespace BeerOverflowWindowsApp.Database
         {
             using (var db = new BarsDatabase())
             {
-                localBars.ForEach(bar => bar.Ratings = db.UserRatings.Where<UsersRatingToBar>(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList<int>());
+                localBars.ForEach(bar => bar.Ratings = db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList());
             }
             return localBars;
         }
@@ -55,7 +48,7 @@ namespace BeerOverflowWindowsApp.Database
             List<int> list;
             using (var db = new BarsDatabase())
             {
-                list = db.UserRatings.Where<UsersRatingToBar>(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList<int>();
+                list = db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList();
             }
             return list;
         }

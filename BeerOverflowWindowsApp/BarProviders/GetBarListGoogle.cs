@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
 using System.Collections.Generic;

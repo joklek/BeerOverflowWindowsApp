@@ -76,7 +76,7 @@ namespace BeerOverflowWindowsApp.BarRaters
         }
 
         int difference = 0;
-        private Boolean mousePressed = false;
+        private bool mousePressed = false;
         private void ManualBeerMeter_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (marker.Contains(e.X, e.Y) && e.Button == MouseButtons.Left)
@@ -86,7 +86,7 @@ namespace BeerOverflowWindowsApp.BarRaters
             }
         }
 
-        private String text = "0 %";
+        private string text = "0 %";
         private const string textToDisplay = "BEEROVERFLOW!!!";
         private void ManualBeerMeter_MouseMove(object sender, MouseEventArgs e)
         {
