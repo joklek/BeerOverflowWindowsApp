@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BeerOverflowWindowsApp.Database;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Device.Location;
@@ -125,9 +126,10 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public void GetRatings()
         {
+            var dbManager = new DatabaseManager();
             foreach (var bar in this)
             {
-                bar.Ratings = BarFileReader.GetBarRatings(bar);
+                bar.Ratings = dbManager.GetBarRatings(bar);
             }
         }
 
