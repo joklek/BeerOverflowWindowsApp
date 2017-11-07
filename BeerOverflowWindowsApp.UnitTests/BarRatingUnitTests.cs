@@ -17,15 +17,6 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        public void BarRating_AddBar_EmptyBar()
-        {
-            // Arrange
-            var rating = new BarRating();
-            // Act && Assert  
-            var ex = Assert.Throws<ArgumentNullException>(() => rating.AddBars(null));
-        }
-
-        [Test]
         public void BarRating_Sort_UnknownEnum()
         {
             // Arrange

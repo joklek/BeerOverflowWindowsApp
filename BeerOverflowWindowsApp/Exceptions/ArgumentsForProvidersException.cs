@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace BeerOverflowWindowsApp.Exceptions
 {
-    [Serializable()]
+    [Serializable]
     public class ArgumentsForProvidersException : Exception
     {
         public string InvalidArguments { get; }

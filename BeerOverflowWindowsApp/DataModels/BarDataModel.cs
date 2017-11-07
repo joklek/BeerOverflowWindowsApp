@@ -6,7 +6,6 @@ using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BeerOverflowWindowsApp.Exceptions;
 
 namespace BeerOverflowWindowsApp.DataModels
 {

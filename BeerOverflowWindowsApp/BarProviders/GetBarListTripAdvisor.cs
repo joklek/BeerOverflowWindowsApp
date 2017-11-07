@@ -99,7 +99,8 @@ namespace BeerOverflowWindowsApp.BarProviders
             {
                 Title = place.name,
                 Latitude = double.Parse(place.locationResponse.latitude, CultureInfo.InvariantCulture),
-                Longitude = double.Parse(place.locationResponse.longitude, CultureInfo.InvariantCulture)
+                Longitude = double.Parse(place.locationResponse.longitude, CultureInfo.InvariantCulture),
+                Ratings = new List<int>()
             };
             barList.Add(newBar);
         }
