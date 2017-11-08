@@ -8,28 +8,6 @@ namespace BeerOverflowWindowsApp.UnitTests
     public class BarRatingUnitTests
     {
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void BarRating_AddRatingToNullBarList()
-        {
-            // Arrange
-            BarRating rating = new BarRating();
-            // Act
-            rating.AddRating(null, 100);
-            // Assert
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void BarRating_AddEmptyBarList()
-        {
-            // Arrange
-            BarRating rating = new BarRating();
-            // Act
-            rating.AddBars(null);
-            // Assert
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void BarRating_SortUnknownEnum()
         {
