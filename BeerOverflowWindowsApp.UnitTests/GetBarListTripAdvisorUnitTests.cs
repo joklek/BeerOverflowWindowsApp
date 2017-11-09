@@ -8,7 +8,7 @@ namespace BeerOverflowWindowsApp.UnitTests
     [TestFixture]
     public class GetBarListTripAdvisorUnitTests
     {
-        [Test]
+        /*[Test]
         [TestCase("0.0", "0.0", "0")]
         [TestCase("-90.0", "-180.0", "50")]
         [TestCase("90.0", "180.0", "50")]
@@ -33,7 +33,7 @@ namespace BeerOverflowWindowsApp.UnitTests
                 Assert.NotNull(bar.Longitude);
                 Assert.NotNull(bar.Title);
             }
-        }
+        }*/
 
         [Test]
         [TestCase(null, "0.0", "0")]
