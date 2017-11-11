@@ -13,17 +13,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             // Arrange
             var rating = new BarRating();
             // Act && Assert  
-            var ex = Assert.Throws<ArgumentNullException>(() => rating.AddRating(null, 100));
-        }
-
-        [Test]
-        public void BarRating_Sort_UnknownEnum()
-        {
-            // Arrange
-            var rating = new BarRating();
-
-            // Act && Assert  
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => rating.Sort((CompareType)99999));
+            Assert.Throws<ArgumentNullException>(() => rating.AddRating(null, 5));
         }
 
         [Test]
