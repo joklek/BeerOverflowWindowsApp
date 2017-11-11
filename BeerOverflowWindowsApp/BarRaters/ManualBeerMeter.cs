@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace BeerOverflowWindowsApp.BarRaters
 {
     [Description("A manual beer meter")]
-    public partial class ManualBeerMeter : Control
+    public sealed partial class ManualBeerMeter : Control
     {
         private Rectangle marker;
         public string Rating { get; private set; }
@@ -34,7 +34,7 @@ namespace BeerOverflowWindowsApp.BarRaters
             get { return this.marker.Width; }
         }
 
-        Rectangle cr;
+        private Rectangle cr;
         public ManualBeerMeter()
         {
             InitializeComponent();
@@ -75,9 +75,9 @@ namespace BeerOverflowWindowsApp.BarRaters
             base.OnPaintBackground(pevent);
         }
 
-        int difference = 0;
-        private bool mousePressed = false;
-        private void ManualBeerMeter_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private int difference = 0;
+        private Boolean mousePressed = false;
+        private void ManualBeerMeter_MouseDown(object sender, MouseEventArgs e)
         {
             if (marker.Contains(e.X, e.Y) && e.Button == MouseButtons.Left)
             {

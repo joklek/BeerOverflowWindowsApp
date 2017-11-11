@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using FourSquare.SharpSquare.Core;
 using FourSquare.SharpSquare.Entities;
 using BeerOverflowWindowsApp.DataModels;
@@ -14,6 +15,16 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
+            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+
+            // FourSquare doesn't like when the coordinates are (0,0), so we change it to something close.
+            // Should this be done with exceptions?
+            if (double.Parse(latitude, CultureInfo.InvariantCulture) == 0 && double.Parse(longitude, CultureInfo.InvariantCulture) == 0)
+            {
+                latitude = "0.000001";
+                longitude = "0.000001";
+            }
+
             List<BarData> barList = null;
             var result = GetBarData(latitude, longitude, radius);
             barList = VenueListToBars(result);
@@ -50,7 +61,8 @@ namespace BeerOverflowWindowsApp.BarProviders
                 {
                     Title = result.name,
                     Latitude = result.location.lat,
-                    Longitude = result.location.lng
+                    Longitude = result.location.lng,
+                    Ratings = new List<int>()
                 };
                 barList.Add(newBar);
             }

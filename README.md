@@ -17,6 +17,9 @@ _ _ _
 _ _ _
 ## To Be Done
 - Show bars on the map.
+- Migrate to using databases.
+- Beer amount recognition from camera input.
+- BeerOverflow as a service.
 - ???
 
 _ _ _

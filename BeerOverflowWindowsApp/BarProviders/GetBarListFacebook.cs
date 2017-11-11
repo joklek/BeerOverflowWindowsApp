@@ -20,6 +20,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
+            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
             var result = GetBarData(latitude, longitude, radius);
             var barList = FacebookDataToBars(result);
             return barList;
@@ -57,7 +58,8 @@ namespace BeerOverflowWindowsApp.BarProviders
                 {
                     Title = result.name,
                     Latitude = result.location.latitude,
-                    Longitude = result.location.longitude
+                    Longitude = result.location.longitude,
+                    Ratings = new List<int>()
                 };
                 barList.Add(newBar);
             }

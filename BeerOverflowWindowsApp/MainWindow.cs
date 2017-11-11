@@ -8,7 +8,9 @@ using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 using System.Device.Location;
 using System.Configuration;
+using System.Net;
 using BeerOverflowWindowsApp.BarProviders;
+using BeerOverflowWindowsApp.Exceptions;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using BeerOverflowWindowsApp.Database;
 
@@ -74,12 +76,7 @@ namespace BeerOverflowWindowsApp
             var longitude = GetLongitude();
             var radius = GetRadius();
 
-            if (!RegexTools.LatitudeTextIsCorrect(LatitudeTextBox.Text) || !RegexTools.LongitudeTextIsCorrect(LongitudeTextBox.Text) || !RegexTools.RadiusTextIsCorrect(RadiusTextBox.Text))
-
-            {
-                MessageBox.Show("Please enter correct required data. Erroneus data is painted red.");
-            }
-            else
+            try
             {
                 var providerList = new List<object>
                 {
@@ -91,6 +88,7 @@ namespace BeerOverflowWindowsApp
                 var providerCount = providerList.Count;
                 var progressStep = 100 / providerCount;
                 var result = new BarDataModel();
+
                 var currentProgressValue = 0;
                 GoButton.Enabled = false;
                 InitiateProgressBars();
@@ -101,18 +99,30 @@ namespace BeerOverflowWindowsApp
                     currentProgressValue += progressStep;
                     UpdateProgressBars(currentProgressValue);
                 }
-                HideProgressBars();
                 result.ForEach(bar => bar.BarId = bar.Title); // Temporary solution until we decide on BarId 
                 // Display
                 result.GetRatings();
                 _barRating.BarsData = result;
                 var currentLocation = GetCurrentLocation();
-                foreach(var bar in _barRating.BarsData)
+                foreach (var bar in _barRating.BarsData)
                 {
-                    bar.DistanceToCurrentLocation = currentLocation.GetDistanceTo(new GeoCoordinate(bar.Latitude, bar.Longitude));
+                    bar.DistanceToCurrentLocation =
+                        currentLocation.GetDistanceTo(new GeoCoordinate(bar.Latitude, bar.Longitude));
                 }
-                SortList(CompareType.Distance);
-                Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
+                SortList(CompareType.Distance, SortOrder.Ascending);
+            }
+            catch (ArgumentsForProvidersException)
+            {
+                MessageBox.Show("Please enter the required data correctly. Erroneus data is painted red.");
+            }
+            catch (WebException)
+            {
+                MessageBox.Show("There seems to be a problem with the network.");
+            }
+            finally
+            {
+                HideProgressBars();
+                Application.DoEvents(); // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
             }
         }
@@ -146,7 +156,16 @@ namespace BeerOverflowWindowsApp
             try
             {
                 barList.AddRange(provider.GetBarsAround(latitude, longitude, radius));
-                barList.CleanUpList(latitude, longitude, radius);
+                barList.RemoveDuplicates();
+                barList.RemoveBarsOutsideRadius(radius);
+            }
+            catch (ArgumentsForProvidersException)
+            {
+                throw;
+            }
+            catch (WebException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -191,31 +210,34 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        private void LongitudeTextBox_TextChanged(object sender, EventArgs e)
+        private void DataTextBoxChanged(TextBox textbox, Func<string, bool> textValidate)
         {
-            if (!RegexTools.LongitudeTextIsCorrect(LongitudeTextBox.Text))
+            var textIsCorrect = false;
+            try
             {
-                PaintTextBoxIncorrect(LongitudeTextBox);
+                textIsCorrect = textValidate(textbox.Text);
             }
-            else { ResetTextBoxColor(LongitudeTextBox); }
+            catch (ArgumentsForProvidersException)
+            {
+                PaintTextBoxIncorrect(textbox);
+            }
+            if (textIsCorrect)
+            { ResetTextBoxColor(textbox); }
         }
 
         private void LatitudeTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!RegexTools.LatitudeTextIsCorrect(LatitudeTextBox.Text))
-            {
-                PaintTextBoxIncorrect(LatitudeTextBox);
-            }
-            else { ResetTextBoxColor(LatitudeTextBox); }
+            DataTextBoxChanged(LatitudeTextBox, RegexTools.LatitudeTextIsCorrect);
+        }
+
+        private void LongitudeTextBox_TextChanged(object sender, EventArgs e)
+        {
+            DataTextBoxChanged(LongitudeTextBox, RegexTools.LongitudeTextIsCorrect);
         }
 
         private void RadiusTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!RegexTools.RadiusTextIsCorrect(RadiusTextBox.Text))
-            {
-                PaintTextBoxIncorrect(RadiusTextBox);
-            }
-            else { ResetTextBoxColor(RadiusTextBox); }
+            DataTextBoxChanged(RadiusTextBox, RegexTools.RadiusTextIsCorrect);
         }
 
         private void PaintTextBoxIncorrect(TextBox textBox)

@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using Newtonsoft.Json;
 using BeerOverflowWindowsApp.DataModels;
 using static BeerOverflowWindowsApp.DataModels.TripAdvisorDataModel;
@@ -22,6 +21,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
+            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
             List<BarData> barList = null;
             try
             {
@@ -99,7 +99,8 @@ namespace BeerOverflowWindowsApp.BarProviders
             {
                 Title = place.name,
                 Latitude = double.Parse(place.locationResponse.latitude, CultureInfo.InvariantCulture),
-                Longitude = double.Parse(place.locationResponse.longitude, CultureInfo.InvariantCulture)
+                Longitude = double.Parse(place.locationResponse.longitude, CultureInfo.InvariantCulture),
+                Ratings = new List<int>()
             };
             barList.Add(newBar);
         }
@@ -111,20 +112,17 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private void GetLocationForPlace(PlaceInfo place)
         {
-            using (var client = new HttpClient())
+            try
             {
-                try
-                {
-                    var webClient = new WebClient();
-                    var response =
-                        webClient.DownloadString(string.Format(_locationApiLink, place.location_id, _accessKey));
-                    var result = JsonConvert.DeserializeObject<LocationResponse>(response);
-                    place.locationResponse = result;
-                }
-                catch (Exception exception)
-                {
-                    throw exception;
-                }
+                var webClient = new WebClient();
+                var response =
+                    webClient.DownloadString(string.Format(_locationApiLink, place.location_id, _accessKey));
+                var result = JsonConvert.DeserializeObject<LocationResponse>(response);
+                place.locationResponse = result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
             }
         }
 

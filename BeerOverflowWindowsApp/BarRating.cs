@@ -16,6 +16,10 @@ namespace BeerOverflowWindowsApp
 
         public void AddRating(BarData barData, int rating)
         {
+            if (barData == null)
+            {
+                throw new ArgumentNullException(nameof(barData), "BarRating.AddRating null parameter");
+            }
             new DatabaseManager().SaveBarRating(barData, rating);
         }
 
@@ -31,6 +35,8 @@ namespace BeerOverflowWindowsApp
                     break;
                 case CompareType.Distance:
                     BarsData.Sort(new ComparerByDistance());
+                    break;
+                case CompareType.None:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(compareType), compareType, null);

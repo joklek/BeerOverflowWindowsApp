@@ -28,5 +28,4 @@ namespace BeerOverflowWindowsApp.DataModels
             return this.Title == other.Title ? true : false;
         }
     }
-
 }

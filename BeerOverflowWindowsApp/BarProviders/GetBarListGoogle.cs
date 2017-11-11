@@ -17,6 +17,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
+            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
             List<BarData> barList = null;
             try
             {
@@ -61,7 +62,8 @@ namespace BeerOverflowWindowsApp.BarProviders
                 {
                     Title = result.Name,
                     Latitude = result.Geometry.Location.Lat,
-                    Longitude = result.Geometry.Location.Lng
+                    Longitude = result.Geometry.Location.Lng,
+                    Ratings = new List<int>()
                 };
                 barList.Add(newBar);
             }
