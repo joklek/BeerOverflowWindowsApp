@@ -16,12 +16,12 @@ namespace BeerOverflowWindowsApp
 {
     public partial class MainWindow : Form
     {
-        private BarRating _barRating = null;
-        private BarData _selectedBar = null;
         private readonly string _defaultLatitude = ConfigurationManager.AppSettings["defaultLatitude"];
         private readonly string _defaultLongitude = ConfigurationManager.AppSettings["defaultLongitude"];
         private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
-        MapWindow mapForm;
+        private readonly BarRating _barRating = null;
+        private BarData _selectedBar;
+        private MapWindow _mapForm;
 
         public MainWindow()
         {
@@ -48,7 +48,7 @@ namespace BeerOverflowWindowsApp
             {
                 string rating;
                 if (bar.Ratings != null && bar.Ratings.Any())
-                    rating = bar.Ratings?.Average().ToString("0.00") ?? "0";
+                    rating = bar.Ratings?.Average().ToString("0.00");
                 else
                     rating = "0";
                 var distance = bar.DistanceToCurrentLocation.ToString("0");
@@ -91,33 +91,27 @@ namespace BeerOverflowWindowsApp
                 var providerCount = providerList.Count;
                 var progressStep = 100 / providerCount;
                 var result = new BarDataModel();
-                
                 var currentProgressValue = 0;
                 GoButton.Enabled = false;
                 InitiateProgressBars();
                 UpdateProgressBars(currentProgressValue);
-
                 foreach (IBeerable provider in providerList)
                 {
                     CollectBarsFromProvider(provider, result, latitude, longitude, radius);
                     currentProgressValue += progressStep;
                     UpdateProgressBars(currentProgressValue);
                 }
-
                 HideProgressBars();
-
                 result.ForEach(bar => bar.BarId = bar.Title); // Temporary solution until we decide on BarId 
-                
                 // Display
                 result.GetRatings();
                 _barRating.BarsData = result;
-
                 var currentLocation = GetCurrentLocation();
                 foreach(var bar in _barRating.BarsData)
                 {
                     bar.DistanceToCurrentLocation = currentLocation.GetDistanceTo(new GeoCoordinate(bar.Latitude, bar.Longitude));
                 }
-                SortList(CompareType.Distance, SortOrder.Ascending);
+                SortList(CompareType.Distance);
                 Application.DoEvents();        // no idea what this does. Some threading stuff, but makes button disabling work
                 GoButton.Enabled = true;
             }
@@ -240,7 +234,6 @@ namespace BeerOverflowWindowsApp
         {
             var columnIndex = (int)compareType - 1;
             var isAscending = sortOrder == SortOrder.Ascending;
-
             if (sortOrder != SortOrder.None)
             {
                 _barRating.Sort(compareType, isAscending);
@@ -254,17 +247,13 @@ namespace BeerOverflowWindowsApp
         {
             var currentSortOrder = SortOrder.None;
             var currentSortColumn = CompareType.None;
-
             foreach (DataGridViewColumn column in BarDataGridView.Columns)
             {
-                if (column.HeaderCell.SortGlyphDirection != SortOrder.None)
-                {
-                    currentSortOrder = column.HeaderCell.SortGlyphDirection;
-                    currentSortColumn = (CompareType) column.Index + 1;
-                    break;
-                }
+                if (column.HeaderCell.SortGlyphDirection == SortOrder.None) continue;
+                currentSortOrder = column.HeaderCell.SortGlyphDirection;
+                currentSortColumn = (CompareType) column.Index + 1;
+                break;
             }
-
             if (currentSortOrder != SortOrder.None && currentSortColumn != CompareType.None)
             {
                 SortList(currentSortColumn, currentSortOrder);
@@ -278,7 +267,6 @@ namespace BeerOverflowWindowsApp
             var toBeSortOrder = currentSortOrder != SortOrder.None
                 ? (currentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)
                 : SortOrder.Ascending;
-
             SortList((CompareType) e.ColumnIndex + 1, toBeSortOrder);
         }
 
@@ -298,22 +286,22 @@ namespace BeerOverflowWindowsApp
             return currentLocation;
         }
 
-        public void MapButton_Click(object sender, EventArgs e)
+        private void MapButton_Click(object sender, EventArgs e)
         {
             var latitude = GetLatitude();
             var longitude = GetLongitude();
-            if (mapForm == null)
+            if (_mapForm == null)
             {
-                mapForm = new MapWindow();
-                mapForm.FormClosed += mapForm_FormClosed;
+                _mapForm = new MapWindow();
+                _mapForm.FormClosed += MapForm_FormClosed;
             }
-            mapForm.Show(this);
+            _mapForm.Show(this);
             Hide();
         }
 
-        void mapForm_FormClosed(object sender, FormClosedEventArgs e)
+        void MapForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            mapForm = null;
+            _mapForm = null;
             Show();
         }
     }

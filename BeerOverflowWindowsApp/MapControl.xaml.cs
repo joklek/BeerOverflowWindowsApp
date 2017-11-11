@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Input;
 using System;
+using System.Configuration;
+using System.Globalization;
 
 namespace BeerOverflowWindowsApp
 {
@@ -10,7 +12,10 @@ namespace BeerOverflowWindowsApp
     /// </summary>
     public partial class MapControl
     {
+        private readonly string _defaultStartingZoom = ConfigurationManager.AppSettings["map_startingZoomLevel"];
 
+        private readonly string _defaultCurrentLocationZoom =
+            ConfigurationManager.AppSettings["map_currentLocationZoomLevel"];
         public MapControl()
         {
             InitializeComponent();
@@ -20,8 +25,8 @@ namespace BeerOverflowWindowsApp
                 var longitude = CurrentLocation.currentLocation.Longitude;
                 var center = new Location(latitude, longitude);
                 var pin = new Pushpin { Location = center };
+                var zoom = Convert.ToDouble(_defaultStartingZoom, CultureInfo.InvariantCulture);
                 Map.Children.Add(pin);
-                var zoom = 13.000;
                 Map.SetView(center, zoom);
             }
         }
@@ -31,7 +36,7 @@ namespace BeerOverflowWindowsApp
             var latitude = CurrentLocation.currentLocation.Latitude;
             var longitude = CurrentLocation.currentLocation.Longitude;
             var center = new Location(latitude, longitude);
-            var zoom = 16.000;
+            var zoom = Convert.ToDouble(_defaultCurrentLocationZoom, CultureInfo.InvariantCulture);
             Map.SetView(center, zoom);
         }
 
@@ -47,19 +52,20 @@ namespace BeerOverflowWindowsApp
 
         private void ChangeMapMode_Click(object sender, RoutedEventArgs e)
         {
-            if (Map.Mode.ToString() == "Microsoft.Maps.MapControl.WPF.RoadMode")
+            switch (Map.Mode.ToString())
             {
-                Map.Mode = new AerialMode(true);
-            }
-            else if (Map.Mode.ToString() == "Microsoft.Maps.MapControl.WPF.AerialMode")
-            {
-                Map.Mode = new RoadMode();
+                case "Microsoft.Maps.MapControl.WPF.RoadMode":
+                    Map.Mode = new AerialMode(true);
+                    break;
+                case "Microsoft.Maps.MapControl.WPF.AerialMode":
+                    Map.Mode = new RoadMode();
+                    break;
             }
         }
 
         private void BackToMainWindow_Click(object sender, RoutedEventArgs e)
         {
-            MapWindow close = new MapWindow();
+            var close = new MapWindow();
             close.MapWindowForm();
         }
     }
