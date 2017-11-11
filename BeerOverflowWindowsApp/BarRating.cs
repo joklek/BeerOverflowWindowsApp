@@ -5,7 +5,7 @@ using BeerOverflowWindowsApp.Database;
 
 namespace BeerOverflowWindowsApp
 {
-    class BarRating
+    public class BarRating
     {
         public BarDataModel BarsData { get; set; }
 
