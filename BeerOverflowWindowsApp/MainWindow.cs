@@ -26,6 +26,13 @@ namespace BeerOverflowWindowsApp
         private readonly BarRating _barRating = null;
         private BarData _selectedBar;
         private MapWindow _mapForm;
+        private readonly List<object> _providerList = new List<object>
+        {
+            new GetBarListGoogle(),
+            new GetBarListFourSquare(),
+            new GetBarListFacebook(),
+            new GetBarListTripAdvisor()
+        };
 
         public MainWindow()
         {
@@ -80,14 +87,7 @@ namespace BeerOverflowWindowsApp
 
             try
             {
-                var providerList = new List<object>
-                {
-                    new GetBarListGoogle(),
-                    new GetBarListFourSquare(),
-                    new GetBarListFacebook(),
-                    new GetBarListTripAdvisor()
-                };
-                var providerCount = providerList.Count;
+                var providerCount = _providerList.Count;
                 var progressStep = 100 / providerCount;
                 var result = new BarDataModel();
 
@@ -95,7 +95,7 @@ namespace BeerOverflowWindowsApp
                 GoButton.Enabled = false;
                 InitiateProgressBars();
                 UpdateProgressBars(currentProgressValue);
-                foreach (IBeerable provider in providerList)
+                foreach (IBeerable provider in _providerList)
                 {
                     var barsFromProvider = await CollectBarsFromProvider(provider, latitude, longitude, radius);
                     result.AddRange(barsFromProvider);
