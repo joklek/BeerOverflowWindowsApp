@@ -207,7 +207,7 @@ namespace BeerOverflowWindowsApp
             if (_selectedBar != null && rating != "" && int.TryParse(rating, out int ratingNumber))
             {
                 _barRating.AddRating(_selectedBar ,ratingNumber);
-                _selectedBar.Ratings = DatabaseManager.GetBarRatings(_selectedBar);
+                _selectedBar.Ratings = new DatabaseManager().GetBarRatings(_selectedBar);
                 Resort();
             }
         }

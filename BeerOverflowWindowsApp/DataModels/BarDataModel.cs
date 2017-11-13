@@ -128,7 +128,7 @@ namespace BeerOverflowWindowsApp.DataModels
         {
             foreach (var bar in this)
             {
-                bar.Ratings = DatabaseManager.GetBarRatings(bar);
+                bar.Ratings = new DatabaseManager().GetBarRatings(bar);
             }
         }
 
