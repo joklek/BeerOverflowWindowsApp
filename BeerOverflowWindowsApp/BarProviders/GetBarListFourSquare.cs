@@ -12,6 +12,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListFourSquare : JsonFetcher, IBeerable
     {
+        public string ProviderName { get; } = "FourSquare";
         private readonly string _apiLink = ConfigurationManager.AppSettings["FourSquareAPILink"];
         private readonly string _clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
         private readonly string _clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
@@ -29,7 +30,6 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             var categoryIDs = _categoryIdDs.Split(',');
             var venueList = new List<Venue>();
-
             foreach (var category in categoryIDs)
             {
                 var link = string.Format(_apiLink, _clientId, _clientSecret, latitude, longitude, category, radius);
@@ -51,7 +51,6 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             var categoryIDs = _categoryIdDs.Split(',');
             var venueList = new List<Venue>();
-
             foreach (var category in categoryIDs)
             {
                 var link = string.Format(_apiLink, _clientId, _clientSecret, latitude, longitude, category, radius);
@@ -69,7 +68,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private static BarData VenueToBar(Venue venue)
         {
-            var newBar = new BarData
+            return new BarData
             {
                 Title = venue.name,
                 BarId = venue.name,   // Temporary solution until we decide on BarId 
@@ -77,7 +76,6 @@ namespace BeerOverflowWindowsApp.BarProviders
                 Longitude = venue.location.lng,
                 Ratings = new List<int>()
             };
-            return newBar;
         }
     }
 }

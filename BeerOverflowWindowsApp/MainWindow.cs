@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using BeerOverflowWindowsApp.BarProviders;
 using BeerOverflowWindowsApp.Utilities;
 using System.Net;
+using System.Net.Http;
 using BeerOverflowWindowsApp.Exceptions;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using BeerOverflowWindowsApp.Database;
@@ -52,7 +53,6 @@ namespace BeerOverflowWindowsApp
             {
                 BarDataGridView_ClearHeaderSortGlyphs();
             }
-
             var barData = _barRating.BarsData;
             BarDataGridView.Rows.Clear();
             foreach (var bar in barData)
@@ -84,10 +84,12 @@ namespace BeerOverflowWindowsApp
             var latitude = GetLatitude();
             var longitude = GetLongitude();
             var radius = GetRadius();
+            var failedToConnectCounter = 0;
+            var providerCount = _providerList.Count;
 
             try
             {
-                var providerCount = _providerList.Count;
+                var barsFromProvider = new List<BarData>();
                 var progressStep = 100 / providerCount;
                 var result = new BarDataModel();
 
@@ -97,17 +99,32 @@ namespace BeerOverflowWindowsApp
                 UpdateProgressBars(currentProgressValue);
                 foreach (IBeerable provider in _providerList)
                 {
-                    var barsFromProvider = await CollectBarsFromProvider(provider, latitude, longitude, radius);
+                    try
+                    {
+                        barsFromProvider = await CollectBarsFromProvider(provider, latitude, longitude, radius);
+                    }
+                    catch (HttpRequestException)
+                    {
+                        if (++failedToConnectCounter == providerCount)
+                        {
+                            MessageBox.Show("Check your internet connection, it seems to be down.");
+                        }
+                    }
+                    catch (WebException)
+                    {
+                        MessageBox.Show("Failed connecting to: " + provider.ProviderName);
+                    }
+
                     result.AddRange(barsFromProvider);
                     currentProgressValue += progressStep;
                     UpdateProgressBars(currentProgressValue);
                 }
                 result.RemoveDuplicates();
                 result.RemoveBarsOutsideRadius(radius);
+                result.GetRatings();
                 HideProgressBars();
                 
                 // Display
-                result.GetRatings();
                 _barRating.BarsData = result;
                 var currentLocation = GetCurrentLocation();
                 foreach (var bar in _barRating.BarsData)
@@ -120,10 +137,6 @@ namespace BeerOverflowWindowsApp
             catch (ArgumentsForProvidersException)
             {
                 MessageBox.Show("Please enter the required data correctly. Erroneus data is painted red.");
-            }
-            catch (WebException)
-            {
-                MessageBox.Show("There seems to be a problem with the network.");
             }
             finally
             {
@@ -149,6 +162,7 @@ namespace BeerOverflowWindowsApp
             TaskbarManager.Instance.SetProgressValue(currentValue, 100);
             // this is a big workaround for progressbar not updating as fast as we need it. 
             // TODO: Fix this when we do threads
+            // UPDATE, NO IDEA HOW TO FIX YET
             progressBar.Maximum = 101;
             progressBar.Value = currentValue + 1;
             progressBar.Value = currentValue;
@@ -158,7 +172,7 @@ namespace BeerOverflowWindowsApp
         private async Task<List<BarData>> CollectBarsFromProvider(IBeerable provider,
             string latitude, string longitude, string radius)
         {
-            var response = new List<BarData>();
+            List<BarData> response;
             try
             {
                 response = await provider.GetBarsAroundAsync(latitude, longitude, radius);
@@ -166,10 +180,6 @@ namespace BeerOverflowWindowsApp
             catch (NotImplementedException)
             {
                 response = provider.GetBarsAround(latitude, longitude, radius);
-            }
-            catch (WebException)
-            {
-                throw;
             }
             return response;
         }
@@ -197,7 +207,7 @@ namespace BeerOverflowWindowsApp
             if (_selectedBar != null && rating != "" && int.TryParse(rating, out int ratingNumber))
             {
                 _barRating.AddRating(_selectedBar ,ratingNumber);
-                _selectedBar.Ratings = new DatabaseManager().GetBarRatings(_selectedBar);
+                _selectedBar.Ratings = DatabaseManager.GetBarRatings(_selectedBar);
                 Resort();
             }
         }

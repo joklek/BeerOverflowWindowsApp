@@ -12,6 +12,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListTripAdvisor : JsonFetcher, IBeerable
     {
+        public string ProviderName { get; } = "TripAdvisor";
         private readonly string _accessKey = ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
         private readonly string _mapperLink = ConfigurationManager.AppSettings["TripAdvisorMapperLink"];
         private readonly string _locationApiLink = ConfigurationManager.AppSettings["TripAdvisorLocationAPILink"];
@@ -31,7 +32,6 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             var categories = _categoryListString.Split(',');
             var placeList =  new List<PlaceInfo>();
-
             foreach (var category in categories)
             {
                 var link = string.Format(_mapperLink, latitude, longitude, _accessKey, category);
@@ -39,7 +39,6 @@ namespace BeerOverflowWindowsApp.BarProviders
                 placeList.AddRange(JsonConvert.DeserializeObject<PlacesResponse>(jsonStream).data);
             }
             FetchLocations(placeList);
-
             return placeList;
         }
 
@@ -71,14 +70,12 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             var categories = _categoryListString.Split(',');
             var placeList = new List<PlaceInfo>();
-
             foreach (var category in categories)
             {
                 var jsonStream = await GetJsonStreamAsync(string.Format(_mapperLink, latitude, longitude, _accessKey, category));
                 placeList.AddRange(JsonConvert.DeserializeObject<PlacesResponse>(jsonStream).data);
             }
             await FetchLocationsAsync(placeList);
-
             return placeList;
         }
 
@@ -102,7 +99,6 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             var groupList = _applicableGroupsString.Split(',').ToList();
             var groupCategoryList = _applicableGroupCategories.Split(',').ToList();
-
             var barList = new List<BarData>();
             foreach (var place in placeList)
             {
@@ -127,7 +123,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private static BarData PlaceToBar(PlaceInfo place)
         {
-            var newBar = new BarData
+            return new BarData
             {
                 Title = place.name,
                 BarId = place.name,   // Temporary solution until we decide on BarId 
@@ -135,7 +131,6 @@ namespace BeerOverflowWindowsApp.BarProviders
                 Longitude = double.Parse(place.locationResponse.longitude, CultureInfo.InvariantCulture),
                 Ratings = new List<int>()
             };
-            return newBar;
         }
 
         private static double ConvertMilesToMeters(double miles)

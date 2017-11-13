@@ -11,6 +11,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListGoogle : JsonFetcher, IBeerable
     {
+        public string ProviderName { get; } = "Google";
         private readonly string _apiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
         private readonly string _apiLink = ConfigurationManager.AppSettings["GoogleAPILink"];
         private readonly string _categoryList = ConfigurationManager.AppSettings["GoogleAPICategories"];
@@ -27,7 +28,6 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             var categoryList = _categoryList.Split(',');
             var placeList = new List<Place>();
-
             foreach (var category in categoryList)
             {
                 var link = string.Format(_apiLink, latitude, longitude, radius, category, _apiKey);
@@ -50,7 +50,6 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             var categoryList = _categoryList.Split(',');
             var placeList = new List<Place>();
-
             foreach (var category in categoryList)
             {
                 var link = string.Format(_apiLink, latitude, longitude, radius, category, _apiKey);
@@ -68,7 +67,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private static BarData PlaceToBar(Place place)
         {
-            var newBar = new BarData
+            return new BarData
             {
                 Title = place.Name,
                 BarId = place.Name,   // Temporary solution until we decide on BarId 
@@ -76,7 +75,6 @@ namespace BeerOverflowWindowsApp.BarProviders
                 Longitude = place.Geometry.Location.Lng,
                 Ratings = new List<int>()
             };
-            return newBar;
         }
     }
 }

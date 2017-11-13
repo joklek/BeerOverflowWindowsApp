@@ -4,52 +4,43 @@ using System.Linq;
 
 namespace BeerOverflowWindowsApp.Database
 {
-    public class DatabaseManager
+    public static class DatabaseManager
     {
-        public void SaveBarRating(BarData barToRate, int rating)
-        {
-            using (var db = new BarsDatabase())
-            {              
-                var userInDb = db.Users.FirstOrDefault(user => user.Username == Program.defaultUser.Username);
-                if (userInDb == null)
-                    userInDb = new User { Username = Program.defaultUser.Username };
-                var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == barToRate.BarId);
-                if (barInDb != null)
+        private static readonly BarsDatabase _db = new BarsDatabase();
+        public static void SaveBarRating(BarData barToRate, int rating)
+        {          
+            var userInDb = _db.Users.FirstOrDefault(user => user.Username == Program.defaultUser.Username);
+            if (userInDb == null)
+                userInDb = new User { Username = Program.defaultUser.Username };
+            var barInDb = _db.Bars.FirstOrDefault(bar => bar.BarId == barToRate.BarId);
+            if (barInDb != null)
+            {
+                var barRating = _db.UserRatings.Find(barInDb.BarId, userInDb.Username);
+                if (barRating != null)
                 {
-                    var barRating = db.UserRatings.Find(barInDb.BarId, userInDb.Username);
-                    if (barRating != null)
-                    {
-                        barRating.Rating = rating;
-                    }
-                    else
-                    {
-                        db.UserRatings.Add(new UsersRatingToBar(barInDb, userInDb, rating));
-                    }
+                    barRating.Rating = rating;
                 }
                 else
                 {
-                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
+                    _db.UserRatings.Add(new UsersRatingToBar(barInDb, userInDb, rating));
                 }
-                db.SaveChanges();              
             }
+            else
+            {
+                _db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
+            }
+            _db.SaveChanges();              
         }
 
-        public BarDataModel GetAllBarData(BarDataModel localBars)
+        public static BarDataModel GetAllBarData(BarDataModel localBars)
         {
-            using (var db = new BarsDatabase())
-            {
-                localBars.ForEach(bar => bar.Ratings = db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList());
-            }
+            localBars.ForEach(bar => bar.Ratings = _db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList());
             return localBars;
         }
 
-        public List<int> GetBarRatings(BarData bar)
+        public static List<int> GetBarRatings(BarData bar)
         {
-            List<int> list;
-            using (var db = new BarsDatabase())
-            {
-                list = db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList();
-            }
+            var list = _db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList();
             return list;
         }
     }

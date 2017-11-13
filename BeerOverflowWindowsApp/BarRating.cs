@@ -20,7 +20,7 @@ namespace BeerOverflowWindowsApp
             {
                 throw new ArgumentNullException(nameof(barData), "BarRating.AddRating null parameter");
             }
-            new DatabaseManager().SaveBarRating(barData, rating);
+            DatabaseManager.SaveBarRating(barData, rating);
         }
 
         public void Sort(CompareType compareType, bool ascending = true)

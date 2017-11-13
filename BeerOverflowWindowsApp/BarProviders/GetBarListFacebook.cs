@@ -11,6 +11,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListFacebook : JsonFetcher, IBeerable
     {
+        public string ProviderName { get; } = "Facebook";
         private readonly string _apiLink = ConfigurationManager.AppSettings["FacebookAPILink"];
         private readonly string _accessToken = ConfigurationManager.AppSettings["FacebookAccessToken"];
         private readonly string _category = ConfigurationManager.AppSettings["FacebookCategoryID"];
@@ -54,7 +55,6 @@ namespace BeerOverflowWindowsApp.BarProviders
         private List<BarData> PlaceListToBarList(IEnumerable<Place> resultData)
         {
             var barList = new List<BarData>();
-            
             foreach (var result in resultData)
             {
                 if (result.restaurant_specialties != null && result.restaurant_specialties.drinks != 1) continue;
@@ -70,7 +70,7 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private static BarData PlaceToBar(Place place)
         {
-            var newBar = new BarData
+            return new BarData
             {
                 Title = place.name,
                 BarId = place.name,   // Temporary solution until we decide on BarId 
@@ -78,7 +78,6 @@ namespace BeerOverflowWindowsApp.BarProviders
                 Longitude = place.location.longitude,
                 Ratings = new List<int>()
             };
-            return newBar;
         }
 
         private static bool HasCategories(IEnumerable<string> categories, string bannedCategoriesInString)
