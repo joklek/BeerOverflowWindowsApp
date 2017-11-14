@@ -121,7 +121,7 @@ namespace BeerOverflowWindowsApp
                 }
                 result.RemoveDuplicates();
                 result.RemoveBarsOutsideRadius(radius);
-                result.GetRatings();
+                await Task.Run(() => result.GetRatings());
                 HideProgressBars();
                 
                 // Display
@@ -206,8 +206,8 @@ namespace BeerOverflowWindowsApp
             var rating = manualBarRating.Rating;
             if (_selectedBar != null && rating != "" && int.TryParse(rating, out int ratingNumber))
             {
-                _barRating.AddRating(_selectedBar ,ratingNumber);
-                _selectedBar.Ratings = new DatabaseManager().GetBarRatings(_selectedBar);
+                Task.Run(() => _barRating.AddRating(_selectedBar, ratingNumber)).Wait();
+                Task.Run(() => _selectedBar.Ratings = new DatabaseManager().GetBarRatings(_selectedBar)).Wait();
                 Resort();
             }
         }
