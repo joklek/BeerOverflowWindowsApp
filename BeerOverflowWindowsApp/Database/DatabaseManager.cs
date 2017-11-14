@@ -9,7 +9,7 @@ namespace BeerOverflowWindowsApp.Database
         public void SaveBarRating(BarData barToRate, int rating)
         {
             using (var db = new BarsDatabase())
-            {              
+            {
                 var userInDb = db.Users.FirstOrDefault(user => user.Username == Program.defaultUser.Username);
                 if (userInDb == null)
                     userInDb = new User { Username = Program.defaultUser.Username };
@@ -30,7 +30,7 @@ namespace BeerOverflowWindowsApp.Database
                 {
                     db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
                 }
-                db.SaveChanges();              
+                db.SaveChanges();
             }
         }
 

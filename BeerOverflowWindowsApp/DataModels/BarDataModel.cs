@@ -6,6 +6,7 @@ using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using BeerOverflowWindowsApp.Utilities;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
@@ -125,10 +126,9 @@ namespace BeerOverflowWindowsApp.DataModels
 
         public void GetRatings()
         {
-            var dbManager = new DatabaseManager();
             foreach (var bar in this)
             {
-                bar.Ratings = dbManager.GetBarRatings(bar);
+                bar.Ratings = new DatabaseManager().GetBarRatings(bar);
             }
         }
 
