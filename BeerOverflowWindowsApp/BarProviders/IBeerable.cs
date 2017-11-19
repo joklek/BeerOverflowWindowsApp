@@ -1,8 +1,8 @@
-﻿using BeerOverflowWindowsApp.DataModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BeerOverflowWindowsApp.DataModels;
 
-namespace BeerOverflowWindowsApp
+namespace BeerOverflowWindowsApp.BarProviders
 {
     interface IBeerable
     {

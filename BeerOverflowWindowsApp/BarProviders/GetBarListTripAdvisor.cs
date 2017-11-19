@@ -10,7 +10,7 @@ using static BeerOverflowWindowsApp.DataModels.TripAdvisorDataModel;
 
 namespace BeerOverflowWindowsApp.BarProviders
 {
-    class GetBarListTripAdvisor : JsonFetcher, IBeerable
+    class GetBarListTripAdvisor : IBeerable
     {
         public string ProviderName { get; } = "TripAdvisor";
         private readonly string _accessKey = ConfigurationManager.AppSettings["TripAdvisorAccessKey"];
@@ -19,6 +19,12 @@ namespace BeerOverflowWindowsApp.BarProviders
         private readonly string _categoryListString = ConfigurationManager.AppSettings["TripAdvisorCategories"];
         private readonly string _applicableGroupsString = ConfigurationManager.AppSettings["TripAdvisorApplicableGroups"];
         private readonly string _applicableGroupCategories = ConfigurationManager.AppSettings["TripAdvisorApplicableGroupCategories"];
+        private readonly IHttpFetcher _fetcher;
+
+        public GetBarListTripAdvisor(IHttpFetcher fetcher)
+        {
+            _fetcher = fetcher;
+        }
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -35,7 +41,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             foreach (var category in categories)
             {
                 var link = string.Format(_mapperLink, latitude, longitude, _accessKey, category);
-                var jsonStream = GetJsonStream(link);
+                var jsonStream = _fetcher.GetHttpStream(link);
                 placeList.AddRange(JsonConvert.DeserializeObject<PlacesResponse>(jsonStream).data);
             }
             FetchLocations(placeList);
@@ -53,7 +59,7 @@ namespace BeerOverflowWindowsApp.BarProviders
         private LocationResponse GetLocationForPlace(PlaceInfo place)
         {
             var link = string.Format(_locationApiLink, place.location_id, _accessKey);
-            var jsonStream = GetJsonStream(link);
+            var jsonStream = _fetcher.GetHttpStream(link);
             var placeLocation = JsonConvert.DeserializeObject<LocationResponse>(jsonStream);
             return placeLocation;
         }
@@ -72,7 +78,8 @@ namespace BeerOverflowWindowsApp.BarProviders
             var placeList = new List<PlaceInfo>();
             foreach (var category in categories)
             {
-                var jsonStream = await GetJsonStreamAsync(string.Format(_mapperLink, latitude, longitude, _accessKey, category));
+                var link = string.Format(_mapperLink, latitude, longitude, _accessKey, category);
+                var jsonStream = await _fetcher.GetHttpStreamAsync(link);
                 placeList.AddRange(JsonConvert.DeserializeObject<PlacesResponse>(jsonStream).data);
             }
             await FetchLocationsAsync(placeList);
@@ -90,7 +97,7 @@ namespace BeerOverflowWindowsApp.BarProviders
         private async Task<LocationResponse> GetLocationForPlaceAsync(PlaceInfo place)
         {
             var link = string.Format(_locationApiLink, place.location_id, _accessKey);
-            var jsonStream = await GetJsonStreamAsync(link);
+            var jsonStream = await _fetcher.GetHttpStreamAsync(link);
             var placeLocation = JsonConvert.DeserializeObject<LocationResponse>(jsonStream);
             return placeLocation;
         }

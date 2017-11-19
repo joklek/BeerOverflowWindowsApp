@@ -9,12 +9,19 @@ using BeerOverflowWindowsApp.Utilities;
 
 namespace BeerOverflowWindowsApp.BarProviders
 {
-    class GetBarListGoogle : JsonFetcher, IBeerable
+    class GetBarListGoogle : IBeerable
     {
         public string ProviderName { get; } = "Google";
         private readonly string _apiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
         private readonly string _apiLink = ConfigurationManager.AppSettings["GoogleAPILink"];
         private readonly string _categoryList = ConfigurationManager.AppSettings["GoogleAPICategories"];
+        private readonly IHttpFetcher _fetcher;
+
+        public GetBarListGoogle(IHttpFetcher fetcher)
+        {
+            _fetcher = fetcher;
+        }
+
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -31,7 +38,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             foreach (var category in categoryList)
             {
                 var link = string.Format(_apiLink, latitude, longitude, radius, category, _apiKey);
-                var jsonStream = GetJsonStream(link);
+                var jsonStream = _fetcher.GetHttpStream(link);
                 var deserialized = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(jsonStream).Results;
                 placeList.AddRange(deserialized);
             }
@@ -53,7 +60,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             foreach (var category in categoryList)
             {
                 var link = string.Format(_apiLink, latitude, longitude, radius, category, _apiKey);
-                var jsonStream = await GetJsonStreamAsync(link);
+                var jsonStream = await _fetcher.GetHttpStreamAsync(link);
                 var deserialized = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(jsonStream).Results;
                 placeList.AddRange(deserialized);
             }
