@@ -10,13 +10,19 @@ using static BeerOverflowWindowsApp.DataModels.FourSquareDataModel;
 
 namespace BeerOverflowWindowsApp.BarProviders
 {
-    class GetBarListFourSquare : JsonFetcher, IBeerable
+    class GetBarListFourSquare : IBeerable
     {
         public string ProviderName { get; } = "FourSquare";
         private readonly string _apiLink = ConfigurationManager.AppSettings["FourSquareAPILink"];
         private readonly string _clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
         private readonly string _clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
         private readonly string _categoryIdDs = ConfigurationManager.AppSettings["FourSquareCategoryIDs"];
+        private readonly IHttpFetcher _fetcher;
+
+        public GetBarListFourSquare(IHttpFetcher fetcher)
+        {
+            _fetcher = fetcher;
+        }
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -33,7 +39,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             foreach (var category in categoryIDs)
             {
                 var link = string.Format(_apiLink, _clientId, _clientSecret, latitude, longitude, category, radius);
-                var jsonStream = GetJsonStream(link);
+                var jsonStream = _fetcher.GetHttpStream(link);
                 venueList.AddRange(JsonConvert.DeserializeObject<SearchResponse>(jsonStream).response.venues);
             }
             return venueList;
@@ -54,7 +60,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             foreach (var category in categoryIDs)
             {
                 var link = string.Format(_apiLink, _clientId, _clientSecret, latitude, longitude, category, radius);
-                var jsonStream = await GetJsonStreamAsync(link);
+                var jsonStream = await _fetcher.GetHttpStreamAsync(link);
                 venueList.AddRange(JsonConvert.DeserializeObject<SearchResponse>(jsonStream).response.venues);
             }
             return venueList;

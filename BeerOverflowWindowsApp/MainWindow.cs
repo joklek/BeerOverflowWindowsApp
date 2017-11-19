@@ -28,10 +28,10 @@ namespace BeerOverflowWindowsApp
         private MapWindow _mapForm;
         private readonly List<object> _providerList = new List<object>
         {
-            new GetBarListGoogle(),
-            new GetBarListFourSquare(),
-            new GetBarListFacebook(),
-            new GetBarListTripAdvisor()
+            new GetBarListGoogle(new JsonFetcher()),
+            new GetBarListFourSquare(new JsonFetcher()),
+            new GetBarListFacebook(new JsonFetcher()),
+            new GetBarListTripAdvisor(new JsonFetcher())
         };
 
         public MainWindow()

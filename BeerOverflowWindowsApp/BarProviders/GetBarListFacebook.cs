@@ -9,7 +9,7 @@ using static BeerOverflowWindowsApp.DataModels.FacebookDataModel;
 
 namespace BeerOverflowWindowsApp.BarProviders
 {
-    class GetBarListFacebook : JsonFetcher, IBeerable
+    class GetBarListFacebook : IBeerable
     {
         public string ProviderName { get; } = "Facebook";
         private readonly string _apiLink = ConfigurationManager.AppSettings["FacebookAPILink"];
@@ -18,6 +18,12 @@ namespace BeerOverflowWindowsApp.BarProviders
         private readonly string _allowedCategories = ConfigurationManager.AppSettings["FacebookAllowedCategoryStrings"];
         private readonly string _bannedCategories = ConfigurationManager.AppSettings["FacebookBannedCategoryStrings"];
         private readonly string _requestedFields = ConfigurationManager.AppSettings["FacebookRequestedFields"];
+        private readonly IHttpFetcher _fetcher;
+
+        public GetBarListFacebook(IHttpFetcher fetcher)
+        {
+            _fetcher = fetcher;
+        }
 
         public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
         {
@@ -30,7 +36,7 @@ namespace BeerOverflowWindowsApp.BarProviders
         private IEnumerable<Place> GetBarData(string latitude, string longitude, string radius)
         {
             var link = string.Format(_apiLink, _accessToken, latitude, longitude, radius, _requestedFields, _category);
-            var jsonStream = GetJsonStream(link);
+            var jsonStream = _fetcher.GetHttpStream(link);
             var barList = JsonConvert.DeserializeObject<PlacesResponse>(jsonStream).data;
             return barList;
         }
@@ -47,7 +53,7 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
             var link = string.Format(_apiLink, _accessToken, latitude, longitude, radius, _requestedFields, _category);
-            var jsonStream = await GetJsonStreamAsync(link);
+            var jsonStream = await _fetcher.GetHttpStreamAsync(link);
             var barList = JsonConvert.DeserializeObject<PlacesResponse>(jsonStream).data;
             return barList;
         }

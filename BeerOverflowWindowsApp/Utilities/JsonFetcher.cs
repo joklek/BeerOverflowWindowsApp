@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace BeerOverflowWindowsApp.Utilities
 {
-    public class JsonFetcher
+    public class JsonFetcher : IHttpFetcher
     {
-        public async Task<string> GetJsonStreamAsync(string uri)
+        public async Task<string> GetHttpStreamAsync(string uri)
         {
             string result = null;
             using (var httpClient = new HttpClient())
@@ -18,7 +18,7 @@ namespace BeerOverflowWindowsApp.Utilities
             return result;
         }
 
-        public string GetJsonStream(string uri)
+        public string GetHttpStream(string uri)
         {
             var webClient = new WebClient { Encoding = Encoding.UTF8 };
             var response = webClient.DownloadString(uri);
