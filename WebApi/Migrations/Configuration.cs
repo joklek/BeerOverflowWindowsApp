@@ -1,4 +1,4 @@
-namespace BeerOverflowWindowsApp.Migrations
+namespace WebApi.Migrations
 {
     using System.Data.Entity.Migrations;
 
@@ -6,8 +6,8 @@ namespace BeerOverflowWindowsApp.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
-            ContextKey = "BeerOverflowWindowsApp.Database.BarsDatabase";
+            AutomaticMigrationsEnabled = true;
+            ContextKey = "WebApi.Database.BarsDatabase";
         }
 
         protected override void Seed(Database.BarsDatabase context)

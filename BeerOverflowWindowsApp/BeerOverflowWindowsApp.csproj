@@ -11,6 +11,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -73,6 +73,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Device" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -92,6 +93,7 @@
     <Compile Include="BarComparers\ComparerByTitle.cs" />
     <Compile Include="BarComparers\CompareType.cs" />
     <Compile Include="BarRating.cs" />
+    <Compile Include="DataModels\RatingModel.cs" />
     <Compile Include="DataModels\FourSquareDataModel.cs" />
     <Compile Include="Utilities\JsonFetcher.cs" />
     <Compile Include="Utilities\RegexTools.cs" />
@@ -105,17 +107,6 @@
     <Compile Include="MapWindow.Designer.cs">
       <DependentUpon>MapWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Database\BarsDatabase.cs" />
-    <Compile Include="Database\DatabaseManager.cs" />
-    <Compile Include="Migrations\201711071344345_InitialCreate.cs" />
-    <Compile Include="Migrations\201711071344345_InitialCreate.Designer.cs">
-      <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711072027400_AddUserComments.cs" />
-    <Compile Include="Migrations\201711072027400_AddUserComments.Designer.cs">
-      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="DataModels\BarData.cs" />
     <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="FileIO\BarFileReader.cs" />
@@ -149,8 +140,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Database\User.cs" />
-    <Compile Include="Database\UsersRatingToBar.cs" />
+    <Compile Include="DataModels\User.cs" />
+    <Compile Include="DataModels\UsersRatingToBar.cs" />
+    <Compile Include="WebApiAccess.cs" />
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -162,12 +154,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MapWindow.resx">
       <DependentUpon>MapWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711071344345_InitialCreate.resx">
-      <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711072027400_AddUserComments.resx">
-      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -220,5 +206,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

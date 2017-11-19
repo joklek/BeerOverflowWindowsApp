@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BeerOverflowWindowsApp.DataModels;
 
-namespace BeerOverflowWindowsApp.Database
+namespace BeerOverflowWindowsApp.DataModels
 {
     [Table("UserRatings")]
     public class UsersRatingToBar
