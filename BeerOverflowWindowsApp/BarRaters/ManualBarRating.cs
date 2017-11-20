@@ -75,11 +75,6 @@ namespace BeerOverflowWindowsApp.BarRaters
             }
         }
 
-        private void ManualBarRating_MouseClick(object sender, MouseEventArgs e)
-        {
-            SelectRating(e.Location);
-        }
-
         private bool mouseEntered = false;
         private int numberOfGlasses = -1;
 
@@ -102,15 +97,12 @@ namespace BeerOverflowWindowsApp.BarRaters
             {
                 if (mouseEntered && (e.X / imageSize) != lastLocation)
                 {
-                    //SelectRating(e.Location);
                     lastLocation = e.X / imageSize;
                     toolTip.Show(toolTipMessages[lastLocation], this, e.X + 10, e.Y + 10, 3000);
                 }
             }
             else
             {
-                //SelectRating(new Point(-1, -1));
-                //numberOfGlasses = -1;
                 toolTip.Hide(this);
                 lastLocation = -1;
             }
@@ -121,21 +113,7 @@ namespace BeerOverflowWindowsApp.BarRaters
             lastLocation = -1;
             toolTip.Hide(this);
             mouseEntered = false;
-            //numberOfGlasses = -1;
             Refresh();
-        }
-
-        private void SelectRating(Point point)
-        {
-            for (var i = 4; i >= 0; i--)
-            {
-                if (beerGlassList[i].Contains(point))
-                {
-                    numberOfGlasses = i;
-                    Refresh();
-                    break;
-                }
-            }
         }
 
         private void SetImages()

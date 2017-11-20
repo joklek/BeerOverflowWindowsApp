@@ -207,8 +207,8 @@ namespace BeerOverflowWindowsApp
         {
             int rating = manualBarRating.Rating;
 
-            if (_selectedBar != null)
-            {
+            if (_selectedBar != null && _selectedBar.UserRating != rating)
+            {              
                 Task.Run(() => _barRating.AddRating(_selectedBar, rating)).Wait();
                 Task.Run(() => _selectedBar = WebApiAccess.GetBarRatings(_selectedBar)).Wait();
                 Resort();

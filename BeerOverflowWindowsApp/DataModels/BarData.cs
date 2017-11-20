@@ -28,6 +28,7 @@ namespace BeerOverflowWindowsApp.DataModels
         public double Longitude { get; set; }
 
         public virtual ICollection<UsersRatingToBar> UserRatings { get; set; }
+        public virtual ICollection<BarSynonym> Synonyms { get; set; }
 
         [NotMapped]
         public double DistanceToCurrentLocation { get; set; }

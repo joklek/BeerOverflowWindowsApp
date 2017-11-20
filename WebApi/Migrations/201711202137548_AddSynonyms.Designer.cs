@@ -7,13 +7,13 @@ namespace WebApi.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class AddAverageRating : IMigrationMetadata
+    public sealed partial class AddSynonyms : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddAverageRating));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddSynonyms));
         
         string IMigrationMetadata.Id
         {
-            get { return "201711192011445_AddAverageRating"; }
+            get { return "201711202137548_AddSynonyms"; }
         }
         
         string IMigrationMetadata.Source

@@ -9,8 +9,7 @@ namespace WebApi.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
-            ContextKey = "WebApi.Database.BarsDatabase";
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(WebApi.Database.BarsDatabase context)

@@ -137,17 +137,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711071344345_InitialCreate.cs" />
-    <Compile Include="Migrations\201711071344345_InitialCreate.Designer.cs">
-      <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711072027400_AddUserComments.cs" />
-    <Compile Include="Migrations\201711072027400_AddUserComments.Designer.cs">
-      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711192011445_AddAverageRating.cs" />
-    <Compile Include="Migrations\201711192011445_AddAverageRating.Designer.cs">
-      <DependentUpon>201711192011445_AddAverageRating.cs</DependentUpon>
+    <Compile Include="Migrations\201711202137548_AddSynonyms.cs" />
+    <Compile Include="Migrations\201711202137548_AddSynonyms.Designer.cs">
+      <DependentUpon>201711202137548_AddSynonyms.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -169,21 +161,15 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711071344345_InitialCreate.resx">
-      <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711072027400_AddUserComments.resx">
-      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711192011445_AddAverageRating.resx">
-      <DependentUpon>201711192011445_AddAverageRating.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BeerOverflowWindowsApp\BeerOverflowWindowsApp.csproj">
       <Project>{8219DCAD-DDC8-42A7-A3BC-D1BD081BB2F2}</Project>
       <Name>BeerOverflowWindowsApp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201711202137548_AddSynonyms.resx">
+      <DependentUpon>201711202137548_AddSynonyms.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

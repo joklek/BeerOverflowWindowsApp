@@ -17,33 +17,42 @@ namespace WebApi.Database
                 if (barInDb != null)
                 {
                     var barRating = db.UserRatings.Find(barInDb.BarId, userInDb.Username);
-                    if (barRating != null)
+                    if (barRating != null)      // useris jau vertino si bara
                     {
-                        barRating.Rating = rating;
+                        barRating.Rating = rating;                       
                     }
-                    else
+                    else    // useris dar nevertino sio baro
                     {
                         db.UserRatings.Add(new UsersRatingToBar(barInDb, userInDb, rating));
                     }
+                    db.SaveChanges();
+                    barInDb.AvgRating = (float)db.UserRatings.Where(x => x.BarId == barInDb.BarId).Select(x => x.Rating).DefaultIfEmpty().Average(); //
                 }
-                else
+                else    // tokio baro nera db
                 {
-                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
+                    barToRate.AvgRating = rating;
+                    db.SaveChanges();
+                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));                  
                 }
                 db.SaveChanges();
             }
+
         }
 
         public List<BarData> GetAllBarData(List<BarData> localBars, User user)
         {
             using (var db = new BarsDatabase())
-            {
-                localBars.ForEach(bar =>  
+            {               
+                localBars.ForEach(bar => 
                 {
-                    bar.AvgRating = (float)db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).DefaultIfEmpty().Average();
+                    //bar.AvgRating = (float)db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).DefaultIfEmpty().Average();
+                    var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
+                    bar.AvgRating = barInDb != null ? barInDb.AvgRating : 0;
+
                     var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
                     bar.UserRating = barRating != null ? barRating.Rating : 0;
                 });
+                db.Database.Delete();
             }
             return localBars;
         }
@@ -52,7 +61,10 @@ namespace WebApi.Database
         {
             using (var db = new BarsDatabase())
             {
-                bar.AvgRating = (float)db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).DefaultIfEmpty().Average();
+                //bar.AvgRating = (float)db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).DefaultIfEmpty().Average();
+                var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
+                bar.AvgRating = barInDb != null ? barInDb.AvgRating : 0;
+
                 var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
                 bar.UserRating = barRating != null ? barRating.Rating : 0;
             }
