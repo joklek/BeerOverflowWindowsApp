@@ -52,7 +52,6 @@ namespace WebApi.Database
                     var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
                     bar.UserRating = barRating != null ? barRating.Rating : 0;
                 });
-                db.Database.Delete();
             }
             return localBars;
         }

@@ -137,9 +137,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711202137548_AddSynonyms.cs" />
-    <Compile Include="Migrations\201711202137548_AddSynonyms.Designer.cs">
-      <DependentUpon>201711202137548_AddSynonyms.cs</DependentUpon>
+    <Compile Include="Migrations\201711202252009_InitialCreate.cs" />
+    <Compile Include="Migrations\201711202252009_InitialCreate.Designer.cs">
+      <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -167,8 +167,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711202137548_AddSynonyms.resx">
-      <DependentUpon>201711202137548_AddSynonyms.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201711202252009_InitialCreate.resx">
+      <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
