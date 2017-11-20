@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -144,6 +145,10 @@
     <Compile Include="Migrations\201711072027400_AddUserComments.Designer.cs">
       <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711202052222_AddRatings.cs" />
+    <Compile Include="Migrations\201711202052222_AddRatings.Designer.cs">
+      <DependentUpon>201711202052222_AddRatings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -169,6 +174,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711072027400_AddUserComments.resx">
       <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711202052222_AddRatings.resx">
+      <DependentUpon>201711202052222_AddRatings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

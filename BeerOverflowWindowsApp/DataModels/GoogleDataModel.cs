@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
@@ -43,6 +44,8 @@ namespace BeerOverflowWindowsApp.DataModels
             public string Scope { get; set; }
             public List<string> Types { get; set; }
             public string Vicinity { get; set; }
+            [JsonIgnore]
+            public string Category { get; set; }
         }
 
         public class PlacesApiQueryResponse

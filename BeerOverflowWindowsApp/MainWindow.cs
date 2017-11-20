@@ -135,8 +135,6 @@ namespace BeerOverflowWindowsApp
                     }
                     SortList(CompareType.Distance);
                 }
-
-
             }
             catch (ArgumentsForProvidersException)
             {
