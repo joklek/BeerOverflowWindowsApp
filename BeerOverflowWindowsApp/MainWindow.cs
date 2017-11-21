@@ -342,5 +342,24 @@ namespace BeerOverflowWindowsApp
             _mapForm = null;
             Show();
         }
+
+        private void PictureButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    Form form = new Form();
+                    PictureBox pictureBox = new PictureBox();
+                    pictureBox.Dock = DockStyle.Fill;
+                    pictureBox.Image = Image.FromFile(ofd.FileName);
+                    pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                    form.Controls.Add(pictureBox);
+                    form.ShowDialog();
+                }
+            }
+            catch (Exception) { }
+        }
     }
 }
