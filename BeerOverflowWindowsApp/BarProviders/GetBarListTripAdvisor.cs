@@ -160,11 +160,6 @@ namespace BeerOverflowWindowsApp.BarProviders
             {
                 placeCategories |= CategoryTypes.Restaurant;
             }
-
-            if (placeCategories == CategoryTypes.None)
-            {
-                placeCategories = CategoryTypes.None;
-            }
             return placeCategories;
         }
 

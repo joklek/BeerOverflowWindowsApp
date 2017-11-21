@@ -104,10 +104,6 @@ namespace BeerOverflowWindowsApp.BarProviders
                     placeCategories |= foundCategoryEnum;
                 }
             }
-            if (placeCategories == CategoryTypes.None)
-            {
-                placeCategories = CategoryTypes.None;
-            }
             return placeCategories;
         }
 
