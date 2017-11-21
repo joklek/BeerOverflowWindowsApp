@@ -9,16 +9,16 @@ using BeerOverflowWindowsApp.Utilities;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
-   public class BarDataModel : List<BarData>
+    public class BarDataModel : List<BarData>
     {
-        private readonly double _barNameSimilarThreshold = double.Parse(ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
+        private readonly double _barNameSimilarThreshold = 0.52d;//double.Parse(ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barNameLikelySimilarThreshold = 0.15d;
         //double.Parse(ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
         private readonly double _barNearnessThresholdInMeters = 0.3d;
         // double.Parse(ConfigurationManager.AppSettings["barNearnessInMetersThreshold"], CultureInfo.InvariantCulture);
 
         private readonly int _maxSameBarDistanceErrorThresholdMeters = 40;
-            //int.Parse(ConfigurationManager.AppSettings["maxSameBarDistanceErrorThresholdMeters"], CultureInfo.InvariantCulture);
+        //int.Parse(ConfigurationManager.AppSettings["maxSameBarDistanceErrorThresholdMeters"], CultureInfo.InvariantCulture);
 
         public void RemoveDuplicates()
         {

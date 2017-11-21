@@ -93,6 +93,7 @@
     <Compile Include="BarComparers\ComparerByTitle.cs" />
     <Compile Include="BarComparers\CompareType.cs" />
     <Compile Include="BarRating.cs" />
+    <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="DataModels\RatingModel.cs" />
     <Compile Include="DataModels\FourSquareDataModel.cs" />
     <Compile Include="DataModels\BarSynonym .cs" />
@@ -112,7 +113,6 @@
       <DependentUpon>MapWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="DataModels\BarData.cs" />
-    <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="FileIO\BarFileReader.cs" />
     <Compile Include="FileIO\BarFileWriter.cs" />
     <Compile Include="DataModels\TripAdvisorDataModel.cs" />
