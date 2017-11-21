@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="jumbotron">
+    <h1>BeerOverflow</h1>
+    <p class="lead">Starting page prototype</p>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>BarsList</h2>
+        <table id="barsList" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div><input type="button" onclick="LoadDataToTable()" value="Reload"/></div>
+</div>
+
+<script>
+    $('document').ready(function () {
+        //debugger;
+        LoadDataToTable();
+        $('#barsList').DataTable({
+            "paging": false,
+            "dom": 't'            
+        });
+    });
+    function LoadDataToTable() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllBars", "Home")',
+            contentType: "application/json; charset=utf-8",
+            //data: JSON.stringify({}),
+            dataType: "json",
+            success: function (response) {
+                $('#barsList').DataTable().rows().remove();
+                for (var i = 0; i < response.length; i++){
+                    var ratingsSum = 0;
+                    for (var j = 0; j < response[i].Ratings.length; j++) {
+                        ratingsSum += response[i].Ratings[j];
+                    }
+                    var averageRatings = 0;
+                    if (response[i].Ratings.length != 0) {
+                        averageRatings = ratingsSum / response[i].Ratings.length;
+                    }
+                    $('#barsList').DataTable().row.add({ 0: response[i].Title, 1: averageRatings }).draw();
+                }              
+            },
+            error: function (response) {
+            }
+        });
+    }
+</script>

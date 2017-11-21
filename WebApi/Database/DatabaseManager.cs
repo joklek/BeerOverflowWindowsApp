@@ -56,5 +56,25 @@ namespace WebApi.Database
             }
             return list;
         }
+        public List<BarData> GetAllBars()
+        {
+            var barsList = new List<BarData>();
+            using (var db = new BarsDatabase())
+            {
+                foreach (var bar in db.Bars)
+                {
+                    var barData = new BarData()
+                    {
+                        BarId = bar.BarId,
+                        Title = bar.Title,
+                        Latitude = bar.Latitude,
+                        Longitude = bar.Longitude,
+                        Ratings = bar.UserRatings.Select(x => x.Rating).ToList()
+                    };                   
+                    barsList.Add(barData);
+                }
+            }
+            return barsList;
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace BeerOverflowWindowsApp
 {
-    static class WebApiAccess
+    public static class WebApiAccess
     {
         public static List<int> GetBarRatings(BarData bar)
         {
@@ -50,6 +50,28 @@ namespace BeerOverflowWindowsApp
                 var json = JsonConvert.SerializeObject(new RatingModel{barData = barToRate, rating = rating});
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = client.PostAsync("Api/Data/SaveBarRating", content).Result;
+            }
+        }
+        public static List<BarData> GetAllBars()
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:1726/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var json = JsonConvert.SerializeObject("");
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = client.PostAsync("Api/Data/GetAllBars", content);
+                var responseResult = response.Result.Content.ReadAsStringAsync();
+                try
+                {
+                    var result = JsonConvert.DeserializeObject<List<BarData>>(responseResult.Result);
+                    return result;
+                }
+                catch
+                {
+                    return null;
+                }                
             }
         }
     }

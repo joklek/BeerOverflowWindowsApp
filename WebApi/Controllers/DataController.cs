@@ -34,5 +34,14 @@ namespace WebApi.Controllers
             List<int> result = dbManager.GetBarRatings(localBars);
             return Ok(result);
         }
+
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        [HttpPost]
+        public IHttpActionResult GetAllBars()
+        {
+            var dbManager = new DatabaseManager();
+            List<BarData> result = dbManager.GetAllBars();
+            return Ok(result);
+        }
     }
 }
