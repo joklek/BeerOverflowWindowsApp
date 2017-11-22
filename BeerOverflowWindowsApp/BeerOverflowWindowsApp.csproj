@@ -93,8 +93,11 @@
     <Compile Include="BarComparers\ComparerByTitle.cs" />
     <Compile Include="BarComparers\CompareType.cs" />
     <Compile Include="BarRating.cs" />
+    <Compile Include="DataModels\CategoryTypes.cs" />
+    <Compile Include="DataModels\CategoryUnconverted.cs" />
     <Compile Include="DataModels\RatingModel.cs" />
     <Compile Include="DataModels\FourSquareDataModel.cs" />
+    <Compile Include="Utilities\FetcherAndDeserializer.cs" />
     <Compile Include="Utilities\IHttpFetcher.cs" />
     <Compile Include="Utilities\JsonFetcher.cs" />
     <Compile Include="Utilities\RegexTools.cs" />

@@ -1,20 +1,20 @@
-﻿using Newtonsoft.Json;
-using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using BeerOverflowWindowsApp.DataModels;
 using BeerOverflowWindowsApp.Utilities;
+using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
 
 namespace BeerOverflowWindowsApp.BarProviders
 {
     class GetBarListGoogle : IBeerable
     {
         public string ProviderName { get; } = "Google";
-        private readonly string _apiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
-        private readonly string _apiLink = ConfigurationManager.AppSettings["GoogleAPILink"];
-        private readonly string _categoryList = ConfigurationManager.AppSettings["GoogleAPICategories"];
+        private static readonly string _apiKey = ConfigurationManager.AppSettings["GoogleAPIKey"];
+        private static readonly string _apiLink = ConfigurationManager.AppSettings["GoogleAPILink"];
+        private static readonly string _categoryList = ConfigurationManager.AppSettings["GoogleAPICategories"];
         private readonly IHttpFetcher _fetcher;
 
         public GetBarListGoogle(IHttpFetcher fetcher)
@@ -33,13 +33,13 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private IEnumerable<Place> GetBarData(string latitude, string longitude, string radius)
         {
-            var categoryList = _categoryList.Split(',');
+            var categoryList = _categoryList.Split(',').ToList().SelectMany(category => category.Split('|')).Where((c, i) => i % 2 == 0);
             var placeList = new List<Place>();
             foreach (var category in categoryList)
             {
                 var link = string.Format(_apiLink, latitude, longitude, radius, category, _apiKey);
-                var jsonStream = _fetcher.GetHttpStream(link);
-                var deserialized = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(jsonStream).Results;
+                var deserialized = FetcherAndDeserializer.FetchAndDeserialize<PlacesApiQueryResponse>(link, _fetcher).Results;
+                deserialized.ForEach(x => x.Category = category);
                 placeList.AddRange(deserialized);
             }
             return placeList;
@@ -55,14 +55,14 @@ namespace BeerOverflowWindowsApp.BarProviders
 
         private async Task<IEnumerable<Place>> GetBarDataAsync(string latitude, string longitude, string radius)
         {
-            var categoryList = _categoryList.Split(',');
+            var categoryList = _categoryList.Split(',').ToList().SelectMany(category => category.Split('|')).Where((c, i) => i % 2 == 0);
             var placeList = new List<Place>();
             foreach (var category in categoryList)
             {
                 var link = string.Format(_apiLink, latitude, longitude, radius, category, _apiKey);
-                var jsonStream = await _fetcher.GetHttpStreamAsync(link);
-                var deserialized = JsonConvert.DeserializeObject<PlacesApiQueryResponse>(jsonStream).Results;
-                placeList.AddRange(deserialized);
+                var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesApiQueryResponse>(link, _fetcher);
+                deserializedResponse.Results.ForEach(x => x.Category = category);
+                placeList.AddRange(deserializedResponse.Results);
             }
             return placeList;
         }
@@ -78,10 +78,28 @@ namespace BeerOverflowWindowsApp.BarProviders
             {
                 Title = place.Name,
                 BarId = place.Name,   // Temporary solution until we decide on BarId 
+                Categories = CollectCategories(place),
                 Latitude = place.Geometry.Location.Lat,
                 Longitude = place.Geometry.Location.Lng,
                 Ratings = new List<int>()
             };
+        }
+
+        private static CategoryTypes CollectCategories(Place place)
+        {
+            var placeCategories = CategoryTypes.None;
+            var listOfCategories = _categoryList.Split(',').Select
+                (category => category.Split('|')).Select
+                (splitCategory => new CategoryUnconverted { NameFromProvider = splitCategory[0], NameNormalized = splitCategory[1] })
+                .ToList();
+
+            var foundCategory = listOfCategories.FirstOrDefault(x => x.NameFromProvider == place.Category);
+            CategoryTypes foundCategoryEnum;
+            if (foundCategory != null && Enum.TryParse(foundCategory.NameNormalized, true, out foundCategoryEnum))
+            {
+                placeCategories |= foundCategoryEnum;
+            }
+            return placeCategories;
         }
     }
 }

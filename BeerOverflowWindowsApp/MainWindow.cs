@@ -25,6 +25,7 @@ namespace BeerOverflowWindowsApp
         private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
         private readonly BarRating _barRating = null;
         private BarData _selectedBar;
+        private CategoryTypes _categoryFilter = CategoryTypes.None;
         private MapWindow _mapForm;
         private readonly List<object> _providerList = new List<object>
         {
@@ -44,6 +45,8 @@ namespace BeerOverflowWindowsApp
             var longitude = Convert.ToDouble(_defaultLongitude, CultureInfo.InvariantCulture);
             CurrentLocation.currentLocation = new GeoCoordinate(latitude, longitude);
             RadiusTextBox.Text = _defaultRadius;
+            _categoryFilter = CategoryTypes.Bar | CategoryTypes.Restaurant | CategoryTypes.Club;
+            ChangeChecksAccordingToSetCategories();
         }
 
         public void ReloadDataGrid(bool completely = false)
@@ -56,13 +59,16 @@ namespace BeerOverflowWindowsApp
             BarDataGridView.Rows.Clear();
             foreach (var bar in barData)
             {
-                string rating;
-                if (bar.Ratings != null && bar.Ratings.Any())
-                    rating = bar.Ratings?.Average().ToString("0.00");
-                else
-                    rating = "0";
-                var distance = bar.DistanceToCurrentLocation.ToString("0");
-                BarDataGridView.Rows.Add(bar.Title, rating, distance);
+                if ((_categoryFilter & bar.Categories) != 0)
+                {
+                    string rating;
+                    if (bar.Ratings != null && bar.Ratings.Any())
+                        rating = bar.Ratings?.Average().ToString("0.00");
+                    else
+                        rating = "0";
+                    var distance = bar.DistanceToCurrentLocation.ToString("0");
+                    BarDataGridView.Rows.Add(bar.Title, bar.Categories, rating, distance);
+                }
             }
             if (BarDataGridView.Rows.Count > 0 && _selectedBar != null)
             {
@@ -70,6 +76,7 @@ namespace BeerOverflowWindowsApp
                 BarDataGridView.Rows[indexOfBar].Selected = true;
             }
             ClearSelection();
+            ChangeChecksAccordingToSetCategories();
         }
 
         private void ClearSelection()
@@ -135,8 +142,6 @@ namespace BeerOverflowWindowsApp
                     }
                     SortList(CompareType.Distance);
                 }
-
-
             }
             catch (ArgumentsForProvidersException)
             {
@@ -221,7 +226,7 @@ namespace BeerOverflowWindowsApp
         {
             if (BarDataGridView.CurrentRow != null)
             {
-                var selectedBarName = (string)BarDataGridView.CurrentRow.Cells["titleColumn"].Value;
+                var selectedBarName = (string)BarDataGridView.CurrentRow.Cells["Title"].Value;
                 _selectedBar = _barRating.BarsData.Find(bar => bar.Title == selectedBarName);
             }
         }
@@ -270,9 +275,11 @@ namespace BeerOverflowWindowsApp
 
         private void SortList(CompareType compareType, SortOrder sortOrder = SortOrder.Ascending)
         {
-            var columnIndex = (int)compareType - 1;
+            var columnList = BarDataGridView.Columns.Cast<DataGridViewColumn>().ToList();
+            var columnIndex = columnList.FindIndex(x => x.Name == compareType.ToString());
+
             var isAscending = sortOrder == SortOrder.Ascending;
-            if (sortOrder != SortOrder.None)
+            if (sortOrder != SortOrder.None && columnIndex != -1)
             {
                 _barRating.Sort(compareType, isAscending);
                 BarDataGridView_ClearHeaderSortGlyphs();
@@ -300,12 +307,14 @@ namespace BeerOverflowWindowsApp
 
         private void BarDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (BarDataGridView.Columns[e.ColumnIndex].SortMode != DataGridViewColumnSortMode.Programmatic) return;
             var currentSortOrder = BarDataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection;
-
             var toBeSortOrder = currentSortOrder != SortOrder.None
                 ? (currentSortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending)
                 : SortOrder.Ascending;
-            SortList((CompareType)e.ColumnIndex + 1, toBeSortOrder);
+            var columnName = BarDataGridView.Columns[e.ColumnIndex].Name;
+            Enum.TryParse(columnName, out CompareType compareType);
+            SortList(compareType, toBeSortOrder);
         }
 
         private void BarDataGridView_ClearHeaderSortGlyphs()
@@ -341,6 +350,48 @@ namespace BeerOverflowWindowsApp
         {
             _mapForm = null;
             Show();
+        }
+
+        private void ChangeChecksAccordingToSetCategories()
+        {
+            FilterBar.Checked = (_categoryFilter & CategoryTypes.Bar) != 0;
+            FilterRestaurant.Checked = (_categoryFilter & CategoryTypes.Restaurant) != 0;
+            FilterClub.Checked = (_categoryFilter & CategoryTypes.Club) != 0;
+            FilterAll.Checked = FilterBar.Checked && FilterRestaurant.Checked && FilterClub.Checked;
+            FilterEmpty.Checked = !(FilterBar.Checked || FilterRestaurant.Checked || FilterClub.Checked);
+        }
+
+        private void FilterChanged(CategoryTypes newFilter)
+        {
+            _categoryFilter = newFilter;
+            ReloadDataGrid();
+        }
+
+        private void FilterAll_Click(object sender, EventArgs e)
+        {
+            var allChecked = CategoryTypes.Bar | CategoryTypes.Restaurant | CategoryTypes.Club;
+            FilterChanged((_categoryFilter == allChecked) ? CategoryTypes.None : allChecked);
+        }
+
+        private void FilterBar_Click(object sender, EventArgs e)
+        {
+            FilterChanged(_categoryFilter ^ CategoryTypes.Bar);
+        }
+
+        private void FilterRestaurant_Click(object sender, EventArgs e)
+        {
+            FilterChanged(_categoryFilter ^ CategoryTypes.Restaurant);
+        }
+
+        private void FilterClub_Click(object sender, EventArgs e)
+        {
+            FilterChanged(_categoryFilter ^ CategoryTypes.Club);
+        }
+
+        private void FilterEmpty_Click(object sender, EventArgs e)
+        {
+            var allChecked = CategoryTypes.Bar | CategoryTypes.Restaurant | CategoryTypes.Club;
+            FilterChanged(_categoryFilter != CategoryTypes.None ? CategoryTypes.None : allChecked);
         }
     }
 }

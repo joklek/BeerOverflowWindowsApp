@@ -44,8 +44,9 @@ namespace BeerOverflowWindowsApp.DataModels
                                       GetDistanceBetweenBars(this[i].Latitude, this[i].Longitude,
                                                              this[j].Latitude, this[j].Longitude).ToString("N3") + " meters away" +
                                                              "One bar had other in name?:" + OneNameContainsTheOther(this[i].Title, this[j].Title) + "\n\n");*/
+                        this[i].Categories |= this[j].Categories;
                         this.Remove(this[j]);
-                        j--; //? should we do it, as on the same index we are a new bar will appear
+                        j--;
                         length--;
                     }
                 }

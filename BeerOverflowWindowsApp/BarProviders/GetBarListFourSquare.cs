@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using BeerOverflowWindowsApp.DataModels;
 using BeerOverflowWindowsApp.Utilities;
-using Newtonsoft.Json;
 using static BeerOverflowWindowsApp.DataModels.FourSquareDataModel;
 
 namespace BeerOverflowWindowsApp.BarProviders
@@ -13,10 +13,12 @@ namespace BeerOverflowWindowsApp.BarProviders
     class GetBarListFourSquare : IBeerable
     {
         public string ProviderName { get; } = "FourSquare";
-        private readonly string _apiLink = ConfigurationManager.AppSettings["FourSquareAPILink"];
-        private readonly string _clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
-        private readonly string _clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
-        private readonly string _categoryIdDs = ConfigurationManager.AppSettings["FourSquareCategoryIDs"];
+        private static readonly string _apiLink = ConfigurationManager.AppSettings["FourSquareAPILink"];
+        private static readonly string _clientId = ConfigurationManager.AppSettings["FourSquareClientId"];
+        private static readonly string _clientSecret = ConfigurationManager.AppSettings["FourSquareClientSecret"];
+        private static readonly string _categoryIdFetced = ConfigurationManager.AppSettings["FourSquareFetchCategoryIDs"];
+        private static readonly string _categoryIdBanned = ConfigurationManager.AppSettings["FourSquareBannedCategoryIDs"];
+        private static readonly string _categoryIdSecondary = ConfigurationManager.AppSettings["FourSquareSecondaryCategoryIDs"];
         private readonly IHttpFetcher _fetcher;
 
         public GetBarListFourSquare(IHttpFetcher fetcher)
@@ -28,19 +30,19 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
             var venueList = GetBarData(latitude, longitude, radius);
+            RemoveBannedVenues(venueList);
             var barList = VenueListToBarList(venueList, radius);
             return barList;
         }
 
-        private IEnumerable<Venue> GetBarData (string latitude, string longitude, string radius)
+        private List<Venue> GetBarData (string latitude, string longitude, string radius)
         {
-            var categoryIDs = _categoryIdDs.Split(',');
+            var categoryIDs = _categoryIdFetced.Split(',').ToList();
             var venueList = new List<Venue>();
             foreach (var category in categoryIDs)
             {
                 var link = string.Format(_apiLink, _clientId, _clientSecret, latitude, longitude, category, radius);
-                var jsonStream = _fetcher.GetHttpStream(link);
-                venueList.AddRange(JsonConvert.DeserializeObject<SearchResponse>(jsonStream).response.venues);
+                venueList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<SearchResponse>(link, _fetcher).response.venues);
             }
             return venueList;
         }
@@ -49,19 +51,26 @@ namespace BeerOverflowWindowsApp.BarProviders
         {
             RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
             var venueList = await GetBarDataAsync(latitude, longitude, radius);
+            RemoveBannedVenues(venueList);
             var barList = VenueListToBarList(venueList, radius);
             return barList;
         }
 
-        private async Task<IEnumerable<Venue>> GetBarDataAsync(string latitude, string longitude, string radius)
+        private void RemoveBannedVenues(List<Venue> venueList)
         {
-            var categoryIDs = _categoryIdDs.Split(',');
+            var categoryIdBanned = _categoryIdBanned.Split(',').ToList();
+            venueList.RemoveAll(x => x.categories.Exists(y => categoryIdBanned.Contains(y.id)));
+        }
+
+        private async Task<List<Venue>> GetBarDataAsync(string latitude, string longitude, string radius)
+        {
+            var categoryIDs = _categoryIdFetced.Split(',').ToList();
             var venueList = new List<Venue>();
             foreach (var category in categoryIDs)
             {
                 var link = string.Format(_apiLink, _clientId, _clientSecret, latitude, longitude, category, radius);
-                var jsonStream = await _fetcher.GetHttpStreamAsync(link);
-                venueList.AddRange(JsonConvert.DeserializeObject<SearchResponse>(jsonStream).response.venues);
+                var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<SearchResponse>(link, _fetcher);
+                venueList.AddRange(deserialized.response.venues);
             }
             return venueList;
         }
@@ -78,10 +87,31 @@ namespace BeerOverflowWindowsApp.BarProviders
             {
                 Title = venue.name,
                 BarId = venue.name,   // Temporary solution until we decide on BarId 
+                Categories = CollectCategories(venue),
                 Latitude = venue.location.lat,
                 Longitude = venue.location.lng,
                 Ratings = new List<int>()
             };
+        }
+
+        private static CategoryTypes CollectCategories(Venue place)
+        {
+            var placeCategories = CategoryTypes.None;
+            var listOfCategories = _categoryIdSecondary.Split(',').Select
+                (category => category.Split('|')).Select
+                (splitCategory => new CategoryUnconverted { NameFromProvider = splitCategory[0], NameNormalized = splitCategory[1] })
+                .ToList();
+
+            foreach (var category in place.categories)
+            {
+                var foundCategory = listOfCategories.FirstOrDefault(x => x.NameFromProvider == category.id);
+                CategoryTypes foundCategoryEnum;
+                if (foundCategory != null && Enum.TryParse(foundCategory.NameNormalized, true, out foundCategoryEnum))
+                {
+                    placeCategories |= foundCategoryEnum;
+                }
+            }
+            return placeCategories;
         }
     }
 }
