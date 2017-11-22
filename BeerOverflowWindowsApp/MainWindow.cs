@@ -216,6 +216,7 @@ namespace BeerOverflowWindowsApp
                 Task.Run(() => _barRating.AddRating(_selectedBar, rating)).Wait();
                 Task.Run(() => _selectedBar = WebApiAccess.GetBarRatings(_selectedBar)).Wait();
                 Resort();
+                ReloadDataGrid();
             }
         }
 

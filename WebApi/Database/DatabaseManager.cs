@@ -45,9 +45,9 @@ namespace WebApi.Database
                 localBars.ForEach(bar => 
                 {
                     var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
-                    bar.AvgRating = barInDb != null ? barInDb.AvgRating : 0;
+                    bar.AvgRating = barInDb?.AvgRating ?? 0;
                     var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
-                    bar.UserRating = barRating != null ? barRating.Rating : 0;
+                    bar.UserRating = barRating?.Rating ?? 0;
                 });
             }
             return localBars;
@@ -58,9 +58,9 @@ namespace WebApi.Database
             using (var db = new BarsDatabase())
             {
                 var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
-                bar.AvgRating = barInDb != null ? barInDb.AvgRating : 0;
+                bar.AvgRating = barInDb?.AvgRating ?? 0;
                 var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
-                bar.UserRating = barRating != null ? barRating.Rating : 0;
+                bar.UserRating = barRating?.Rating ?? 0;
             }
             return bar;
         }

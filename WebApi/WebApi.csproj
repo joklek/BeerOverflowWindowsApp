@@ -141,10 +141,6 @@
     <Compile Include="Migrations\201711202252009_InitialCreate.Designer.cs">
       <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711202052222_AddRatings.cs" />
-    <Compile Include="Migrations\201711202052222_AddRatings.Designer.cs">
-      <DependentUpon>201711202052222_AddRatings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -166,11 +162,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711202052222_AddRatings.resx">
-      <DependentUpon>201711202052222_AddRatings.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BeerOverflowWindowsApp\BeerOverflowWindowsApp.csproj">
