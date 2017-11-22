@@ -26,6 +26,7 @@ namespace BeerOverflowWindowsApp.DataModels
 
         [Required]
         public double Longitude { get; set; }
+        public CategoryTypes Categories { get; set; }
 
         public virtual ICollection<UsersRatingToBar> UserRatings { get; set; }
         public virtual ICollection<BarSynonym> Synonyms { get; set; }
