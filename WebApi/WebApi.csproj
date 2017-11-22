@@ -168,12 +168,6 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711071344345_InitialCreate.resx">
-      <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711072027400_AddUserComments.resx">
-      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711202052222_AddRatings.resx">
       <DependentUpon>201711202052222_AddRatings.cs</DependentUpon>
     </EmbeddedResource>
