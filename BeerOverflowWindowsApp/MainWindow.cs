@@ -24,7 +24,7 @@ namespace BeerOverflowWindowsApp
         private readonly string _defaultLongitude = ConfigurationManager.AppSettings["defaultLongitude"];
         private readonly string _defaultRadius = ConfigurationManager.AppSettings["defaultRadius"];
         private readonly BarRating _barRating = null;
-        private BarData _selectedBar;
+        private BarData _selectedBar = null;
         private CategoryTypes _categoryFilter = CategoryTypes.None;
         private MapWindow _mapForm;
         private readonly List<object> _providerList = new List<object>
@@ -59,13 +59,9 @@ namespace BeerOverflowWindowsApp
             BarDataGridView.Rows.Clear();
             foreach (var bar in barData)
             {
-                if ((_categoryFilter & bar.Categories) != 0)
+                if (_categoryFilter.HasFlag(bar.Categories))
                 {
-                    string rating;
-                    if (bar.Ratings != null && bar.Ratings.Any())
-                        rating = bar.Ratings?.Average().ToString("0.00");
-                    else
-                        rating = "0";
+                    var rating = bar.AvgRating.ToString("0.00");
                     var distance = bar.DistanceToCurrentLocation.ToString("0");
                     BarDataGridView.Rows.Add(bar.Title, bar.Categories, rating, distance);
                 }
@@ -83,6 +79,7 @@ namespace BeerOverflowWindowsApp
         {
             BarDataGridView.ClearSelection();
             _selectedBar = null;
+            manualBarRating.Rating = 0;
         }
 
         private async void GoButton_Click(object sender, EventArgs e)
@@ -212,13 +209,14 @@ namespace BeerOverflowWindowsApp
 
         private void ManualBarRating_Click(object sender, EventArgs e)
         {
-            var rating = manualBarRating.Rating;
-            int ratingNumber;
-            if (_selectedBar != null && rating != "" && int.TryParse(rating, out ratingNumber))
-            {
-                Task.Run(() => _barRating.AddRating(_selectedBar, ratingNumber)).Wait();
-                Task.Run(() => _selectedBar.Ratings = WebApiAccess.GetBarRatings(_selectedBar)).Wait();
+            int rating = manualBarRating.Rating;
+
+            if (_selectedBar != null && _selectedBar.UserRating != rating)
+            {              
+                Task.Run(() => _barRating.AddRating(_selectedBar, rating)).Wait();
+                Task.Run(() => _selectedBar = WebApiAccess.GetBarRatings(_selectedBar)).Wait();
                 Resort();
+                ReloadDataGrid();
             }
         }
 
@@ -228,6 +226,7 @@ namespace BeerOverflowWindowsApp
             {
                 var selectedBarName = (string)BarDataGridView.CurrentRow.Cells["Title"].Value;
                 _selectedBar = _barRating.BarsData.Find(bar => bar.Title == selectedBarName);
+                manualBarRating.Rating = _selectedBar.UserRating;
             }
         }
 

@@ -125,7 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -135,25 +137,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711071344345_InitialCreate.cs" />
-    <Compile Include="Migrations\201711071344345_InitialCreate.Designer.cs">
-      <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711072027400_AddUserComments.cs" />
-    <Compile Include="Migrations\201711072027400_AddUserComments.Designer.cs">
-      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711202052222_AddRatings.cs" />
-    <Compile Include="Migrations\201711202052222_AddRatings.Designer.cs">
-      <DependentUpon>201711202052222_AddRatings.cs</DependentUpon>
+    <Compile Include="Migrations\201711202252009_InitialCreate.cs" />
+    <Compile Include="Migrations\201711202252009_InitialCreate.Designer.cs">
+      <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -167,21 +164,15 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711071344345_InitialCreate.resx">
-      <DependentUpon>201711071344345_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711072027400_AddUserComments.resx">
-      <DependentUpon>201711072027400_AddUserComments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711202052222_AddRatings.resx">
-      <DependentUpon>201711202052222_AddRatings.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BeerOverflowWindowsApp\BeerOverflowWindowsApp.csproj">
       <Project>{8219DCAD-DDC8-42A7-A3BC-D1BD081BB2F2}</Project>
       <Name>BeerOverflowWindowsApp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201711202252009_InitialCreate.resx">
+      <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

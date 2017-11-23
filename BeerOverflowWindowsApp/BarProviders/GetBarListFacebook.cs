@@ -83,7 +83,6 @@ namespace BeerOverflowWindowsApp.BarProviders
                 Categories = CollectCategories(place),
                 Latitude = place.location.latitude,
                 Longitude = place.location.longitude,
-                Ratings = new List<int>()
             };
         }
 

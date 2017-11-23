@@ -6,55 +6,63 @@ namespace WebApi.Database
 {
     public class DatabaseManager
     {
-        public void SaveBarRating(BarData barToRate, int rating)
+        public void SaveBarRating(BarData barToRate, User currentUser, int rating)
         {
             using (var db = new BarsDatabase())
             {
-                var userInDb = db.Users.FirstOrDefault(user => user.Username == "testUser");//Program.defaultUser.Username);
+                var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser.Username);
                 if (userInDb == null)
-                    userInDb = new User { Username = "testUser" };//Program.defaultUser.Username };
+                    userInDb = new User { Username = currentUser.Username };
                 var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == barToRate.BarId);
                 if (barInDb != null)
                 {
                     var barRating = db.UserRatings.Find(barInDb.BarId, userInDb.Username);
-                    if (barRating != null)
+                    if (barRating != null)  
                     {
-                        barRating.Rating = rating;
+                        barRating.Rating = rating;                       
                     }
-                    else
+                    else   
                     {
                         db.UserRatings.Add(new UsersRatingToBar(barInDb, userInDb, rating));
                     }
+                    db.SaveChanges();
+                    barInDb.AvgRating = (float)db.UserRatings.Where(x => x.BarId == barInDb.BarId).Select(x => x.Rating).DefaultIfEmpty().Average(); //
                 }
-                else
+                else  
                 {
-                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
+                    barToRate.AvgRating = rating;
+                    db.SaveChanges();
+                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));                  
                 }
                 db.SaveChanges();
             }
         }
 
-        public List<BarData> GetAllBarData(List<BarData> localBars)
+        public List<BarData> GetAllBarData(List<BarData> localBars, User user)
         {
-            //if (localBars == null)
-            //{
-            //    return null;
-            //}
             using (var db = new BarsDatabase())
-            {
-                localBars.ForEach(bar => bar.Ratings = db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList());
+            {               
+                localBars.ForEach(bar => 
+                {
+                    var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
+                    bar.AvgRating = barInDb?.AvgRating ?? 0;
+                    var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
+                    bar.UserRating = barRating?.Rating ?? 0;
+                });
             }
             return localBars;
         }
 
-        public List<int> GetBarRatings(BarData bar)
+        public BarData GetBarRatings(BarData bar, User user)
         {
-            List<int> list;
             using (var db = new BarsDatabase())
             {
-                list = db.UserRatings.Where(x => x.BarId == bar.BarId).Select(x => x.Rating).ToList();
+                var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
+                bar.AvgRating = barInDb?.AvgRating ?? 0;
+                var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
+                bar.UserRating = barRating?.Rating ?? 0;
             }
-            return list;
+            return bar;
         }
     }
 }

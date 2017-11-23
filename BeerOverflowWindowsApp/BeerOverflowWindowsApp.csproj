@@ -93,6 +93,10 @@
     <Compile Include="BarComparers\ComparerByTitle.cs" />
     <Compile Include="BarComparers\CompareType.cs" />
     <Compile Include="BarRating.cs" />
+    <Compile Include="DataModels\BarDataModel.cs" />
+    <Compile Include="DataModels\BarSynonym .cs" />
+    <Compile Include="DataModels\UserAndBarModel.cs" />
+    <Compile Include="DataModels\UserAndBarsModel.cs" />
     <Compile Include="DataModels\CategoryTypes.cs" />
     <Compile Include="DataModels\CategoryUnconverted.cs" />
     <Compile Include="DataModels\RatingModel.cs" />
@@ -112,7 +116,6 @@
       <DependentUpon>MapWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="DataModels\BarData.cs" />
-    <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="FileIO\BarFileReader.cs" />
     <Compile Include="FileIO\BarFileWriter.cs" />
     <Compile Include="DataModels\TripAdvisorDataModel.cs" />
@@ -164,6 +167,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -179,12 +183,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

@@ -10,15 +10,26 @@ namespace BeerOverflowWindowsApp.DataModels
     {
         public BarData() { }
 
+        [Required, MaxLength(50)]
         public string Title { get; set; }
-        [Key]
+
+        [Key, MaxLength(50)]
         public string BarId { get; set; }
-        public List<int> Ratings { get; set; }
+
+        public float AvgRating { get; set; }
+
+        [NotMapped]
+        public int UserRating { get; set; }
+
+        [Required]
         public double Latitude { get; set; }
+
+        [Required]
         public double Longitude { get; set; }
         public CategoryTypes Categories { get; set; }
 
         public virtual ICollection<UsersRatingToBar> UserRatings { get; set; }
+        public virtual ICollection<BarSynonym> Synonyms { get; set; }
 
         [NotMapped]
         public double DistanceToCurrentLocation { get; set; }

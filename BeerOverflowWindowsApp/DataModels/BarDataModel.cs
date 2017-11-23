@@ -9,17 +9,12 @@ using BeerOverflowWindowsApp.Utilities;
 
 namespace BeerOverflowWindowsApp.DataModels
 {
-   public class BarDataModel : List<BarData>
+    public class BarDataModel : List<BarData>
     {
-        private readonly double _barNameSimilarThreshold = 
-            double.Parse(ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
-        private readonly double _barNameLikelySimilarThreshold = 
-            double.Parse(ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
-        private readonly double _barNearnessThresholdInMeters = 
-            double.Parse(ConfigurationManager.AppSettings["barNearnessInMetersThreshold"], CultureInfo.InvariantCulture);
-
-        private readonly int _maxSameBarDistanceErrorThresholdMeters =
-            int.Parse(ConfigurationManager.AppSettings["maxSameBarDistanceErrorThresholdMeters"], CultureInfo.InvariantCulture);
+        private readonly double _barNameSimilarThreshold = double.Parse(ConfigurationManager.AppSettings["barNameSimilarThreshold"], CultureInfo.InvariantCulture);
+        private readonly double _barNameLikelySimilarThreshold = double.Parse(ConfigurationManager.AppSettings["barNameLikelySimilarThreshold"], CultureInfo.InvariantCulture);
+        private readonly double _barNearnessThresholdInMeters = double.Parse(ConfigurationManager.AppSettings["barNearnessInMetersThreshold"], CultureInfo.InvariantCulture);
+        private readonly int _maxSameBarDistanceErrorThresholdMeters = int.Parse(ConfigurationManager.AppSettings["maxSameBarDistanceErrorThresholdMeters"], CultureInfo.InvariantCulture);
 
         public void RemoveDuplicates()
         {
@@ -122,14 +117,6 @@ namespace BeerOverflowWindowsApp.DataModels
             return string.Join("",
                 s.Normalize(NormalizationForm.FormD)
                     .Where(c => char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
-        }
-
-        public void GetRatings()
-        {
-            foreach (var bar in this)
-            {
-                bar.Ratings = WebApiAccess.GetBarRatings(bar);
-            }
         }
 
         public void RemoveBarsOutsideRadius(string radius)
