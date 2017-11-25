@@ -2,9 +2,58 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="Content/bootstrap.min.css">
+    <link rel="stylesheet" href="Content/DataTables/media/css/dataTables.bootstrap.min.css">
+    <script src="Scripts/jquery-1.12.4.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="Scripts/DataTables/media/js/dataTables.bootstrap.min.js"></script>
     <title></title>
 </head>
 <body>
-
+    <button onclick="GetData()">DO IT</button>
+    <table class="table table-bordered table-condensed table-hover" id="barsTable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </body>
 </html>
+<script>
+    $(document).ready(function () {
+        $('#barsTable').DataTable({
+            columns: [
+                { data: 'Id' },
+                { data: 'Title' },
+                { data: 'Category' },
+                { data: 'Rating' }
+            ]
+        });
+    });
+    function GetData() {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: "http://localhost:1726/Api/Data/GetBarsByCoordinates",
+            data: {
+                coordinates: "abc"
+            },
+            type: "POST",
+            dataType: "json",
+            error: function (request, status, error) {
+                alert(request.responseText);              
+            },
+            success: function (data) {
+                $('#barsTable').DataTable().rows.add(data).draw();
+            }
+        });
+    }
+
+
+</script>

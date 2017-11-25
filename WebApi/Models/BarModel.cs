@@ -11,5 +11,6 @@ namespace WebApi.Models
         public string Title { get; set; }
         public float Rating { get; set; }
         public string Category { get; set; }
+        public double Distance { get; set; }
     }
 }
