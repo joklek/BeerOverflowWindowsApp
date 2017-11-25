@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace BeerOverflowWindowsApp.DataModels
+namespace WebApi.DataModels
 {
     public class GoogleDataModel
     {

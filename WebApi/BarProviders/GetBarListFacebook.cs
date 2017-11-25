@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using BeerOverflowWindowsApp.DataModels;
-using BeerOverflowWindowsApp.Utilities;
-using static BeerOverflowWindowsApp.DataModels.FacebookDataModel;
+using BarData = WebApi.DataModels.BarData;
+using CategoryTypes = WebApi.DataModels.CategoryTypes;
+using CategoryUnconverted = WebApi.DataModels.CategoryUnconverted;
+using FacebookDataModel = WebApi.DataModels.FacebookDataModel;
+using FetcherAndDeserializer = WebApi.Utilities.FetcherAndDeserializer;
+using IHttpFetcher = WebApi.Utilities.IHttpFetcher;
 
-namespace BeerOverflowWindowsApp.BarProviders
+namespace WebApi.BarProviders
 {
-    class GetBarListFacebook : IBeerable
+    internal class GetBarListFacebook : IBeerable
     {
         public string ProviderName { get; } = "Facebook";
         private static readonly string _apiLink = ConfigurationManager.AppSettings["FacebookAPILink"];
@@ -25,39 +29,38 @@ namespace BeerOverflowWindowsApp.BarProviders
             _fetcher = fetcher;
         }
 
-        public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
+        public List<BarData> GetBarsAround(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+            //TODO: CHECK DATA
             var placeList = GetBarData(latitude, longitude, radius);
             var barList = PlaceListToBarList(placeList);
             return barList;
         }
 
-        private IEnumerable<Place> GetBarData(string latitude, string longitude, string radius)
+        private IEnumerable<FacebookDataModel.Place> GetBarData(double latitude, double longitude, double radius)
         {
-            var link = string.Format(_apiLink, _accessToken, latitude, longitude, radius, _requestedFields, _category);
-            var barList = FetcherAndDeserializer.FetchAndDeserialize<PlacesResponse>(link, _fetcher).data;
+            var link = string.Format(_apiLink, _accessToken, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), _requestedFields, _category, CultureInfo.InvariantCulture);
+            var barList = FetcherAndDeserializer.FetchAndDeserialize<FacebookDataModel.PlacesResponse>(link, _fetcher).data;
             return barList;
         }
 
-        public async Task<List<BarData>> GetBarsAroundAsync(string latitude, string longitude, string radius)
+        public async Task<List<BarData>> GetBarsAroundAsync(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+            //TODO: CHECK DATA
             var placeList = await GetBarDataAsync(latitude, longitude, radius);
             var barList = PlaceListToBarList(placeList);
             return barList;
         }
 
-        private async Task<List<Place>> GetBarDataAsync(string latitude, string longitude, string radius)
+        private async Task<List<FacebookDataModel.Place>> GetBarDataAsync(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
-            var link = string.Format(_apiLink, _accessToken, latitude, longitude, radius, _requestedFields, _category);
-            var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesResponse>(link, _fetcher);
+            var link = string.Format(_apiLink, _accessToken, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), _requestedFields, _category, CultureInfo.InvariantCulture);
+            var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<FacebookDataModel.PlacesResponse>(link, _fetcher);
             var barList = deserialized.data;
             return barList;
         }
 
-        private List<BarData> PlaceListToBarList(IEnumerable<Place> resultData)
+        private List<BarData> PlaceListToBarList(IEnumerable<FacebookDataModel.Place> resultData)
         {
             var allowedCategories = string.Join(",", _allowedCategories.Split(',').ToList().SelectMany(category => category.Split('|')).Where((c, i) => i % 2 == 0));
             var barList = new List<BarData>();
@@ -74,7 +77,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             return barList;
         }
 
-        private static BarData PlaceToBar(Place place)
+        private static BarData PlaceToBar(FacebookDataModel.Place place)
         {
             return new BarData
             {
@@ -86,7 +89,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             };
         }
 
-        private static CategoryTypes CollectCategories(Place place)
+        private static CategoryTypes CollectCategories(FacebookDataModel.Place place)
         {
             var placeCategories = CategoryTypes.None;
             var listOfCategories = _allowedCategories.Split(',').Select

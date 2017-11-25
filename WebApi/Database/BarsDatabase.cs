@@ -1,5 +1,8 @@
 ﻿using System.Data.Entity;
-using BeerOverflowWindowsApp.DataModels;
+using BarData = WebApi.DataModels.BarData;
+using BarSynonym = WebApi.DataModels.BarSynonym;
+using User = WebApi.DataModels.User;
+using UsersRatingToBar = WebApi.DataModels.UsersRatingToBar;
 
 namespace WebApi.Database
 {

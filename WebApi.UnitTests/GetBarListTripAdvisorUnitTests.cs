@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BeerOverflowWindowsApp.BarProviders;
-using BeerOverflowWindowsApp.Exceptions;
-using BeerOverflowWindowsApp.UnitTests.TestData;
-using BeerOverflowWindowsApp.Utilities;
 using Moq;
 using NUnit.Framework;
+using WebApi.BarProviders;
+using WebApi.Exceptions;
+using WebApi.UnitTests.TestData;
+using WebApi.Utilities;
 
-namespace BeerOverflowWindowsApp.UnitTests
+namespace WebApi.UnitTests
 {
     [TestFixture]
     public class GetBarListTripAdvisorUnitTests
     {
         [TestCaseSource(typeof(BarProviderTestData), "ValidDataCases")]
-        public void GetBarsFourSquare_GetBarsAround_ValidData(string latitude, string longitude, string radius)
+        public void GetBarsFourSquare_GetBarsAround_ValidData(double latitude, double longitude, double radius)
         {
             // Arrange
             var validFetcher = new Mock<IHttpFetcher>();
@@ -36,7 +36,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [TestCaseSource(typeof(BarProviderTestData), "ValidDataCases")]
-        public void GetBarsFourSquare_GetBarsAroundAsync_ValidData(string latitude, string longitude, string radius)
+        public void GetBarsFourSquare_GetBarsAroundAsync_ValidData(double latitude, double longitude, double radius)
         {
             // Arrange
             var validFetcher = new Mock<IHttpFetcher>();
@@ -58,19 +58,8 @@ namespace BeerOverflowWindowsApp.UnitTests
             }
         }
 
-        [TestCaseSource(typeof(BarProviderTestData), "NullDataCases")]
-        public void GetBarsTripAdvisor_GetBarsAround_NullData(string latitude, string longitude, string radius)
-        {
-            var emptyFetcher = new Mock<IHttpFetcher>();
-            emptyFetcher.Setup(p => p.GetHttpStream(It.IsAny<string>())).Throws(new Exception("This should not have been thrown"));
-            // Arrange
-            var getBars = new GetBarListTripAdvisor(emptyFetcher.Object);
-            // Act && Assert
-            var ex = Assert.Throws<ArgumentNullException>(() => getBars.GetBarsAround(latitude, longitude, radius));
-        }
-
         [TestCaseSource(typeof(BarProviderTestData), "InvalidDataCases")]
-        public void GetBarsTripAdvisor_GetBarsAround_InvalidData(string latitude, string longitude, string radius, string exceptionMessage)
+        public void GetBarsTripAdvisor_GetBarsAround_InvalidData(double latitude, double longitude, double radius, string exceptionMessage)
         {
             var emptyFetcher = new Mock<IHttpFetcher>();
             emptyFetcher.Setup(p => p.GetHttpStream(It.IsAny<string>())).Throws(new Exception("This should not have been thrown"));
@@ -82,20 +71,8 @@ namespace BeerOverflowWindowsApp.UnitTests
             Assert.That(ex.InvalidArguments == exceptionMessage);
         }
 
-        [TestCaseSource(typeof(BarProviderTestData), "NullDataCases")]
-        public void GetBarsTripAdvisor_GetBarsAroundAsync_NullData(string latitude, string longitude, string radius)
-        {
-            var emptyFetcher = new Mock<IHttpFetcher>();
-            emptyFetcher.Setup(p => p.GetHttpStream(It.IsAny<string>())).Throws(new Exception("This should not have been thrown"));
-            // Arrange
-            var getBars = new GetBarListTripAdvisor(emptyFetcher.Object);
-            // Act && Assert
-            var ex = Assert.ThrowsAsync<ArgumentNullException>
-                            (async () => await getBars.GetBarsAroundAsync(latitude, longitude, radius));
-        }
-
         [TestCaseSource(typeof(BarProviderTestData), "InvalidDataCases")]
-        public void GetBarsTripAdvisor_GetBarsAroundAsync_InvalidData(string latitude, string longitude, string radius, string exceptionMessage)
+        public void GetBarsTripAdvisor_GetBarsAroundAsync_InvalidData(double latitude, double longitude, double radius, string exceptionMessage)
         {
             var emptyFetcher = new Mock<IHttpFetcher>();
             emptyFetcher.Setup(p => p.GetHttpStream(It.IsAny<string>())).Throws(new Exception("This should not have been thrown"));

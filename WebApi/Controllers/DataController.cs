@@ -1,8 +1,13 @@
-﻿using BeerOverflowWindowsApp.DataModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using WebApi.Database;
+using WebApi.DataModels;
+using WebApi.Utilities;
+using BarData = WebApi.DataModels.BarData;
+using RatingModel = WebApi.DataModels.RatingModel;
+using UserAndBarModel = WebApi.DataModels.UserAndBarModel;
+using UserAndBarsModel = WebApi.DataModels.UserAndBarsModel;
 
 namespace WebApi.Controllers
 {
@@ -10,10 +15,18 @@ namespace WebApi.Controllers
     {
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel UserAndBars)
+        public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
-            List<BarData> result = dbManager.GetAllBarData(UserAndBars.Bars, UserAndBars.User);            
+            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User);            
+            return Ok(result);
+        }
+
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        [HttpPost]
+        public IHttpActionResult GetBarsAround([FromBody]LocationRequestModel locationRequest)
+        {
+            List<BarData> result = BarFetcher.RequestBarsAroundCoords(locationRequest).Result;
             return Ok(result);
         }
 

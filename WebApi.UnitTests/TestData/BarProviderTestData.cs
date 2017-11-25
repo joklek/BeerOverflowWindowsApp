@@ -1,4 +1,4 @@
-﻿namespace BeerOverflowWindowsApp.UnitTests.TestData
+﻿namespace WebApi.UnitTests.TestData
 {
     public class BarProviderTestData
     {
@@ -14,35 +14,21 @@
 
         public static object[] ValidDataCases =
         {
-            new object[] { "0.0", "0.0", "0" },
-            new object[] { "-90.0", "-180.0", "50" },
-            new object[] { "90.0", "180.0", "50" },
-            new object[] { "-90.0", "180.0", "50" },
-            new object[] { "90.0", "-180.0", "50" },
-        };
-
-        public static readonly object[] NullDataCases =
-        {
-            new object[] { null, "0.0", "0" },
-            new object[] { "0.0", null, "0" },
-            new object[] { "0.0", "0.0", null }
+            new object[] { 0.0, 0.0, 0 },
+            new object[] { -90.0, -180.0, 50 },
+            new object[] { 90.0, 180.0, 50 },
+            new object[] { -90.0, 180.0, 50 },
+            new object[] { 90.0, -180.0, 50 },
         };
 
         public static readonly object[] InvalidDataCases =
         {
-            new object[] { "T", "1.0", "1", "latitude" },
-            new object[] { "", "1.0", "1", "latitude"  },
-            new object[] { "-91.0", "1.0", "1", "latitude" },
-            new object[] { "91.0", "1.0", "1", "latitude" },
-            new object[] { "1.0", "T", "1", "longitude" },
-            new object[] { "1.0", "", "1", "longitude" },
-            new object[] { "1.0", "-181.0", "1", "longitude" },
-            new object[] { "1.0", "181.0", "1", "longitude" },
-            new object[] { "1.0", "1", "T", "radius" },
-            new object[] { "1.0", "1", "-", "radius" },
-            new object[] { "1.0", "1", "", "radius" },
-            new object[] { "1.0", "1", "-1", "radius" },
-            new object[] { "1.0", "1", "9999999", "radius" }
+            new object[] { -91.0, 1.0, 1, "latitude" },
+            new object[] { 91.0, 1.0, 1, "latitude" },
+            new object[] { 1.0, -181.0, 1, "longitude" },
+            new object[] { 1.0, 181.0, 1, "longitude" },
+            new object[] { 1.0, 1, -1, "radius" },
+            new object[] { 1.0, 1, 9999999, "radius" }
         };
     }
 }

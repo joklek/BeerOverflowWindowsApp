@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using BeerOverflowWindowsApp.DataModels;
-using BeerOverflowWindowsApp.Utilities;
-using static BeerOverflowWindowsApp.DataModels.GoogleDataModel;
+using BarData = WebApi.DataModels.BarData;
+using CategoryTypes = WebApi.DataModels.CategoryTypes;
+using CategoryUnconverted = WebApi.DataModels.CategoryUnconverted;
+using FetcherAndDeserializer = WebApi.Utilities.FetcherAndDeserializer;
+using GoogleDataModel = WebApi.DataModels.GoogleDataModel;
+using IHttpFetcher = WebApi.Utilities.IHttpFetcher;
 
-namespace BeerOverflowWindowsApp.BarProviders
+namespace WebApi.BarProviders
 {
     class GetBarListGoogle : IBeerable
     {
@@ -23,56 +27,56 @@ namespace BeerOverflowWindowsApp.BarProviders
         }
 
 
-        public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
+        public List<BarData> GetBarsAround(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+            //TODO: CHECK DATA
             var placeList = GetBarData(latitude, longitude, radius);
             var barList = PlaceListToBarList(placeList);
             return barList;
         }
 
-        private IEnumerable<Place> GetBarData(string latitude, string longitude, string radius)
+        private IEnumerable<GoogleDataModel.Place> GetBarData(double latitude, double longitude, double radius)
         {
             var categoryList = _categoryList.Split(',').ToList().SelectMany(category => category.Split('|')).Where((c, i) => i % 2 == 0);
-            var placeList = new List<Place>();
+            var placeList = new List<GoogleDataModel.Place>();
             foreach (var category in categoryList)
             {
-                var link = string.Format(_apiLink, latitude, longitude, radius, category, _apiKey);
-                var deserialized = FetcherAndDeserializer.FetchAndDeserialize<PlacesApiQueryResponse>(link, _fetcher).Results;
+                var link = string.Format(_apiLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), category, _apiKey, CultureInfo.InvariantCulture);
+                var deserialized = FetcherAndDeserializer.FetchAndDeserialize<GoogleDataModel.PlacesApiQueryResponse>(link, _fetcher).Results;
                 deserialized.ForEach(x => x.Category = category);
                 placeList.AddRange(deserialized);
             }
             return placeList;
         }
 
-        public async Task<List<BarData>> GetBarsAroundAsync(string latitude, string longitude, string radius)
+        public async Task<List<BarData>> GetBarsAroundAsync(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+            //TODO: CHECK DATA
             var placeList = await GetBarDataAsync(latitude, longitude, radius);
             var barList = PlaceListToBarList(placeList);
             return barList;
         }
 
-        private async Task<IEnumerable<Place>> GetBarDataAsync(string latitude, string longitude, string radius)
+        private async Task<IEnumerable<GoogleDataModel.Place>> GetBarDataAsync(double latitude, double longitude, double radius)
         {
             var categoryList = _categoryList.Split(',').ToList().SelectMany(category => category.Split('|')).Where((c, i) => i % 2 == 0);
-            var placeList = new List<Place>();
+            var placeList = new List<GoogleDataModel.Place>();
             foreach (var category in categoryList)
             {
-                var link = string.Format(_apiLink, latitude, longitude, radius, category, _apiKey);
-                var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesApiQueryResponse>(link, _fetcher);
+                var link = string.Format(_apiLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), category, _apiKey, CultureInfo.InvariantCulture);
+                var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<GoogleDataModel.PlacesApiQueryResponse>(link, _fetcher);
                 deserializedResponse.Results.ForEach(x => x.Category = category);
                 placeList.AddRange(deserializedResponse.Results);
             }
             return placeList;
         }
 
-        private static List<BarData> PlaceListToBarList(IEnumerable<Place> placeList)
+        private static List<BarData> PlaceListToBarList(IEnumerable<GoogleDataModel.Place> placeList)
         {
             return placeList.Select(PlaceToBar).ToList();
         }
 
-        private static BarData PlaceToBar(Place place)
+        private static BarData PlaceToBar(GoogleDataModel.Place place)
         {
             return new BarData
             {
@@ -84,7 +88,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             };
         }
 
-        private static CategoryTypes CollectCategories(Place place)
+        private static CategoryTypes CollectCategories(GoogleDataModel.Place place)
         {
             var placeCategories = CategoryTypes.None;
             var listOfCategories = _categoryList.Split(',').Select

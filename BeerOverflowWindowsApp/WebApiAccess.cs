@@ -30,7 +30,7 @@ namespace BeerOverflowWindowsApp
             }
         }
 
-        public static List<BarData> GetAllBarData(BarDataModel localBars)
+        public static List<BarData> GetAllBarData(List<BarData> localBars)
         {
             using (var client = new HttpClient())
             {
@@ -41,7 +41,23 @@ namespace BeerOverflowWindowsApp
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = client.PostAsync("Api/Data/GetAllBarData", content);
                 var responseResult = response.Result.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<BarDataModel>(responseResult.Result);
+                var result = JsonConvert.DeserializeObject<List<BarData>>(responseResult.Result);
+                return result;
+            }
+        }
+
+        public static List<BarData> GetBarsAround(double latitude, double longitude, double radius)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:1726/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var json = JsonConvert.SerializeObject(new LocationRequestModel() { Latitude = latitude, Longitude = longitude, Radius = radius, User = defaultUser });
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = client.PostAsync("Api/Data/GetBarsAround", content);
+                var responseResult = response.Result.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<List<BarData>>(responseResult.Result);
                 return result;
             }
         }

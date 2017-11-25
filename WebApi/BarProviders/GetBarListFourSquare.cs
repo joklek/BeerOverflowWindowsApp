@@ -4,11 +4,14 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using BeerOverflowWindowsApp.DataModels;
-using BeerOverflowWindowsApp.Utilities;
-using static BeerOverflowWindowsApp.DataModels.FourSquareDataModel;
+using BarData = WebApi.DataModels.BarData;
+using CategoryTypes = WebApi.DataModels.CategoryTypes;
+using CategoryUnconverted = WebApi.DataModels.CategoryUnconverted;
+using FetcherAndDeserializer = WebApi.Utilities.FetcherAndDeserializer;
+using FourSquareDataModel = WebApi.DataModels.FourSquareDataModel;
+using IHttpFetcher = WebApi.Utilities.IHttpFetcher;
 
-namespace BeerOverflowWindowsApp.BarProviders
+namespace WebApi.BarProviders
 {
     class GetBarListFourSquare : IBeerable
     {
@@ -26,62 +29,61 @@ namespace BeerOverflowWindowsApp.BarProviders
             _fetcher = fetcher;
         }
 
-        public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
+        public List<BarData> GetBarsAround(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+            //TODO: CHECK DATA
             var venueList = GetBarData(latitude, longitude, radius);
             RemoveBannedVenues(venueList);
             var barList = VenueListToBarList(venueList, radius);
             return barList;
         }
 
-        private List<Venue> GetBarData (string latitude, string longitude, string radius)
+        private List<FourSquareDataModel.Venue> GetBarData (double latitude, double longitude, double radius)
         {
             var categoryIDs = _categoryIdFetced.Split(',').ToList();
-            var venueList = new List<Venue>();
+            var venueList = new List<FourSquareDataModel.Venue>();
             foreach (var category in categoryIDs)
             {
-                var link = string.Format(_apiLink, _clientId, _clientSecret, latitude, longitude, category, radius);
-                venueList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<SearchResponse>(link, _fetcher).response.venues);
+                var link = string.Format(_apiLink, _clientId, _clientSecret, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), category, radius.ToString(CultureInfo.InvariantCulture));
+                venueList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<FourSquareDataModel.SearchResponse>(link, _fetcher).response.venues);
             }
             return venueList;
         }
 
-        public async Task<List<BarData>> GetBarsAroundAsync(string latitude, string longitude, string radius)
+        public async Task<List<BarData>> GetBarsAroundAsync(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+            //TODO: CHECK DATA
             var venueList = await GetBarDataAsync(latitude, longitude, radius);
             RemoveBannedVenues(venueList);
             var barList = VenueListToBarList(venueList, radius);
             return barList;
         }
 
-        private void RemoveBannedVenues(List<Venue> venueList)
+        private void RemoveBannedVenues(List<FourSquareDataModel.Venue> venueList)
         {
             var categoryIdBanned = _categoryIdBanned.Split(',').ToList();
             venueList.RemoveAll(x => x.categories.Exists(y => categoryIdBanned.Contains(y.id)));
         }
 
-        private async Task<List<Venue>> GetBarDataAsync(string latitude, string longitude, string radius)
+        private async Task<List<FourSquareDataModel.Venue>> GetBarDataAsync(double latitude, double longitude, double radius)
         {
             var categoryIDs = _categoryIdFetced.Split(',').ToList();
-            var venueList = new List<Venue>();
+            var venueList = new List<FourSquareDataModel.Venue>();
             foreach (var category in categoryIDs)
             {
-                var link = string.Format(_apiLink, _clientId, _clientSecret, latitude, longitude, category, radius);
-                var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<SearchResponse>(link, _fetcher);
+                var link = string.Format(_apiLink, _clientId, _clientSecret, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), category, radius.ToString(CultureInfo.InvariantCulture));
+                var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<FourSquareDataModel.SearchResponse>(link, _fetcher);
                 venueList.AddRange(deserialized.response.venues);
             }
             return venueList;
         }
 
-        private static List<BarData> VenueListToBarList(IEnumerable<Venue> venueList, string radius)
+        private static List<BarData> VenueListToBarList(IEnumerable<FourSquareDataModel.Venue> venueList, double radius)
         {
-            var radiusNum = int.Parse(radius, CultureInfo.InvariantCulture);
-            return (from venue in venueList where (venue.location.distance <= radiusNum) select VenueToBar(venue)).ToList();
+            return (from venue in venueList where (venue.location.distance <= radius) select VenueToBar(venue)).ToList();
         }
 
-        private static BarData VenueToBar(Venue venue)
+        private static BarData VenueToBar(FourSquareDataModel.Venue venue)
         {
             return new BarData
             {
@@ -93,7 +95,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             };
         }
 
-        private static CategoryTypes CollectCategories(Venue place)
+        private static CategoryTypes CollectCategories(FourSquareDataModel.Venue place)
         {
             var placeCategories = CategoryTypes.None;
             var listOfCategories = _categoryIdSecondary.Split(',').Select

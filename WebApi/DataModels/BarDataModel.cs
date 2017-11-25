@@ -5,9 +5,8 @@ using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BeerOverflowWindowsApp.Utilities;
 
-namespace BeerOverflowWindowsApp.DataModels
+namespace WebApi.DataModels
 {
     public class BarDataModel : List<BarData>
     {
@@ -119,12 +118,11 @@ namespace BeerOverflowWindowsApp.DataModels
                     .Where(c => char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
         }
 
-        public void RemoveBarsOutsideRadius(string radius)
+        public void RemoveBarsOutsideRadius(double radius)
         {
-            RegexTools.RadiusTextIsCorrect(radius);
-            var numRadius = double.Parse(radius, CultureInfo.InvariantCulture);
+            // TODO: Radius Check
             var barsToRemove = new List<BarData>(_maxSameBarDistanceErrorThresholdMeters);
-            barsToRemove.AddRange(this.Where(bar => bar.DistanceToCurrentLocation > numRadius));
+            barsToRemove.AddRange(this.Where(bar => bar.DistanceToCurrentLocation > radius));
             foreach (var bar in barsToRemove)
             {
                 this.Remove(bar);

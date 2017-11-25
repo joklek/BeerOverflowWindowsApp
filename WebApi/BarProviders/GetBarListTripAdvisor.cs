@@ -4,11 +4,14 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using BeerOverflowWindowsApp.DataModels;
-using BeerOverflowWindowsApp.Utilities;
-using static BeerOverflowWindowsApp.DataModels.TripAdvisorDataModel;
+using WebApi.DataModels;
+using BarData = WebApi.DataModels.BarData;
+using CategoryTypes = WebApi.DataModels.CategoryTypes;
+using CategoryUnconverted = WebApi.DataModels.CategoryUnconverted;
+using FetcherAndDeserializer = WebApi.Utilities.FetcherAndDeserializer;
+using IHttpFetcher = WebApi.Utilities.IHttpFetcher;
 
-namespace BeerOverflowWindowsApp.BarProviders
+namespace WebApi.BarProviders
 {
     class GetBarListTripAdvisor : IBeerable
     {
@@ -26,9 +29,9 @@ namespace BeerOverflowWindowsApp.BarProviders
             _fetcher = fetcher;
         }
 
-        public List<BarData> GetBarsAround(string latitude, string longitude, string radius)
+        public List<BarData> GetBarsAround(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+            //TODO: CHECK DATA
             var placeList = GetBarData(latitude, longitude);
             RemovePlacesOutsideRadius(placeList, radius);
             FetchLocations(placeList);
@@ -37,19 +40,19 @@ namespace BeerOverflowWindowsApp.BarProviders
             return barList;
         }
 
-        private List<PlaceInfo> GetBarData(string latitude, string longitude)
+        private List<TripAdvisorDataModel.PlaceInfo> GetBarData(double latitude, double longitude)
         {
             var categories = _categoryListString.Split(',');
-            var placeList =  new List<PlaceInfo>();
+            var placeList =  new List<TripAdvisorDataModel.PlaceInfo>();
             foreach (var category in categories)
             {
-                var link = string.Format(_mapperLink, latitude, longitude, _accessKey, category);
-                placeList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<PlacesResponse>(link, _fetcher).data);
+                var link = string.Format(_mapperLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), _accessKey, category);
+                placeList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<TripAdvisorDataModel.PlacesResponse>(link, _fetcher).data);
             }
             return placeList;
         }
 
-        private void FetchLocations(IEnumerable<PlaceInfo> placeList)
+        private void FetchLocations(IEnumerable<TripAdvisorDataModel.PlaceInfo> placeList)
         {
             foreach (var place in placeList)
             {
@@ -57,16 +60,16 @@ namespace BeerOverflowWindowsApp.BarProviders
             }
         }
 
-        private LocationResponse GetLocationForPlace(PlaceInfo place)
+        private TripAdvisorDataModel.LocationResponse GetLocationForPlace(TripAdvisorDataModel.PlaceInfo place)
         {
             var link = string.Format(_locationApiLink, place.location_id, _accessKey);
-            var placeLocation = FetcherAndDeserializer.FetchAndDeserialize<LocationResponse>(link, _fetcher);
+            var placeLocation = FetcherAndDeserializer.FetchAndDeserialize<TripAdvisorDataModel.LocationResponse>(link, _fetcher);
             return placeLocation;
         }
 
-        public async Task<List<BarData>> GetBarsAroundAsync(string latitude, string longitude, string radius)
+        public async Task<List<BarData>> GetBarsAroundAsync(double latitude, double longitude, double radius)
         {
-            RegexTools.LocationDataTextIsCorrect(latitude, longitude, radius);
+            //TODO: CHECK DATA
             var placeList = await GetBarDataAsync(latitude, longitude);
             RemovePlacesOutsideRadius(placeList, radius);
             await FetchLocationsAsync(placeList);
@@ -75,20 +78,20 @@ namespace BeerOverflowWindowsApp.BarProviders
             return barList;
         }
 
-        private async Task<List<PlaceInfo>> GetBarDataAsync(string latitude, string longitude)
+        private async Task<List<TripAdvisorDataModel.PlaceInfo>> GetBarDataAsync(double latitude, double longitude)
         {
             var categories = _categoryListString.Split(',');
-            var placeList = new List<PlaceInfo>();
+            var placeList = new List<TripAdvisorDataModel.PlaceInfo>();
             foreach (var category in categories)
             {
-                var link = string.Format(_mapperLink, latitude, longitude, _accessKey, category);
-                var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesResponse>(link, _fetcher);
+                var link = string.Format(_mapperLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), _accessKey, category);
+                var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<TripAdvisorDataModel.PlacesResponse>(link, _fetcher);
                 placeList.AddRange(deserializedResponse.data);
             }
             return placeList;
         }
 
-        private async Task FetchLocationsAsync(IEnumerable<PlaceInfo> placeList)
+        private async Task FetchLocationsAsync(IEnumerable<TripAdvisorDataModel.PlaceInfo> placeList)
         {
             foreach (var place in placeList)
             {
@@ -96,30 +99,30 @@ namespace BeerOverflowWindowsApp.BarProviders
             }
         }
 
-        private async Task<LocationResponse> GetLocationForPlaceAsync(PlaceInfo place)
+        private async Task<TripAdvisorDataModel.LocationResponse> GetLocationForPlaceAsync(TripAdvisorDataModel.PlaceInfo place)
         {
             var link = string.Format(_locationApiLink, place.location_id, _accessKey);
-            var placeLocation = await FetcherAndDeserializer.FetchAndDeserializeAsync<LocationResponse>(link, _fetcher);
+            var placeLocation = await FetcherAndDeserializer.FetchAndDeserializeAsync<TripAdvisorDataModel.LocationResponse>(link, _fetcher);
             return placeLocation;
         }
 
-        private List<BarData> PlaceListToBarList(IEnumerable<PlaceInfo> placeList)
+        private List<BarData> PlaceListToBarList(IEnumerable<TripAdvisorDataModel.PlaceInfo> placeList)
         {
             return placeList.Select(PlaceToBar).ToList();
         }
 
-        private void RemovePlacesOutsideRadius(List<PlaceInfo> placeList, string radius)
+        private void RemovePlacesOutsideRadius(List<TripAdvisorDataModel.PlaceInfo> placeList, double radius)
         {
             placeList.RemoveAll(x =>
-                ConvertMilesToMeters(x.distance) > double.Parse(radius, CultureInfo.InvariantCulture));
+                ConvertMilesToMeters(x.distance) > radius);
         }
 
-        private void RemoveUnneededPlaces(List<PlaceInfo> placeList)
+        private void RemoveUnneededPlaces(List<TripAdvisorDataModel.PlaceInfo> placeList)
         {
             placeList.RemoveAll(x => !IsAValidAttraction(x) && !IsAValidRestaurant(x));
         }
 
-        private static BarData PlaceToBar(PlaceInfo place)
+        private static BarData PlaceToBar(TripAdvisorDataModel.PlaceInfo place)
         {
             return new BarData
             {
@@ -131,7 +134,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             };
         }
 
-        private static CategoryTypes CollectCategories(PlaceInfo place)
+        private static CategoryTypes CollectCategories(TripAdvisorDataModel.PlaceInfo place)
         {
             var placeCategories = CategoryTypes.None;
             
@@ -162,7 +165,7 @@ namespace BeerOverflowWindowsApp.BarProviders
             return placeCategories;
         }
 
-        private static bool IsAValidAttraction(PlaceInfo place)
+        private static bool IsAValidAttraction(TripAdvisorDataModel.PlaceInfo place)
         {
             var allowedGroupList = _applicableGroupsString.Split(',').ToList();
             var allowedGroupCategoryList = _applicableGroupCategories.Split(',').ToList();
@@ -172,7 +175,7 @@ namespace BeerOverflowWindowsApp.BarProviders
                    place.locationResponse.groups.Any(group => group.categories.Exists(x => allowedGroupCategoryList.Contains(x.name)));
         }
 
-        private static bool IsAValidRestaurant(PlaceInfo place)
+        private static bool IsAValidRestaurant(TripAdvisorDataModel.PlaceInfo place)
         {
             return place.locationResponse.category.name == "restaurant" &&
                    place.locationResponse.subcategory.Exists(x => x.name == "sit_down");

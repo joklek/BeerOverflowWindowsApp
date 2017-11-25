@@ -1,24 +1,12 @@
-﻿using System;
-using System.Globalization;
-using BeerOverflowWindowsApp.DataModels;
-using BeerOverflowWindowsApp.Exceptions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using WebApi.DataModels;
+using WebApi.Exceptions;
 
-namespace BeerOverflowWindowsApp.UnitTests
+namespace WebApi.UnitTests
 {
     [TestFixture]
     public class BarDataModelUnitTests
     {
-        [Test]
-        public void BarDataModel_RemoveBarsOutsideRadius_NullRadius()
-        {
-            // Arrange
-            var barData = new BarDataModel();
-            // Act
-            // Assert
-            var ex = Assert.Throws<ArgumentNullException>(() => barData.RemoveBarsOutsideRadius(null));
-        }
-
         [Test]
         [TestCase("TEST", "test")]
         [TestCase("testing", "TEST")]
@@ -68,7 +56,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         }
 
         [Test]
-        public void BarDataModel_RemoveBarsOutsideRadius_InvalidRadius([Values("T", "-", "-1", "", "999999.0")] string radius)
+        public void BarDataModel_RemoveBarsOutsideRadius_InvalidRadius([Values(-1, 999999.0)] double radius)
         {
             // Arrange
             var barData = new BarDataModel();
@@ -82,7 +70,7 @@ namespace BeerOverflowWindowsApp.UnitTests
         private const int _numberOfBarsToRemove = 10;
         private const int _numberOfBarsToStay = 5;
         [Test]
-        public void BarDataModel_RemoveBarsOutsideRadius_RemoveBarsOutside([Random(_numberOfBarsToStay, _maximumRadius, 2)] int radius)
+        public void BarDataModel_RemoveBarsOutsideRadius_RemoveBarsOutside([Random(_numberOfBarsToStay, _maximumRadius, 2)] double radius)
         {
             // Arrange
             var barData = new BarDataModel();
@@ -98,7 +86,7 @@ namespace BeerOverflowWindowsApp.UnitTests
             }
 
             // Act
-            barData.RemoveBarsOutsideRadius(radius.ToString("0", CultureInfo.InvariantCulture));
+            barData.RemoveBarsOutsideRadius(radius);
             // Assert
             Assert.AreEqual(_numberOfBarsToStay, barData.Count);
         }
