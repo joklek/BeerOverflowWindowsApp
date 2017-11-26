@@ -5,6 +5,7 @@ using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using WebApi.Utilities;
 
 namespace WebApi.DataModels
 {
@@ -120,7 +121,7 @@ namespace WebApi.DataModels
 
         public void RemoveBarsOutsideRadius(double radius)
         {
-            // TODO: Radius Check
+            InputDataValidator.RadiusIsCorrect(radius);
             var barsToRemove = new List<BarData>(_maxSameBarDistanceErrorThresholdMeters);
             barsToRemove.AddRange(this.Where(bar => bar.DistanceToCurrentLocation > radius));
             foreach (var bar in barsToRemove)

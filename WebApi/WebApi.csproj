@@ -168,6 +168,7 @@
     <Compile Include="Utilities\BarFetcher.cs" />
     <Compile Include="Utilities\FetcherAndDeserializer.cs" />
     <Compile Include="Utilities\IHttpFetcher.cs" />
+    <Compile Include="Utilities\InputDataValidator.cs" />
     <Compile Include="Utilities\JsonFetcher.cs" />
     <Compile Include="Utilities\RegexTools.cs" />
   </ItemGroup>
@@ -189,12 +190,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BeerOverflowWindowsApp\BeerOverflowWindowsApp.csproj">
-      <Project>{8219DCAD-DDC8-42A7-A3BC-D1BD081BB2F2}</Project>
-      <Name>BeerOverflowWindowsApp</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711202252009_InitialCreate.resx">

@@ -98,12 +98,8 @@
     <Compile Include="DataModels\UserAndBarModel.cs" />
     <Compile Include="DataModels\UserAndBarsModel.cs" />
     <Compile Include="DataModels\CategoryTypes.cs" />
-    <Compile Include="DataModels\CategoryUnconverted.cs" />
     <Compile Include="DataModels\RatingModel.cs" />
     <Compile Include="Exceptions\ArgumentsForProvidersException.cs" />
-    <Compile Include="Utilities\FetcherAndDeserializer.cs" />
-    <Compile Include="Utilities\IHttpFetcher.cs" />
-    <Compile Include="Utilities\JsonFetcher.cs" />
     <Compile Include="Utilities\RegexTools.cs" />
     <Compile Include="MapControl.xaml.cs">
       <DependentUpon>MapControl.xaml</DependentUpon>

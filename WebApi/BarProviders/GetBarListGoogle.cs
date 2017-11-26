@@ -4,7 +4,8 @@ using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using BarData = WebApi.DataModels.BarData;
+using WebApi.DataModels;
+using WebApi.Utilities;
 using CategoryTypes = WebApi.DataModels.CategoryTypes;
 using CategoryUnconverted = WebApi.DataModels.CategoryUnconverted;
 using FetcherAndDeserializer = WebApi.Utilities.FetcherAndDeserializer;
@@ -29,7 +30,7 @@ namespace WebApi.BarProviders
 
         public List<BarData> GetBarsAround(double latitude, double longitude, double radius)
         {
-            //TODO: CHECK DATA
+            InputDataValidator.LocationDataIsCorrect(latitude, longitude, radius);
             var placeList = GetBarData(latitude, longitude, radius);
             var barList = PlaceListToBarList(placeList);
             return barList;
@@ -51,7 +52,7 @@ namespace WebApi.BarProviders
 
         public async Task<List<BarData>> GetBarsAroundAsync(double latitude, double longitude, double radius)
         {
-            //TODO: CHECK DATA
+            InputDataValidator.LocationDataIsCorrect(latitude, longitude, radius);
             var placeList = await GetBarDataAsync(latitude, longitude, radius);
             var barList = PlaceListToBarList(placeList);
             return barList;
@@ -97,8 +98,7 @@ namespace WebApi.BarProviders
                 .ToList();
 
             var foundCategory = listOfCategories.FirstOrDefault(x => x.NameFromProvider == place.Category);
-            CategoryTypes foundCategoryEnum;
-            if (foundCategory != null && Enum.TryParse(foundCategory.NameNormalized, true, out foundCategoryEnum))
+            if (foundCategory != null && Enum.TryParse(foundCategory.NameNormalized, true, out CategoryTypes foundCategoryEnum))
             {
                 placeCategories |= foundCategoryEnum;
             }
