@@ -71,7 +71,7 @@ namespace BeerOverflowWindowsApp
             manualBarRating.Rating = 0;
         }
 
-        private void GoButton_Click(object sender, EventArgs e)
+        private async void GoButton_Click(object sender, EventArgs e)
         {
             var latitude = GetLatitude();
             var longitude = GetLongitude();
@@ -79,13 +79,13 @@ namespace BeerOverflowWindowsApp
 
             try
             {
+                GoButton.Enabled = false;
                 //var progressStep = 100 / providerCount;
-                
-                var result = WebApiAccess.GetBarsAround(latitude, longitude, radius);  // TODO: async await
+                //var result = WebApiAccess.GetBarsAround(latitude, longitude, radius);
+                var result = await WebApiAccess.GetBarsAroundAsync(latitude, longitude, radius);
 
                 //var currentProgressValue = 0;
-                GoButton.Enabled = false;
-                InitiateProgressBars();
+                //InitiateProgressBars();
                 //UpdateProgressBars(currentProgressValue);
 
                 // Display
@@ -103,7 +103,7 @@ namespace BeerOverflowWindowsApp
             }
             finally
             {
-                HideProgressBars();
+                //HideProgressBars();
                 GoButton.Enabled = true;
             }
         }
@@ -152,14 +152,14 @@ namespace BeerOverflowWindowsApp
             return currentRadius;
         }
 
-        private void ManualBarRating_Click(object sender, EventArgs e)
+        private async void ManualBarRating_Click(object sender, EventArgs e)
         {
             var rating = manualBarRating.Rating;
 
             if (_selectedBar != null && _selectedBar.UserRating != rating)
             {              
                 Task.Run(() => _barRating.AddRating(_selectedBar, rating)).Wait();
-                Task.Run(() => _selectedBar = WebApiAccess.GetBarRatings(_selectedBar)).Wait();
+                _selectedBar = await WebApiAccess.GetBarRatingsAsync(_selectedBar);
                 Resort();
                 ReloadDataGrid();
             }

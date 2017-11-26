@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using WebApi.Database;
@@ -34,6 +36,10 @@ namespace WebApi.Controllers
             catch (ArgumentsForProvidersException e)
             {
                 return BadRequest("Invalid arguments:" + e.InvalidArguments);
+            }
+            catch (HttpRequestException)
+            {
+                return NotFound();
             }
             List<BarData> result = BarFetcher.RequestBarsAroundCoords(locationRequest).Result;
             return Ok(result);
