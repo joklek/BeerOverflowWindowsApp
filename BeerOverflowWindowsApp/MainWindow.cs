@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -9,10 +8,7 @@ using BeerOverflowWindowsApp.DataModels;
 using System.Device.Location;
 using System.Configuration;
 using System.Threading.Tasks;
-using BeerOverflowWindowsApp.BarProviders;
 using BeerOverflowWindowsApp.Utilities;
-using System.Net;
-using System.Net.Http;
 using BeerOverflowWindowsApp.Exceptions;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
@@ -27,13 +23,6 @@ namespace BeerOverflowWindowsApp
         private BarData _selectedBar = null;
         private CategoryTypes _categoryFilter = CategoryTypes.None;
         private MapWindow _mapForm;
-        private readonly List<object> _providerList = new List<object>
-        {
-            new GetBarListGoogle(new JsonFetcher()),
-            new GetBarListFourSquare(new JsonFetcher()),
-            new GetBarListFacebook(new JsonFetcher()),
-            new GetBarListTripAdvisor(new JsonFetcher())
-        };
 
         public MainWindow()
         {
@@ -87,45 +76,11 @@ namespace BeerOverflowWindowsApp
             var latitude = GetLatitude();
             var longitude = GetLongitude();
             var radius = GetRadius();
-            var failedToConnectCounter = 0;
-            var providerCount = _providerList.Count;
 
             try
             {
-                var barsFromProvider = new List<BarData>();
-                var progressStep = 100 / providerCount;
-                var result = new BarDataModel();
-
-                var currentProgressValue = 0;
                 GoButton.Enabled = false;
-                InitiateProgressBars();
-                UpdateProgressBars(currentProgressValue);
-                foreach (IBeerable provider in _providerList)
-                {
-                    try
-                    {
-                        barsFromProvider = await CollectBarsFromProvider(provider, latitude, longitude, radius);
-                    }
-                    catch (HttpRequestException)
-                    {
-                        if (++failedToConnectCounter == providerCount)
-                        {
-                            MessageBox.Show("Check your internet connection, it seems to be down.");
-                        }
-                    }
-                    catch (WebException)
-                    {
-                        MessageBox.Show("Failed connecting to: " + provider.ProviderName);
-                    }
-
-                    result.AddRange(barsFromProvider);
-                    currentProgressValue += progressStep;
-                    UpdateProgressBars(currentProgressValue);
-                }
-                result.RemoveDuplicates();
-                result.RemoveBarsOutsideRadius(radius);
-                await Task.Run(() => result = (BarDataModel)WebApiAccess.GetAllBarData(result));
-                HideProgressBars();
+                var result = await WebApiAccess.GetBarsAroundAsync(latitude, longitude, radius);
 
                 // Display
                 _barRating.BarsData = result;
@@ -140,17 +95,13 @@ namespace BeerOverflowWindowsApp
                     SortList(CompareType.Distance);
                 }
             }
-            catch (ArgumentsForProvidersException)
-            {
-                MessageBox.Show("Please enter the required data correctly. Erroneus data is painted red.");
-            }
             finally
             {
-                HideProgressBars();
                 GoButton.Enabled = true;
             }
         }
 
+        // Progress bars are disabled as progress updates from server are not implemented
         private void InitiateProgressBars()
         {
             TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
@@ -175,46 +126,34 @@ namespace BeerOverflowWindowsApp
             progressBar.Maximum = 100;
         }
 
-        private async Task<List<BarData>> CollectBarsFromProvider(IBeerable provider,
-            string latitude, string longitude, string radius)
+        private double GetLatitude()
         {
-            List<BarData> response;
-            try
-            {
-                response = await provider.GetBarsAroundAsync(latitude, longitude, radius);
-            }
-            catch (NotImplementedException)
-            {
-                response = provider.GetBarsAround(latitude, longitude, radius);
-            }
-            return response;
+            var currentLat = Convert.ToDouble(LatitudeTextBox.Text, CultureInfo.InvariantCulture);
+            CurrentLocation.currentLocation.Latitude = currentLat;
+            return currentLat;
         }
 
-        private string GetLatitude()
+        private double GetLongitude()
         {
-            CurrentLocation.currentLocation.Latitude = Convert.ToDouble(LatitudeTextBox.Text, CultureInfo.InvariantCulture);
-            return LatitudeTextBox.Text;
+            var currentLong = Convert.ToDouble(LongitudeTextBox.Text, CultureInfo.InvariantCulture);
+            CurrentLocation.currentLocation.Longitude = currentLong;
+            return currentLong;
         }
 
-        private string GetLongitude()
+        private double GetRadius()
         {
-            CurrentLocation.currentLocation.Longitude = Convert.ToDouble(LongitudeTextBox.Text, CultureInfo.InvariantCulture);
-            return LongitudeTextBox.Text;
+            var currentRadius = Convert.ToDouble(RadiusTextBox.Text, CultureInfo.InvariantCulture);
+            return currentRadius;
         }
 
-        private string GetRadius()
+        private async void ManualBarRating_Click(object sender, EventArgs e)
         {
-            return RadiusTextBox.Text;
-        }
-
-        private void ManualBarRating_Click(object sender, EventArgs e)
-        {
-            int rating = manualBarRating.Rating;
+            var rating = manualBarRating.Rating;
 
             if (_selectedBar != null && _selectedBar.UserRating != rating)
             {              
                 Task.Run(() => _barRating.AddRating(_selectedBar, rating)).Wait();
-                Task.Run(() => _selectedBar = WebApiAccess.GetBarRatings(_selectedBar)).Wait();
+                _selectedBar = await WebApiAccess.GetBarRatingsAsync(_selectedBar);
                 Resort();
                 ReloadDataGrid();
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 
@@ -6,11 +7,11 @@ namespace BeerOverflowWindowsApp
 {
     public class BarRating
     {
-        public BarDataModel BarsData { get; set; }
+        public List<BarData> BarsData { get; set; }
 
         public BarRating()
         {
-            BarsData = new BarDataModel();
+            BarsData = new List<BarData>();
         }
 
         public void AddRating(BarData barData, int rating)

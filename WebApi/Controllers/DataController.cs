@@ -1,10 +1,18 @@
-﻿using BeerOverflowWindowsApp.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using WebApi.Database;
 using WebApi.Models;
+using System.Net.Http;
+using System.Threading.Tasks;
+using WebApi.DataModels;
+using WebApi.Exceptions;
+using WebApi.Utilities;
+using BarData = WebApi.DataModels.BarData;
+using RatingModel = WebApi.DataModels.RatingModel;
+using UserAndBarModel = WebApi.DataModels.UserAndBarModel;
+using UserAndBarsModel = WebApi.DataModels.UserAndBarsModel;
 
 namespace WebApi.Controllers
 {
@@ -22,10 +30,30 @@ namespace WebApi.Controllers
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel UserAndBars)
+        public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
-            List<BarData> result = dbManager.GetAllBarData(UserAndBars.Bars, UserAndBars.User);            
+            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User);            
+            return Ok(result);
+        }
+
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        [HttpPost]
+        public async Task<IHttpActionResult> GetBarsAround([FromBody]LocationRequestModel locationRequest)
+        {
+            try
+            {
+                InputDataValidator.LocationDataIsCorrect(locationRequest);
+            }
+            catch (ArgumentsForProvidersException e)
+            {
+                return BadRequest("Invalid arguments:" + e.InvalidArguments);
+            }
+            catch (HttpRequestException)
+            {
+                return NotFound();
+            }
+            List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
             return Ok(result);
         }
 

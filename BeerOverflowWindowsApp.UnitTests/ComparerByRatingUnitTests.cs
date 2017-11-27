@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BeerOverflowWindowsApp.BarComparers;
 using BeerOverflowWindowsApp.DataModels;
 using NUnit.Framework;

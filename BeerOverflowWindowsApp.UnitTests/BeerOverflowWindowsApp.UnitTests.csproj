@@ -60,17 +60,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BarDataModelUnitTests.cs" />
-    <Compile Include="TestData\BarProviderTestData.cs" />
     <Compile Include="ComparerByDistanceUnitTests.cs" />
     <Compile Include="ComparerByTitleUnitTests.cs" />
-    <Compile Include="GetBarListFacebookUnitTests.cs" />
-    <Compile Include="GetBarListGoogleUnitTests.cs" />
     <Compile Include="ComparerByRatingUnitTests.cs" />
-    <Compile Include="GetBarListTripAdvisorUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BarRatingUnitTests.cs" />
-    <Compile Include="GetBarListFourSquareUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BeerOverflowWindowsApp\BeerOverflowWindowsApp.csproj">
