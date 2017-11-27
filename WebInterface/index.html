@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="Content/bootstrap.min.css">
     <link rel="stylesheet" href="Content/DataTables/media/css/dataTables.bootstrap.min.css">
-    <script src="Scripts/jquery-1.12.4.min.js"></script>
+    <script src="Scripts/jquery-3.2.1.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="Scripts/DataTables/media/js/jquery.dataTables.min.js"></script>
     <script src="Scripts/DataTables/media/js/dataTables.bootstrap.min.js"></script>
@@ -41,11 +41,10 @@
         jQuery.support.cors = true;
         $.ajax({
             url: "http://localhost:1726/Api/Data/GetBarsByCoordinates",
-            data: {
-                coordinates: "abc"
-            },// for some reason data recieved by WebApi is null
             type: "POST",
-            dataType: "json",
+            data: JSON.stringify("coords"),
+            contentType: "application/json",
+            type: "POST",
             error: function (request, status, error) {
                 alert(request.responseText);              
             },

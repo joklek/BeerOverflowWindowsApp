@@ -11,7 +11,7 @@ namespace WebApi.Database
             User currentUser = new User { Username = username, Password = password };
             using (var db = new BarsDatabase())
             {
-                if(db.Users.Contains(currentUser, new UserComparer()))
+                if (db.Users.FirstOrDefault<User>(user => user.Username == username) != null)
                 {
                     return false;
                 }
