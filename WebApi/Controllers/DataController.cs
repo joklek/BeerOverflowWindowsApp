@@ -1,4 +1,5 @@
 ﻿using BeerOverflowWindowsApp.DataModels;
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -9,6 +10,16 @@ namespace WebApi.Controllers
 {
     public class DataController : ApiController
     {
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        [HttpPost]
+        public IHttpActionResult Register([FromBody]String nameAndPass)
+        {
+            var list = nameAndPass.Split(',');
+            var dbManager = new DatabaseManager();
+            bool result = dbManager.Register(list[0],list[1]);
+            return Ok(result);
+        }
+
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
         public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel UserAndBars)

@@ -43,7 +43,7 @@
             url: "http://localhost:1726/Api/Data/GetBarsByCoordinates",
             data: {
                 coordinates: "abc"
-            },
+            },// for some reason data recieved by WebApi is null
             type: "POST",
             dataType: "json",
             error: function (request, status, error) {
