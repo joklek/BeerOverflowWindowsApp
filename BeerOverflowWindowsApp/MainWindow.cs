@@ -80,13 +80,7 @@ namespace BeerOverflowWindowsApp
             try
             {
                 GoButton.Enabled = false;
-                //var progressStep = 100 / providerCount;
-                //var result = WebApiAccess.GetBarsAround(latitude, longitude, radius);
                 var result = await WebApiAccess.GetBarsAroundAsync(latitude, longitude, radius);
-
-                //var currentProgressValue = 0;
-                //InitiateProgressBars();
-                //UpdateProgressBars(currentProgressValue);
 
                 // Display
                 _barRating.BarsData = result;
@@ -103,11 +97,11 @@ namespace BeerOverflowWindowsApp
             }
             finally
             {
-                //HideProgressBars();
                 GoButton.Enabled = true;
             }
         }
 
+        // Progress bars are disabled as progress updates from server are not implemented
         private void InitiateProgressBars()
         {
             TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
