@@ -27,7 +27,7 @@ namespace WebApi.Controllers
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult GetBarsAround([FromBody]LocationRequestModel locationRequest)
+        public async Task<IHttpActionResult> GetBarsAround([FromBody]LocationRequestModel locationRequest)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            List<BarData> result = BarFetcher.RequestBarsAroundCoords(locationRequest).Result;
+            List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
             return Ok(result);
         }
 

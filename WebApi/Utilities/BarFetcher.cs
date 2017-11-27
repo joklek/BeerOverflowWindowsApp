@@ -61,11 +61,11 @@ namespace WebApi.Utilities
         {
             try
             {
-                return provider.GetBarsAround(latitude, longitude, radius); // TODO: FIX ASYNC 
+                return await provider.GetBarsAroundAsync(latitude, longitude, radius);
             }
             catch (NotImplementedException)
             {
-                return await provider.GetBarsAroundAsync(latitude, longitude, radius);
+                return provider.GetBarsAround(latitude, longitude, radius);
             }
         }
     }
