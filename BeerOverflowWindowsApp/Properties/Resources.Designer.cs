@@ -39,7 +39,7 @@ namespace BeerOverflowWindowsApp.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BeerOverflowWindowsApp.Properties.Resources", typeof(Resources).Assembly);
+                    var temp = new global::System.Resources.ResourceManager("BeerOverflowWindowsApp.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -65,7 +65,7 @@ namespace BeerOverflowWindowsApp.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap DarkBeerGlass {
             get {
-                object obj = ResourceManager.GetObject("DarkBeerGlass", resourceCulture);
+                var obj = ResourceManager.GetObject("DarkBeerGlass", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -75,7 +75,7 @@ namespace BeerOverflowWindowsApp.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap LightBeerGlass {
             get {
-                object obj = ResourceManager.GetObject("LightBeerGlass", resourceCulture);
+                var obj = ResourceManager.GetObject("LightBeerGlass", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

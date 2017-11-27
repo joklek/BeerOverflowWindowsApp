@@ -1,6 +1,8 @@
-﻿using BeerOverflowWindowsApp.DataModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using BarData = WebApi.DataModels.BarData;
+using User = WebApi.DataModels.User;
+using UsersRatingToBar = WebApi.DataModels.UsersRatingToBar;
 
 namespace WebApi.Database
 {

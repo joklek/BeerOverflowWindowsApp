@@ -63,7 +63,7 @@ namespace BeerOverflowWindowsApp.BarRaters
 
         protected override void OnPaint(PaintEventArgs pe)
         {
-            Graphics g = pe.Graphics;
+            var g = pe.Graphics;
             g.FillRectangle(new SolidBrush(Parent.BackColor), cr);
             g.DrawLine(Pens.Black, cr.X + cr.Width / 2, topY, cr.X + cr.Width / 2, botY);
             g.DrawEllipse(Pens.Black, marker);

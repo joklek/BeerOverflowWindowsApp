@@ -1,7 +1,6 @@
 ﻿using System;
 using BeerOverflowWindowsApp.DataModels;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BeerOverflowWindowsApp.BarComparers
 {
@@ -11,7 +10,7 @@ namespace BeerOverflowWindowsApp.BarComparers
         {
             if (barData1 == null) throw new ArgumentNullException(nameof(barData1));
             if (barData2 == null) throw new ArgumentNullException(nameof(barData2));
-            int result = barData1.AvgRating == barData2.AvgRating
+            var result = barData1.AvgRating == barData2.AvgRating
                     ? 0 
                     : barData1.AvgRating > barData2.AvgRating
                         ? 1 

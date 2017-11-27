@@ -93,19 +93,14 @@
     <Compile Include="BarComparers\ComparerByTitle.cs" />
     <Compile Include="BarComparers\CompareType.cs" />
     <Compile Include="BarRating.cs" />
-    <Compile Include="DataModels\BarDataModel.cs" />
     <Compile Include="DataModels\BarSynonym .cs" />
+    <Compile Include="DataModels\LocationRequestModel.cs" />
     <Compile Include="DataModels\UserAndBarModel.cs" />
     <Compile Include="DataModels\UserAndBarsModel.cs" />
     <Compile Include="DataModels\CategoryTypes.cs" />
-    <Compile Include="DataModels\CategoryUnconverted.cs" />
     <Compile Include="DataModels\RatingModel.cs" />
-    <Compile Include="DataModels\FourSquareDataModel.cs" />
-    <Compile Include="Utilities\FetcherAndDeserializer.cs" />
-    <Compile Include="Utilities\IHttpFetcher.cs" />
-    <Compile Include="Utilities\JsonFetcher.cs" />
-    <Compile Include="Utilities\RegexTools.cs" />
     <Compile Include="Exceptions\ArgumentsForProvidersException.cs" />
+    <Compile Include="Utilities\RegexTools.cs" />
     <Compile Include="MapControl.xaml.cs">
       <DependentUpon>MapControl.xaml</DependentUpon>
     </Compile>
@@ -116,17 +111,7 @@
       <DependentUpon>MapWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="DataModels\BarData.cs" />
-    <Compile Include="FileIO\BarFileReader.cs" />
-    <Compile Include="FileIO\BarFileWriter.cs" />
-    <Compile Include="DataModels\TripAdvisorDataModel.cs" />
-    <Compile Include="BarProviders\GetBarListTripAdvisor.cs" />
-    <Compile Include="DataModels\FacebookDataModel.cs" />
-    <Compile Include="BarProviders\GetBarListFacebook.cs" />
-    <Compile Include="BarProviders\GetBarListFourSquare.cs" />
-    <Compile Include="BarProviders\GetBarListGoogle.cs" />
     <Compile Include="CurrentLocation.cs" />
-    <Compile Include="BarProviders\IBeerable.cs" />
-    <Compile Include="DataModels\GoogleDataModel.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
