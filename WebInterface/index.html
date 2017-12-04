@@ -84,7 +84,6 @@
                     alert(request.responseText);
                 },
                 success: function (data) {
-                    debugger;
                     $('#barsTable').DataTable().rows.add(data).draw();
                 }
             });
