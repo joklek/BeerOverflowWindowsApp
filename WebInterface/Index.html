@@ -14,7 +14,7 @@
     <title></title>
 </head>
 <body>
-    <button onclick="GetData()">Load bars</button>
+    <button onclick="GetData()" id="loadBars">Load bars</button>
     <table class="table table-bordered table-condensed table-hover" id="barsTable">
         <thead>
             <tr>
@@ -66,7 +66,7 @@
         }
     }
     function GetData() {
-        
+        beginLoading();
         jQuery.support.cors = true;
         var coordinates = null;
         if (myLocation != null) {
@@ -78,6 +78,7 @@
                 contentType: "application/json",
                 type: "POST",
                 error: function (request, status, error) {
+                    stopLoading();
                     alert(request.responseText);
                 },
                 success: function (data) {
@@ -94,6 +95,7 @@
                     setMapOnAll(map);
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
+                    stopLoading();
                 }
             });
         } 
@@ -130,5 +132,13 @@
         google.maps.event.addListener(map, 'click', function (event) {
             addMarker(event.latLng, "My location");
         });
+    }
+    function beginLoading() {
+        $("#loadBars").text("Loading...");
+        $("#loadBars").prop('disabled', true);
+    }
+    function stopLoading() {
+        $("#loadBars").text("Load bars");
+        $("#loadBars").prop('disabled', false);
     }
 </script>
