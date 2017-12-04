@@ -22,33 +22,33 @@ namespace WebApi.Database
                 return true;
             }
         }
-        public void SaveBarRating(BarData barToRate, User currentUser, int rating)
+        public void SaveBarRating(BarData barToRate, string currentUser, int rating)
         {
             using (var db = new BarsDatabase())
             {
-                var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser.Username);
+                var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser);
                 if (userInDb == null)
-                    userInDb = new User { Username = currentUser.Username };
+                    userInDb = new User { Username = currentUser };
                 var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == barToRate.BarId);
                 if (barInDb != null)
                 {
                     var barRating = db.UserRatings.Find(barInDb.BarId, userInDb.Username);
-                    if (barRating != null)  
+                    if (barRating != null)
                     {
-                        barRating.Rating = rating;                       
+                        barRating.Rating = rating;
                     }
-                    else   
+                    else
                     {
                         db.UserRatings.Add(new UsersRatingToBar(barInDb, userInDb, rating));
                     }
                     db.SaveChanges();
-                    barInDb.AvgRating = (float)db.UserRatings.Where(x => x.BarId == barInDb.BarId).Select(x => x.Rating).DefaultIfEmpty().Average(); //
+                    barInDb.AvgRating = (float)barInDb.UserRatings.Select(x => x.Rating).DefaultIfEmpty().Average();
                 }
-                else  
+                else
                 {
                     barToRate.AvgRating = rating;
                     db.SaveChanges();
-                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));                  
+                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
                 }
                 db.SaveChanges();
             }
