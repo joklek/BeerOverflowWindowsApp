@@ -165,7 +165,10 @@
       <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BarModel.cs" />
+    <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserComparer.cs" />
     <Compile Include="Utilities\BarFetcher.cs" />
     <Compile Include="Utilities\FetcherAndDeserializer.cs" />
     <Compile Include="Utilities\IHttpFetcher.cs" />
@@ -190,7 +193,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711202252009_InitialCreate.resx">

@@ -8,6 +8,20 @@ namespace WebApi.Database
 {
     public class DatabaseManager
     {
+        public bool Register(string username, string password)
+        {
+            User currentUser = new User { Username = username, Password = password };
+            using (var db = new BarsDatabase())
+            {
+                if (db.Users.FirstOrDefault<User>(user => user.Username == username) != null)
+                {
+                    return false;
+                }
+                db.Users.Add(currentUser);
+                db.SaveChanges();
+                return true;
+            }
+        }
         public void SaveBarRating(BarData barToRate, User currentUser, int rating)
         {
             using (var db = new BarsDatabase())
