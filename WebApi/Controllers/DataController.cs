@@ -80,14 +80,6 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody]Coordinate coordinate)
         {
-            //var result = new List<BarModel> { };
-            //TEMPORARY: create fake data
-            //for (var i = 0; i < 10; i++)
-            //{
-            //    var bar = new BarModel { Id = i.ToString(), Category = "category" + i, Rating = i / 2, Title = "title" + i * 5 };
-            //    result.Add(bar);
-            //}
-            //return Ok(result);
             var locationRequest = new LocationRequestModel { Latitude = coordinate.lat, Longitude = coordinate.lng, Radius = 150, User = new User { Username = "test" } };
             try
             {
