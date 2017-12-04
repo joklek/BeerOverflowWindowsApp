@@ -84,6 +84,16 @@
                     alert(request.responseText);
                 },
                 success: function (data) {
+                    markers = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var marker = new google.maps.Marker({
+                            position: { lat : data[i].Latitude, lng : data[i].Longitude },
+                            title: data[i].Title,
+                            map: map
+                        });
+                        markers.push(marker);                       
+                    }
+                    setMapOnAll(map);
                     $('#barsTable').DataTable().rows.add(data).draw();
                 }
             });
