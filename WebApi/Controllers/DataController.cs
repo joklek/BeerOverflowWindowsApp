@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         {
             var list = nameAndPass.Split(',');
             var dbManager = new DatabaseManager();
-            bool result = dbManager.Register(list[0],list[1]);
+            bool result = dbManager.Register(list[0], list[1]);
             return Ok(result);
         }
 
@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User);            
+            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User);
             return Ok(result);
         }
 
@@ -78,17 +78,32 @@ namespace WebApi.Controllers
         //TEMPORARY: i think we only need 2 methods in WebApi for now: SaveBarRating(username, rating, barId) and GetBarsByCoordinates(username?, latitude, longitude, radius?)
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult GetBarsByCoordinates([FromBody]string coordinates)
+        public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody]Coordinate coordinate)
         {
-            var result = new List<BarModel> { };
+            //var result = new List<BarModel> { };
             //TEMPORARY: create fake data
-            for (var i = 0; i < 10; i++)
+            //for (var i = 0; i < 10; i++)
+            //{
+            //    var bar = new BarModel { Id = i.ToString(), Category = "category" + i, Rating = i / 2, Title = "title" + i * 5 };
+            //    result.Add(bar);
+            //}
+            //return Ok(result);
+            var locationRequest = new LocationRequestModel { Latitude = coordinate.lat, Longitude = coordinate.lng, Radius = 150, User = new User { Username = "test" } };
+            try
             {
-                var bar = new BarModel { Id = i.ToString(), Category = "category" + i, Rating = i / 2, Title = "title" + i * 5 };
-                result.Add(bar);
+                InputDataValidator.LocationDataIsCorrect(locationRequest);
             }
+            catch (ArgumentsForProvidersException e)
+            {
+                return BadRequest("Invalid arguments:" + e.InvalidArguments);
+            }
+            catch (HttpRequestException)
+            {
+                return NotFound();
+            }
+            List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
             return Ok(result);
+
         }
-        
     }
 }
