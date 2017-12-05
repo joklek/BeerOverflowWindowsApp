@@ -160,7 +160,6 @@
     var tbody = table.getElementsByTagName("tbody")[0];
     tbody.onclick = function (e) {
         e = e || window.event;
-        //var data = [];
         var target = e.srcElement || e.target;
         while (target && target.nodeName !== "TR") {
             target = target.parentNode;
@@ -168,39 +167,35 @@
         if (target) {
             var cells = target.getElementsByTagName("td");
             value = cells[0].innerText;
-            //for (var i = 0; i < cells.length; i++) {
-            //    data.push(cells[i].innerHTML);
-            //}
         }
-        //alert(cells[0].innerText);
     };
 
 
     function SaveBarRating(rating) {
-        beginLoading();
-        jQuery.support.cors = true;
-       // var coordinates = null;
-       // if (myLocation != null) {
-          //  coordinates = { lat: myLocation.getPosition().lat(), lng: myLocation.getPosition().lng() }
-        data = {BarID : value, Rating : rating}
-        $.ajax({
-            url: "http://localhost:1726/Api/Data/SaveBarRating",
-            type: "POST",
-            data: JSON.stringify(data),
-            contentType: "application/json",
-            type: "POST",
-            error: function (request, status, error) {
-                stopLoading();
-                alert(request.responseText);
-            },
-            success: function (data) {
-                stopLoading();
-            }
-        });
-       // }
-      //  else {
-      //      alert("Select your location");
-      //  }
+        if (value != null)
+        {
+            beginLoading();
+            jQuery.support.cors = true;
+            data = {BarID : value, Rating : rating}
+            $.ajax({
+                url: "http://localhost:1726/Api/Data/SaveBarRating",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                type: "POST",
+                error: function (request, status, error) {
+                    stopLoading();
+                    alert(request.responseText);
+                },
+                success: function (data) {
+                    value = null;
+                    stopLoading();
+                }
+            });
+        }
+        else {
+            alert("No bar selected");
+        }
 
     }
 
