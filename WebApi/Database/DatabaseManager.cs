@@ -8,6 +8,21 @@ namespace WebApi.Database
 {
     public class DatabaseManager
     {
+
+        public void SaveBars(List<BarData> barsToSave)
+        {
+            using (var db = new BarsDatabase())
+            {
+                barsToSave.ForEach(barToSave =>
+                {
+                    if (db.Bars.FirstOrDefault<BarData>(barInDB => barInDB.BarId == barToSave.BarId) == null)
+                    {
+                        db.Bars.Add(barToSave);
+                        db.SaveChanges();
+                    }
+                });
+            }
+        }
         public bool Register(string username, string password)
         {
             User currentUser = new User { Username = username, Password = password };
@@ -54,28 +69,28 @@ namespace WebApi.Database
             }
         }
 
-        public List<BarData> GetAllBarData(List<BarData> localBars, User user)
+        public List<BarData> GetAllBarData(List<BarData> localBars, string username)
         {
             using (var db = new BarsDatabase())
-            {               
-                localBars.ForEach(bar => 
+            {
+                localBars.ForEach(bar =>
                 {
                     var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
                     bar.AvgRating = barInDb?.AvgRating ?? 0;
-                    var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
+                    var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == username);
                     bar.UserRating = barRating?.Rating ?? 0;
                 });
             }
             return localBars;
         }
 
-        public BarData GetBarRatings(BarData bar, User user)
+        public BarData GetBarRatings(BarData bar, string user)
         {
             using (var db = new BarsDatabase())
             {
                 var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
                 bar.AvgRating = barInDb?.AvgRating ?? 0;
-                var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
+                var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user);
                 bar.UserRating = barRating?.Rating ?? 0;
             }
             return bar;

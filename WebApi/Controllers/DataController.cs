@@ -80,7 +80,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody]Coordinate coordinate)
         {
-            var locationRequest = new LocationRequestModel { Latitude = coordinate.lat, Longitude = coordinate.lng, Radius = 150, User = new User { Username = "test" } };
+            var locationRequest = new LocationRequestModel { Latitude = coordinate.lat, Longitude = coordinate.lng, Radius = 150, User =  "test"  };
             try
             {
                 InputDataValidator.LocationDataIsCorrect(locationRequest);
@@ -94,6 +94,8 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
+            result = new DatabaseManager().GetAllBarData(result, "Jonas");
+            new DatabaseManager().SaveBars(result);
             return Ok(result);
 
         }

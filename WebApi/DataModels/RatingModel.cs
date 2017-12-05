@@ -4,6 +4,6 @@
     {
         public BarData Bar { get; set; }
         public int Rating { get; set; }
-        public User User { get; set; }
+        public string User { get; set; }
     }
 }

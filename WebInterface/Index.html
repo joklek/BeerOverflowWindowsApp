@@ -39,7 +39,7 @@
                 { data: 'BarId' },
                 { data: 'Title' },
                 { data: 'Categories' },
-                { data: 'UserRating' }
+                { data: 'AvgRating' }
             ]
         });
         initMap();      
@@ -95,6 +95,9 @@
                     setMapOnAll(map);
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
+
+                    addRowHandlers()
+
                     stopLoading();
                 }
             });
@@ -132,7 +135,8 @@
         google.maps.event.addListener(map, 'click', function (event) {
             addMarker(event.latLng, "My location");
         });
-    }
+    } 
+
     function beginLoading() {
         $("#loadBars").text("Loading...");
         $("#loadBars").prop('disabled', true);
@@ -141,4 +145,26 @@
         $("#loadBars").text("Load bars");
         $("#loadBars").prop('disabled', false);
     }
+
+    var value;
+    function addRowHandlers() {
+        var table = document.getElementById("barsTable");
+        var rows = table.getElementsByTagName("tr");
+        for (i = 0; i < rows.length; i++) {
+            var currentRow = table.rows[i];
+            var createClickHandler =
+                function (row) {
+                    return function () {
+                        var Cells = row.getElementsByTagName("td");
+                        alert(Cells[0].innerText);
+                    };
+                };
+
+            currentRow.onclick = createClickHandler(currentRow);
+        }
+    }
+
+
+
+
 </script>
