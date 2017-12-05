@@ -37,14 +37,14 @@ namespace WebApi.Database
                 return true;
             }
         }
-        public void SaveBarRating(BarData barToRate, string currentUser, int rating)
+        public void SaveBarRating(string BarID, string currentUser, int rating)
         {
             using (var db = new BarsDatabase())
             {
                 var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser);
                 if (userInDb == null)
                     userInDb = new User { Username = currentUser };
-                var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == barToRate.BarId);
+                var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == BarID);
                 if (barInDb != null)
                 {
                     var barRating = db.UserRatings.Find(barInDb.BarId, userInDb.Username);
@@ -61,9 +61,9 @@ namespace WebApi.Database
                 }
                 else
                 {
-                    barToRate.AvgRating = rating;
-                    db.SaveChanges();
-                    db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
+                  //  barToRate.AvgRating = rating;
+                   // db.SaveChanges();
+                   // db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
                 }
                 db.SaveChanges();
             }

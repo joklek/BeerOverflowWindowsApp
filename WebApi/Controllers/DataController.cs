@@ -62,7 +62,7 @@ namespace WebApi.Controllers
         public IHttpActionResult SaveBarRating([FromBody] RatingModel barObject)
         {
             var dbManager = new DatabaseManager();
-            dbManager.SaveBarRating(barObject.Bar, barObject.User, barObject.Rating);
+            dbManager.SaveBarRating(barObject.BarID, "test" , barObject.Rating);
             return Ok("Success");
         }
         //TEMPORARY: should not send unneccesary data
