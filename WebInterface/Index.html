@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="Content/bootstrap.min.css">
     <link rel="stylesheet" href="Content/Style.css">
     <link rel="stylesheet" href="Content/DataTables/media/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="lentele.css">
     <script src="Scripts/jquery-3.2.1.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="Scripts/DataTables/media/js/jquery.dataTables.min.js"></script>
@@ -106,6 +107,13 @@
                     setMapOnAll(map);
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
+
+
+                    //$('#barsTable tbody tr').addClass("newclass");
+                //    $('#barsTable').DataTable().rows.forEach(function (row) {
+               //         row.addClass("clickable-row");
+                //    });
+
                     stopLoading();
                 }
             });
@@ -175,6 +183,7 @@
         if (value != null)
         {
             beginLoading();
+            $('table').find('tr.highlight').removeClass('highlight');
             jQuery.support.cors = true;
             data = {BarID : value, Rating : rating}
             $.ajax({
@@ -199,11 +208,15 @@
 
     }
 
-
     $('#Rate').on('click', function (e) {
         var e = document.getElementById("ratings");
         var rating = e.options[e.selectedIndex].value;
         SaveBarRating(rating);
     });
+
+    $('table').on('click', 'tr', function (e) {
+        $('table').find('tr.highlight').removeClass('highlight');
+        $(this).addClass('highlight');
+    })
 
 </script>
