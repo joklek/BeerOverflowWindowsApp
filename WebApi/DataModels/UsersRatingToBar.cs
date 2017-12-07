@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApi.DataModels
@@ -27,5 +29,8 @@ namespace WebApi.DataModels
 
         [MaxLength(400)]
         public string Comment { get; set; }
+
+        [Key, Column(Order = 2)]
+        public DateTime Date { get; set; }
     }
 }
