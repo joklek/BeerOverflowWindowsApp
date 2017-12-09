@@ -37,7 +37,6 @@ namespace WebApi.DataModels
         [NotMapped]
         public double DistanceToCurrentLocation { get; set; }
 
-
         // Equals and GetHasCode are auto generated
         public bool Equals(BarData y)
         {
