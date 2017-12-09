@@ -5,12 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Utilities;
-using BarData = WebApi.DataModels.BarData;
-using CategoryTypes = WebApi.DataModels.CategoryTypes;
-using CategoryUnconverted = WebApi.DataModels.CategoryUnconverted;
-using FacebookDataModel = WebApi.DataModels.FacebookDataModel;
-using FetcherAndDeserializer = WebApi.Utilities.FetcherAndDeserializer;
-using IHttpFetcher = WebApi.Utilities.IHttpFetcher;
+using WebApi.DataModels;
+using static WebApi.DataModels.FacebookDataModel;
 
 namespace WebApi.BarProviders
 {
@@ -38,10 +34,10 @@ namespace WebApi.BarProviders
             return barList;
         }
 
-        private IEnumerable<FacebookDataModel.Place> GetBarData(double latitude, double longitude, double radius)
+        private IEnumerable<Place> GetBarData(double latitude, double longitude, double radius)
         {
             var link = string.Format(_apiLink, _accessToken, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), _requestedFields, _category, CultureInfo.InvariantCulture);
-            var barList = FetcherAndDeserializer.FetchAndDeserialize<FacebookDataModel.PlacesResponse>(link, _fetcher).data;
+            var barList = FetcherAndDeserializer.FetchAndDeserialize<PlacesResponse>(link, _fetcher).data;
             return barList;
         }
 
@@ -53,15 +49,15 @@ namespace WebApi.BarProviders
             return barList;
         }
 
-        private async Task<List<FacebookDataModel.Place>> GetBarDataAsync(double latitude, double longitude, double radius)
+        private async Task<List<Place>> GetBarDataAsync(double latitude, double longitude, double radius)
         {
             var link = string.Format(_apiLink, _accessToken, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), _requestedFields, _category, CultureInfo.InvariantCulture);
-            var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<FacebookDataModel.PlacesResponse>(link, _fetcher);
+            var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesResponse>(link, _fetcher);
             var barList = deserialized.data;
             return barList;
         }
 
-        private List<BarData> PlaceListToBarList(IEnumerable<FacebookDataModel.Place> resultData)
+        private List<BarData> PlaceListToBarList(IEnumerable<Place> resultData)
         {
             var allowedCategories = string.Join(",", _allowedCategories.Split(',').ToList().SelectMany(category => category.Split('|')).Where((c, i) => i % 2 == 0));
             var barList = new List<BarData>();
@@ -78,7 +74,7 @@ namespace WebApi.BarProviders
             return barList;
         }
 
-        private static BarData PlaceToBar(FacebookDataModel.Place place)
+        private static BarData PlaceToBar(Place place)
         {
             return new BarData
             {
@@ -87,10 +83,12 @@ namespace WebApi.BarProviders
                 Categories = CollectCategories(place),
                 Latitude = place.location.latitude,
                 Longitude = place.location.longitude,
+                StreetAddress = place.location.street?.Trim(),
+                City = place.location.city?.Trim()
             };
         }
 
-        private static CategoryTypes CollectCategories(FacebookDataModel.Place place)
+        private static CategoryTypes CollectCategories(Place place)
         {
             var placeCategories = CategoryTypes.None;
             var listOfCategories = _allowedCategories.Split(',').Select
@@ -112,14 +110,7 @@ namespace WebApi.BarProviders
         private static bool HasCategories(IEnumerable<string> categories, string bannedCategoriesInString)
         {
             var allowedCategoryList = bannedCategoriesInString.Split(',');
-            foreach (var category in categories)
-            {
-                if (allowedCategoryList.Any(allowed => category.ToLower().Contains(allowed.ToLower())))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return categories.Any(category => allowedCategoryList.Any(allowed => category.ToLower().Contains(allowed.ToLower())));
         }
     }
 }

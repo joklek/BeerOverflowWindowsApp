@@ -7,18 +7,18 @@ namespace WebApi.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class AddDate : IMigrationMetadata
+    public sealed partial class AddAddress : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddDate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddAddress));
         
         string IMigrationMetadata.Id
         {
-            get { return "201712072259452_AddDate"; }
+            get { return "201712091151551_AddAddress"; }
         }
         
         string IMigrationMetadata.Source
         {
-            get { return Resources.GetString("Source"); }
+            get { return null; }
         }
         
         string IMigrationMetadata.Target

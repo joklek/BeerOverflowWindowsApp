@@ -18,21 +18,30 @@ namespace WebApi.DataModels
 
         public void RemoveDuplicates()
         {
-            var length = this.Count;
-
-            for (var i = 0; i + 1 < length; i++)
+            for (var i = 0; i + 1 < this.Count; i++)
             {
-                for (var j = i + 1; j < length; j++)
+                for (var j = i + 1; j < this.Count; j++)
                 {
                     var stringSimilarity = CalculateStringSimilarity(this[i].Title, this[j].Title);
-                    var distanceBetweenBars = GetDistanceBetweenBars(this[i].Latitude, this[i].Longitude,
-                                                                this[j].Latitude, this[j].Longitude);
+                    var distanceBetweenBars = GetDistanceBetweenBars(this[i], this[j]);
                     var coordCheck = distanceBetweenBars <= _barNearnessThresholdInMeters;
                     if (OneNameContainsTheOther(this[i].Title, this[j].Title) ||
                         distanceBetweenBars <= _maxSameBarDistanceErrorThresholdMeters &&
                         stringSimilarity >= _barNameSimilarThreshold ||
                         (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
                     {
+                        if (this[i].City == null && this[j].City != null ||
+                            this[i].City != null && this[j].City != null && 
+                            this[i].City.Length < this[j].City.Length)
+                        {
+                            this[i].City = this[j].City;
+                        }
+                        if (this[i].StreetAddress == null && this[j].StreetAddress != null ||
+                            this[i].StreetAddress != null && this[j].StreetAddress != null &&
+                            !this[i].StreetAddress.Any(char.IsDigit) && this[j].StreetAddress.Any(char.IsDigit))
+                        {
+                            this[i].StreetAddress = this[j].StreetAddress;
+                        }
                         // Prints out merged bars, their string similarity score, distance between and either one of them had the other in their name
                         // Commented for testing purposes, because this process needs to be improved
                         /*Console.Write("REMOVED: " + this[i].Title + " = " + this[j].Title + " :" + stringSimilarity + " : " +
@@ -42,16 +51,15 @@ namespace WebApi.DataModels
                         this[i].Categories |= this[j].Categories;
                         this.Remove(this[j]);
                         j--;
-                        length--;
                     }
                 }
             }
         }
 
-        private double GetDistanceBetweenBars(double lat1, double lon1, double lat2, double lon2)
+        private double GetDistanceBetweenBars(BarData bar1, BarData bar2)
         {
-            var coord1 = new GeoCoordinate(lat1, lon1);
-            var coord2 = new GeoCoordinate(lat2, lon2);
+            var coord1 = new GeoCoordinate(bar1.Latitude, bar1.Longitude);
+            var coord2 = new GeoCoordinate(bar2.Latitude, bar2.Longitude);
             var distance = coord1.GetDistanceTo(coord2);
             return distance;
         }
@@ -68,13 +76,15 @@ namespace WebApi.DataModels
             var asciifiedNormalizedTarget = ToASCII(target.ToLower());
 
             double stepsToSame = ComputeLevenshteinDistance(asciifiedNormalizedSource, asciifiedNormalizedTarget);
-            return (1.0 - (stepsToSame / Math.Max(source.Length, target.Length)));
+            return 1.0 - stepsToSame / Math.Max(source.Length, target.Length);
         }
 
-        private bool OneNameContainsTheOther(string name1, string name2)
+        private static bool OneNameContainsTheOther(string name1, string name2)
         {
             var asciifiedNormalizedName1 = ToASCII(name1.ToLower());
+            asciifiedNormalizedName1 = new string(asciifiedNormalizedName1.Where(char.IsLetterOrDigit).ToArray());
             var asciifiedNormalizedName2 = ToASCII(name2.ToLower());
+            asciifiedNormalizedName2 = new string(asciifiedNormalizedName2.Where(char.IsLetterOrDigit).ToArray());
             return asciifiedNormalizedName1.Contains(asciifiedNormalizedName2) ||
                    asciifiedNormalizedName2.Contains(asciifiedNormalizedName1);
         }

@@ -1,8 +1,5 @@
 ﻿using System.Data.Entity;
-using BarData = WebApi.DataModels.BarData;
-using BarSynonym = WebApi.DataModels.BarSynonym;
-using User = WebApi.DataModels.User;
-using UsersRatingToBar = WebApi.DataModels.UsersRatingToBar;
+using WebApi.DataModels;
 
 namespace WebApi.Database
 {

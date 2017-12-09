@@ -2,14 +2,14 @@ namespace WebApi.Migrations
 {
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<WebApi.Database.BarsDatabase>
+    internal sealed class Configuration : DbMigrationsConfiguration<Database.BarsDatabase>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(WebApi.Database.BarsDatabase context)
+        protected override void Seed(Database.BarsDatabase context)
         {
             //  This method will be called after migrating to the latest version.
 
