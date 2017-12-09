@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BarData = WebApi.DataModels.BarData;
+using WebApi.DataModels;
 
 namespace WebApi.BarProviders
 {

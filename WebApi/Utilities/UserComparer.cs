@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using WebApi.DataModels;
 
-namespace WebApi
+namespace WebApi.Utilities
 {
     class UserComparer : IEqualityComparer<User>
     {

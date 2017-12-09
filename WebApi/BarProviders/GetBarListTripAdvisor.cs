@@ -6,11 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.DataModels;
 using WebApi.Utilities;
-using BarData = WebApi.DataModels.BarData;
-using CategoryTypes = WebApi.DataModels.CategoryTypes;
-using CategoryUnconverted = WebApi.DataModels.CategoryUnconverted;
-using FetcherAndDeserializer = WebApi.Utilities.FetcherAndDeserializer;
-using IHttpFetcher = WebApi.Utilities.IHttpFetcher;
+using static WebApi.DataModels.TripAdvisorDataModel;
 
 namespace WebApi.BarProviders
 {
@@ -41,19 +37,19 @@ namespace WebApi.BarProviders
             return barList;
         }
 
-        private List<TripAdvisorDataModel.PlaceInfo> GetBarData(double latitude, double longitude)
+        private List<PlaceInfo> GetBarData(double latitude, double longitude)
         {
             var categories = _categoryListString.Split(',');
-            var placeList =  new List<TripAdvisorDataModel.PlaceInfo>();
+            var placeList =  new List<PlaceInfo>();
             foreach (var category in categories)
             {
                 var link = string.Format(_mapperLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), _accessKey, category);
-                placeList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<TripAdvisorDataModel.PlacesResponse>(link, _fetcher).data);
+                placeList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<PlacesResponse>(link, _fetcher).data);
             }
             return placeList;
         }
 
-        private void FetchLocations(IEnumerable<TripAdvisorDataModel.PlaceInfo> placeList)
+        private void FetchLocations(IEnumerable<PlaceInfo> placeList)
         {
             foreach (var place in placeList)
             {
@@ -61,10 +57,10 @@ namespace WebApi.BarProviders
             }
         }
 
-        private TripAdvisorDataModel.LocationResponse GetLocationForPlace(TripAdvisorDataModel.PlaceInfo place)
+        private LocationResponse GetLocationForPlace(PlaceInfo place)
         {
             var link = string.Format(_locationApiLink, place.location_id, _accessKey);
-            var placeLocation = FetcherAndDeserializer.FetchAndDeserialize<TripAdvisorDataModel.LocationResponse>(link, _fetcher);
+            var placeLocation = FetcherAndDeserializer.FetchAndDeserialize<LocationResponse>(link, _fetcher);
             return placeLocation;
         }
 
@@ -79,20 +75,20 @@ namespace WebApi.BarProviders
             return barList;
         }
 
-        private async Task<List<TripAdvisorDataModel.PlaceInfo>> GetBarDataAsync(double latitude, double longitude)
+        private async Task<List<PlaceInfo>> GetBarDataAsync(double latitude, double longitude)
         {
             var categories = _categoryListString.Split(',');
-            var placeList = new List<TripAdvisorDataModel.PlaceInfo>();
+            var placeList = new List<PlaceInfo>();
             foreach (var category in categories)
             {
                 var link = string.Format(_mapperLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), _accessKey, category);
-                var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<TripAdvisorDataModel.PlacesResponse>(link, _fetcher);
+                var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesResponse>(link, _fetcher);
                 placeList.AddRange(deserializedResponse.data);
             }
             return placeList;
         }
 
-        private async Task FetchLocationsAsync(IEnumerable<TripAdvisorDataModel.PlaceInfo> placeList)
+        private async Task FetchLocationsAsync(IEnumerable<PlaceInfo> placeList)
         {
             foreach (var place in placeList)
             {
@@ -100,30 +96,30 @@ namespace WebApi.BarProviders
             }
         }
 
-        private async Task<TripAdvisorDataModel.LocationResponse> GetLocationForPlaceAsync(TripAdvisorDataModel.PlaceInfo place)
+        private async Task<LocationResponse> GetLocationForPlaceAsync(PlaceInfo place)
         {
             var link = string.Format(_locationApiLink, place.location_id, _accessKey);
-            var placeLocation = await FetcherAndDeserializer.FetchAndDeserializeAsync<TripAdvisorDataModel.LocationResponse>(link, _fetcher);
+            var placeLocation = await FetcherAndDeserializer.FetchAndDeserializeAsync<LocationResponse>(link, _fetcher);
             return placeLocation;
         }
 
-        private List<BarData> PlaceListToBarList(IEnumerable<TripAdvisorDataModel.PlaceInfo> placeList)
+        private List<BarData> PlaceListToBarList(IEnumerable<PlaceInfo> placeList)
         {
             return placeList.Select(PlaceToBar).ToList();
         }
 
-        private void RemovePlacesOutsideRadius(List<TripAdvisorDataModel.PlaceInfo> placeList, double radius)
+        private void RemovePlacesOutsideRadius(List<PlaceInfo> placeList, double radius)
         {
             placeList.RemoveAll(x =>
                 ConvertMilesToMeters(x.distance) > radius);
         }
 
-        private void RemoveUnneededPlaces(List<TripAdvisorDataModel.PlaceInfo> placeList)
+        private void RemoveUnneededPlaces(List<PlaceInfo> placeList)
         {
             placeList.RemoveAll(x => !IsAValidAttraction(x) && !IsAValidRestaurant(x));
         }
 
-        private static BarData PlaceToBar(TripAdvisorDataModel.PlaceInfo place)
+        private static BarData PlaceToBar(PlaceInfo place)
         {
             return new BarData
             {
@@ -132,10 +128,12 @@ namespace WebApi.BarProviders
                 Categories = CollectCategories(place),
                 Latitude = double.Parse(place.locationResponse.latitude, CultureInfo.InvariantCulture),
                 Longitude = double.Parse(place.locationResponse.longitude, CultureInfo.InvariantCulture),
+                StreetAddress = place.address_obj.street1?.Trim(),
+                City = place.address_obj.city?.Trim()
             };
         }
 
-        private static CategoryTypes CollectCategories(TripAdvisorDataModel.PlaceInfo place)
+        private static CategoryTypes CollectCategories(PlaceInfo place)
         {
             var placeCategories = CategoryTypes.None;
             
@@ -165,7 +163,7 @@ namespace WebApi.BarProviders
             return placeCategories;
         }
 
-        private static bool IsAValidAttraction(TripAdvisorDataModel.PlaceInfo place)
+        private static bool IsAValidAttraction(PlaceInfo place)
         {
             var allowedGroupList = _applicableGroupsString.Split(',').ToList();
             var allowedGroupCategoryList = _applicableGroupCategories.Split(',').ToList();
@@ -175,7 +173,7 @@ namespace WebApi.BarProviders
                    place.locationResponse.groups.Any(group => group.categories.Exists(x => allowedGroupCategoryList.Contains(x.name)));
         }
 
-        private static bool IsAValidRestaurant(TripAdvisorDataModel.PlaceInfo place)
+        private static bool IsAValidRestaurant(PlaceInfo place)
         {
             return place.locationResponse.category.name == "restaurant" &&
                    place.locationResponse.subcategory.Exists(x => x.name == "sit_down");

@@ -5,12 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Utilities;
-using BarData = WebApi.DataModels.BarData;
-using CategoryTypes = WebApi.DataModels.CategoryTypes;
-using CategoryUnconverted = WebApi.DataModels.CategoryUnconverted;
-using FetcherAndDeserializer = WebApi.Utilities.FetcherAndDeserializer;
-using FourSquareDataModel = WebApi.DataModels.FourSquareDataModel;
-using IHttpFetcher = WebApi.Utilities.IHttpFetcher;
+using WebApi.DataModels;
+using static WebApi.DataModels.FourSquareDataModel;
 
 namespace WebApi.BarProviders
 {
@@ -39,14 +35,14 @@ namespace WebApi.BarProviders
             return barList;
         }
 
-        private List<FourSquareDataModel.Venue> GetBarData (double latitude, double longitude, double radius)
+        private List<Venue> GetBarData (double latitude, double longitude, double radius)
         {
             var categoryIDs = _categoryIdFetced.Split(',').ToList();
-            var venueList = new List<FourSquareDataModel.Venue>();
+            var venueList = new List<Venue>();
             foreach (var category in categoryIDs)
             {
                 var link = string.Format(_apiLink, _clientId, _clientSecret, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), category, radius.ToString(CultureInfo.InvariantCulture));
-                venueList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<FourSquareDataModel.SearchResponse>(link, _fetcher).response.venues);
+                venueList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<SearchResponse>(link, _fetcher).response.venues);
             }
             return venueList;
         }
@@ -60,31 +56,31 @@ namespace WebApi.BarProviders
             return barList;
         }
 
-        private void RemoveBannedVenues(List<FourSquareDataModel.Venue> venueList)
+        private void RemoveBannedVenues(List<Venue> venueList)
         {
             var categoryIdBanned = _categoryIdBanned.Split(',').ToList();
             venueList.RemoveAll(x => x.categories.Exists(y => categoryIdBanned.Contains(y.id)));
         }
 
-        private async Task<List<FourSquareDataModel.Venue>> GetBarDataAsync(double latitude, double longitude, double radius)
+        private async Task<List<Venue>> GetBarDataAsync(double latitude, double longitude, double radius)
         {
             var categoryIDs = _categoryIdFetced.Split(',').ToList();
-            var venueList = new List<FourSquareDataModel.Venue>();
+            var venueList = new List<Venue>();
             foreach (var category in categoryIDs)
             {
                 var link = string.Format(_apiLink, _clientId, _clientSecret, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), category, radius.ToString(CultureInfo.InvariantCulture));
-                var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<FourSquareDataModel.SearchResponse>(link, _fetcher);
+                var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<SearchResponse>(link, _fetcher);
                 venueList.AddRange(deserialized.response.venues);
             }
             return venueList;
         }
 
-        private static List<BarData> VenueListToBarList(IEnumerable<FourSquareDataModel.Venue> venueList, double radius)
+        private static List<BarData> VenueListToBarList(IEnumerable<Venue> venueList, double radius)
         {
             return (from venue in venueList where (venue.location.distance <= radius) select VenueToBar(venue)).ToList();
         }
 
-        private static BarData VenueToBar(FourSquareDataModel.Venue venue)
+        private static BarData VenueToBar(Venue venue)
         {
             return new BarData
             {
@@ -93,10 +89,12 @@ namespace WebApi.BarProviders
                 Categories = CollectCategories(venue),
                 Latitude = venue.location.lat,
                 Longitude = venue.location.lng,
+                StreetAddress = venue.location.address?.Trim(),
+                City = venue.location.city?.Trim()
             };
         }
 
-        private static CategoryTypes CollectCategories(FourSquareDataModel.Venue place)
+        private static CategoryTypes CollectCategories(Venue place)
         {
             var placeCategories = CategoryTypes.None;
             var listOfCategories = _categoryIdSecondary.Split(',').Select
