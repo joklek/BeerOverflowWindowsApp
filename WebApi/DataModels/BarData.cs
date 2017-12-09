@@ -16,9 +16,6 @@ namespace WebApi.DataModels
 
         public float AvgRating { get; set; }
 
-        [NotMapped]
-        public int UserRating { get; set; }
-
         [Required]
         public double Latitude { get; set; }
 

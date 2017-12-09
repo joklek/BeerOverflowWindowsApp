@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -50,10 +51,11 @@ namespace WebApi.Utilities
                     // Provider is down, lets just ignore it
                 }
             }
-            result.RemoveDuplicates();
-            result.RemoveBarsOutsideRadius(radius);
             var dbManager = new DatabaseManager();
-            result = (BarDataModel) dbManager.GetAllBarData(result, user);
+            dbManager.SaveBars(result);
+            result = (BarDataModel)dbManager.GetAllBarData(result.Select(x => x.BarId), user);
+            result.RemoveBarsOutsideRadius(radius);
+            result.RemoveDuplicates();
             return result;
         }
 

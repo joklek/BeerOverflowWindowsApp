@@ -16,11 +16,20 @@ namespace WebApi.Controllers
     {
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult Register([FromBody]String nameAndPass)
+        public IHttpActionResult Register([FromBody]string nameAndPass)
         {
             var list = nameAndPass.Split(',');
             var dbManager = new DatabaseManager();
-            bool result = dbManager.Register(list[0], list[1]);
+            var result = dbManager.Register(list[0], list[1]);
+            return Ok(result);
+        }
+
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        [HttpPost]
+        public IHttpActionResult Register([FromBody]User user)
+        {
+            var dbManager = new DatabaseManager();
+            var result = dbManager.Register(user.Username, user.Password);
             return Ok(result);
         }
 
@@ -29,7 +38,7 @@ namespace WebApi.Controllers
         public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User.Username);
+            var result = dbManager.GetAllBarData(userAndBars.BarIds, userAndBars.User.Username);
             return Ok(result);
         }
 
@@ -55,23 +64,37 @@ namespace WebApi.Controllers
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult SaveBarRating([FromBody] RatingModel barObject)
+        public IHttpActionResult SaveBarRating([FromBody]RatingModel barObject)
         {
             var dbManager = new DatabaseManager();
-            dbManager.SaveBarRating(barObject.BarID, "test" , barObject.Rating);
-            return Ok("Success");
+            // TODO: improve the logic of this thingie
+            if (dbManager.UserCanVote(barObject.BarID, barObject.User))
+            {
+                try
+                {
+                    dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);
+                }
+                catch (InvalidOperationException e)
+                {
+                    Console.WriteLine(e);
+                    return InternalServerError();
+                }
+                return Ok("Success");
+            }
+            return BadRequest("Cannot vote");
         }
-        //TEMPORARY: should not send unneccesary data
-        //TEMPORARY: probably should save empty bars so it wouldn't be needed to send them through Api when trying to save rating
-        [EnableCors(origins: "*", headers: "*", methods: "*")]
+
+        /*[EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
         public IHttpActionResult GetBarRatings([FromBody]UserAndBarModel userAndBar)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetBarRatings(userAndBar.Bar, userAndBar.User.Username);
+            var result = dbManager.GetBarRatings(userAndBar.BarId, userAndBar.User);
             return Ok(result);
-        }
-        //TEMPORARY: i think we only need 2 methods in WebApi for now: SaveBarRating(username, rating, barId) and GetBarsByCoordinates(username?, latitude, longitude, radius?)
+        }*/
+
+        // TEMPORARY: i think we only need 2 methods in WebApi for now: SaveBarRating(username, rating, barId) and GetBarsByCoordinates(username?, latitude, longitude, radius?)
+        // DO NOT USE THIS
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
         public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody]Coordinate coordinate)
@@ -93,7 +116,6 @@ namespace WebApi.Controllers
             result = new DatabaseManager().GetAllBarData(result, "Jonas");
             new DatabaseManager().SaveBars(result);
             return Ok(result);
-
         }
     }
 }
