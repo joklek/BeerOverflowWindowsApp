@@ -9,8 +9,8 @@ namespace WebApi.DataModels
     {
         public UsersRatingToBar(BarData bar, User user, int rating, DateTime ratingDate)
         {
-            this.Bar = bar;
-            this.User = user;
+            this.BarId = bar.BarId;
+            this.Username = user.Username;
             this.Rating = rating;
             this.RatingDate = ratingDate;
         }
@@ -30,7 +30,7 @@ namespace WebApi.DataModels
         [MaxLength(400)]
         public string Comment { get; set; }
 
-        [Required, DataType(DataType.DateTime)]
+        [Key, Column(Order = 2), DataType(DataType.DateTime)]
         public DateTime RatingDate { get; set; }
     }
 }

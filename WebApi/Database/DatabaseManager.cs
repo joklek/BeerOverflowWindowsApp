@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using WebApi.DataModels;
 
@@ -25,32 +26,28 @@ namespace WebApi.Database
 
         public bool UserCanVote(string barId, User currentUser)
         {
+            UsersRatingToBar recentRatingByUser = null;
             using (var db = new BarsDatabase())
             {
                 var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser.Username);
-                if (userInDb == null)
+                if (userInDb == null || barId == null)
                 {
-                    // Not sure if right behavior? Maybe reject request and ask for registration?
-                    // TODO: User registration
-                    userInDb = new User { Username = currentUser.Username };
-                    db.Users.Add(userInDb);
-                    db.SaveChanges();
+                    return false;
                 }
 
                 var timeNow = DateTime.Now;
                 if (!TimeSpan.TryParse(ratingCooldownPeriod, out var cooldownTimeSpan))
                 {
                     var badCooldown = ratingCooldownPeriod ?? "null";
-                    throw new InvalidOperationException("Cofiguration file not present or incorrect value of variable "
-                                                        + nameof(ratingCooldownPeriod) + " : " + badCooldown);
+                    throw new InvalidOperationException(string.Format("Cofiguration file not present or incorrect value of variable {0} : {1} ", nameof(ratingCooldownPeriod),  badCooldown));
                 }
-                var recentRatingByUser = db.UserRatings.FirstOrDefault(x => x.BarId == barId &&
-                                                                            x.Username == currentUser.Username &&
-                                                                            x.RatingDate.Add(cooldownTimeSpan) < timeNow);
+                var cooldownTime = timeNow.Subtract(cooldownTimeSpan);
+                recentRatingByUser = db.UserRatings.FirstOrDefault(x => x.BarId == barId &&
+                                                                   x.Username == currentUser.Username &&
+                                                                   x.RatingDate.CompareTo(cooldownTime) >= 0);
                 return recentRatingByUser == null;
             }
         }
-
 
         public bool Register(string username, string password)
         {
@@ -71,29 +68,23 @@ namespace WebApi.Database
         {
             using (var db = new BarsDatabase())
             {
-                var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser.Username);
-                if (userInDb == null)
-                {
-                    // Not sure if right behavior? Maybe reject request and ask for registration?
-                    // TODO: User registration
-                    userInDb = new User { Username = currentUser.Username };
-                    db.Users.Add(userInDb);
-                }
-
+                if (!UserCanVote(barId, currentUser)) return;
                 var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == barId);
                 if (barInDb == null)
                 {
                     Console.Write("This should not happen. Asking to rate non-existent bar");
                     return;
                 }
-                db.UserRatings.Add(new UsersRatingToBar(barInDb, userInDb, rating, DateTime.Now));
-                barInDb.AvgRating = (float)db.UserRatings.Where(x => x.BarId == barInDb.BarId).Select(x => x.Rating).DefaultIfEmpty().Average();
-
+                db.UserRatings.Add(new UsersRatingToBar(barInDb, currentUser, rating, DateTime.Now));
+                var avgRating = (float) db.UserRatings.Where(x => x.BarId == barInDb.BarId).Select(x => x.Rating)
+                    .DefaultIfEmpty().Average();
+                barInDb.AvgRating = avgRating;
+                db.Bars.AddOrUpdate(barInDb);
                 db.SaveChanges();
             }
         }
 
-        public List<BarData> GetAllBarData(IEnumerable<string> localBarIds, string username)
+        public List<BarData> GetAllBarData(IEnumerable<string> localBarIds)
         {
             var localBars = new List<BarData>();
             using (var db = new BarsDatabase())
@@ -103,17 +94,14 @@ namespace WebApi.Database
             return localBars;
         }
 
-        /*public BarData GetBarRatings(string barId, User user)
+        public BarData GetBarData(string barId, User user)
         {
-            var bar = new BarData();
+            BarData bar;
             using (var db = new BarsDatabase())
             {
-                var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == barId);
-                bar.AvgRating = barInDb?.AvgRating ?? 0;
-                var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user.Username);
-                bar.UserRating = barRating?.Rating ?? 0;
+                bar = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == barId);
             }
             return bar;
-        }*/
+        }
     }
 }

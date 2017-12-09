@@ -53,7 +53,7 @@
                 alert(request.responseText);
             },
             success: function (data) {
-                if (data == true)
+                if (data === true)
                     window.location.href = "LogIn.html";
                 else
                     window.alert("Username already taken");

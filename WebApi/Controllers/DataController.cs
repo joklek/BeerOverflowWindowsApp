@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using WebApi.Database;
@@ -38,7 +39,7 @@ namespace WebApi.Controllers
         public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetAllBarData(userAndBars.BarIds, userAndBars.User.Username);
+            var result = dbManager.GetAllBarData(userAndBars.BarIds);
             return Ok(result);
         }
 
@@ -59,7 +60,11 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
-            return Ok(result);
+            var names = result.Select(x => x.BarId).ToList();
+            var dbMgr = new DatabaseManager();
+            result = dbMgr.GetAllBarData(names);
+            dbMgr.SaveBars(result);
+            return Ok(BarDataToResponseModel(result));
         }
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
@@ -68,7 +73,12 @@ namespace WebApi.Controllers
         {
             var dbManager = new DatabaseManager();
             // TODO: improve the logic of this thingie
-            if (dbManager.UserCanVote(barObject.BarID, barObject.User))
+            var user = new User
+            {
+                Username = "test"
+            };
+            barObject.User = user;
+            if (dbManager.UserCanVote(barObject.BarID, user))
             {
                 try
                 {
@@ -97,9 +107,15 @@ namespace WebApi.Controllers
         // DO NOT USE THIS
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody]Coordinate coordinate)
+        public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody] Coordinate coordinate)
         {
-            var locationRequest = new LocationRequestModel { Latitude = coordinate.lat, Longitude = coordinate.lng, Radius = 150, User =  "test"  };
+            var locationRequest = new LocationRequestModel
+            {
+                Latitude = coordinate.lat,
+                Longitude = coordinate.lng,
+                Radius = 150,
+                User = "test"
+            };
             try
             {
                 InputDataValidator.LocationDataIsCorrect(locationRequest);
@@ -113,9 +129,26 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
-            result = new DatabaseManager().GetAllBarData(result, "Jonas");
-            new DatabaseManager().SaveBars(result);
-            return Ok(result);
+
+            var names = result.Select(x => x.BarId).ToList();
+            var dbMgr = new DatabaseManager();
+            result = dbMgr.GetAllBarData(names);
+            dbMgr.SaveBars(result);
+            return Ok(BarDataToResponseModel(result));
+        }
+
+        private static List<BarResponseModel> BarDataToResponseModel(IEnumerable<BarData> barList)
+        {
+            var responseModelList = barList.Select(bar => new BarResponseModel
+                {
+                    BarId = bar.BarId,
+                    Title = bar.Title,
+                    AvgRating = bar.AvgRating,
+                    Categories = bar.Categories,
+                    City = bar.City,
+                    StreetAddress = bar.StreetAddress
+                }).ToList();
+            return responseModelList;
         }
     }
 }

@@ -53,7 +53,7 @@ namespace WebApi.Utilities
             }
             var dbManager = new DatabaseManager();
             dbManager.SaveBars(result);
-            result = (BarDataModel)dbManager.GetAllBarData(result.Select(x => x.BarId), user);
+            result.AddRange(dbManager.GetAllBarData(result.Select(x => x.BarId)));
             result.RemoveBarsOutsideRadius(radius);
             result.RemoveDuplicates();
             return result;
