@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="Content/bootstrap.min.css">
     <link rel="stylesheet" href="Content/Style.css">
     <link rel="stylesheet" href="Content/DataTables/media/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="lentele.css">
     <script src="Scripts/jquery-3.2.1.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="Scripts/DataTables/media/js/jquery.dataTables.min.js"></script>
@@ -15,6 +16,17 @@
 </head>
 <body>
     <button onclick="GetData()" id="loadBars">Load bars</button>
+
+    <input type="button" id="Rate" value="Rate" />
+
+    <select id="ratings">
+        <option value="1" selected="selected">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+
     <table class="table table-bordered table-condensed table-hover" id="barsTable">
         <thead>
             <tr>
@@ -39,7 +51,7 @@
                 { data: 'BarId' },
                 { data: 'Title' },
                 { data: 'Categories' },
-                { data: 'UserRating' }
+                { data: 'AvgRating' }
             ]
         });
         initMap();      
@@ -95,6 +107,13 @@
                     setMapOnAll(map);
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
+
+
+                    //$('#barsTable tbody tr').addClass("newclass");
+                //    $('#barsTable').DataTable().rows.forEach(function (row) {
+               //         row.addClass("clickable-row");
+                //    });
+
                     stopLoading();
                 }
             });
@@ -132,7 +151,8 @@
         google.maps.event.addListener(map, 'click', function (event) {
             addMarker(event.latLng, "My location");
         });
-    }
+    } 
+
     function beginLoading() {
         $("#loadBars").text("Loading...");
         $("#loadBars").prop('disabled', true);
@@ -141,4 +161,62 @@
         $("#loadBars").text("Load bars");
         $("#loadBars").prop('disabled', false);
     }
+
+    var value;
+
+    var table = document.getElementsByTagName("table")[0];
+    var tbody = table.getElementsByTagName("tbody")[0];
+    tbody.onclick = function (e) {
+        e = e || window.event;
+        var target = e.srcElement || e.target;
+        while (target && target.nodeName !== "TR") {
+            target = target.parentNode;
+        }
+        if (target) {
+            var cells = target.getElementsByTagName("td");
+            value = cells[0].innerText;
+        }
+    };
+
+
+    function SaveBarRating(rating) {
+        if (value != null)
+        {
+            beginLoading();
+            $('table').find('tr.highlight').removeClass('highlight');
+            jQuery.support.cors = true;
+            data = {BarID : value, Rating : rating}
+            $.ajax({
+                url: "http://localhost:1726/Api/Data/SaveBarRating",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                type: "POST",
+                error: function (request, status, error) {
+                    stopLoading();
+                    alert(request.responseText);
+                },
+                success: function (data) {
+                    value = null;
+                    stopLoading();
+                }
+            });
+        }
+        else {
+            alert("No bar selected");
+        }
+
+    }
+
+    $('#Rate').on('click', function (e) {
+        var e = document.getElementById("ratings");
+        var rating = e.options[e.selectedIndex].value;
+        SaveBarRating(rating);
+    });
+
+    $('table').on('click', 'tr', function (e) {
+        $('table').find('tr.highlight').removeClass('highlight');
+        $(this).addClass('highlight');
+    })
+
 </script>

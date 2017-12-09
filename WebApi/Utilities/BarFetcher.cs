@@ -25,7 +25,7 @@ namespace WebApi.Utilities
             return await RequestBarsAroundCoords(locationRequest.Latitude, locationRequest.Longitude, locationRequest.Radius, locationRequest.User);
         }
 
-        public static async Task<BarDataModel> RequestBarsAroundCoords(double latitude, double longitude, double radius, User user)
+        public static async Task<BarDataModel> RequestBarsAroundCoords(double latitude, double longitude, double radius, string user)
         {
             var result = new BarDataModel();
             var failedToConnectCounter = 0;

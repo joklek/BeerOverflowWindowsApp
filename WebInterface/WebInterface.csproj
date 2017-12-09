@@ -241,6 +241,7 @@
     <Content Include="Content\DataTables\extensions\Buttons\css\common.scss" />
     <None Include="packages.config" />
     <Content Include="Initial.html" />
+    <Content Include="lentele.css" />
     <Content Include="Register.html" />
     <Content Include="LogIn.html" />
     <Content Include="Scripts\bootstrap.js" />

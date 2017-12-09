@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User);
+            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User.Username);
             return Ok(result);
         }
 
@@ -62,7 +62,7 @@ namespace WebApi.Controllers
         public IHttpActionResult SaveBarRating([FromBody] RatingModel barObject)
         {
             var dbManager = new DatabaseManager();
-            dbManager.SaveBarRating(barObject.Bar, barObject.User, barObject.Rating);
+            dbManager.SaveBarRating(barObject.BarID, "test" , barObject.Rating);
             return Ok("Success");
         }
         //TEMPORARY: should not send unneccesary data
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
         public IHttpActionResult GetBarRatings([FromBody]UserAndBarModel userAndBar)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetBarRatings(userAndBar.Bar, userAndBar.User);
+            var result = dbManager.GetBarRatings(userAndBar.Bar, userAndBar.User.Username);
             return Ok(result);
         }
         //TEMPORARY: i think we only need 2 methods in WebApi for now: SaveBarRating(username, rating, barId) and GetBarsByCoordinates(username?, latitude, longitude, radius?)
@@ -80,7 +80,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody]Coordinate coordinate)
         {
-            var locationRequest = new LocationRequestModel { Latitude = coordinate.lat, Longitude = coordinate.lng, Radius = 150, User = new User { Username = "test" } };
+            var locationRequest = new LocationRequestModel { Latitude = coordinate.lat, Longitude = coordinate.lng, Radius = 150, User =  "test"  };
             try
             {
                 InputDataValidator.LocationDataIsCorrect(locationRequest);
@@ -94,6 +94,8 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
+            result = new DatabaseManager().GetAllBarData(result, "Jonas");
+            new DatabaseManager().SaveBars(result);
             return Ok(result);
 
         }
