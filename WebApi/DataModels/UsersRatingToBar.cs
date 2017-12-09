@@ -29,8 +29,5 @@ namespace WebApi.DataModels
 
         [MaxLength(400)]
         public string Comment { get; set; }
-
-        [Key, Column(Order = 2)]
-        public DateTime Date { get; set; }
     }
 }

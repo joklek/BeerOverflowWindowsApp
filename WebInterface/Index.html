@@ -42,6 +42,8 @@
 </body>
 </html>
 <script>
+    var email;
+    var pass;
     var map = null;
     var markers = [];
     var myLocation = null;
@@ -54,8 +56,10 @@
                 { data: 'AvgRating' }
             ]
         });
-        initMap();      
-        
+        initMap();     
+        email = localStorage.getItem("email");
+        pass = localStorage.getItem("pass");
+        window.alert(email + "  " + pass);   
     });
     function addMarker(position, label) {
 
@@ -107,13 +111,6 @@
                     setMapOnAll(map);
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
-
-
-                    //$('#barsTable tbody tr').addClass("newclass");
-                //    $('#barsTable').DataTable().rows.forEach(function (row) {
-               //         row.addClass("clickable-row");
-                //    });
-
                     stopLoading();
                 }
             });
@@ -180,12 +177,12 @@
 
 
     function SaveBarRating(rating) {
-        if (value != null)
+        if (value != null && localStorage.getItem("email") != null && localStorage.getItem("pass") != null)
         {
             beginLoading();
             $('table').find('tr.highlight').removeClass('highlight');
             jQuery.support.cors = true;
-            data = {BarID : value, Rating : rating}
+            data = { BarID: value, Rating: rating, User: { Username: localStorage.getItem("email"), Password: localStorage.getItem("pass")}}
             $.ajax({
                 url: "http://localhost:1726/Api/Data/SaveBarRating",
                 type: "POST",

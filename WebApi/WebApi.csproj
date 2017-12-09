@@ -164,10 +164,6 @@
     <Compile Include="Migrations\201711202252009_InitialCreate.Designer.cs">
       <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712072259452_AddDate.cs" />
-    <Compile Include="Migrations\201712072259452_AddDate.Designer.cs">
-      <DependentUpon>201712072259452_AddDate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,9 +195,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711202252009_InitialCreate.resx">
       <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712072259452_AddDate.resx">
-      <DependentUpon>201712072259452_AddDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
