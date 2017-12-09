@@ -4,6 +4,6 @@
     {
         public string BarID { get; set; }
         public int Rating { get; set; }
-        public string User { get; set; }
+        public User User { get; set; }
     }
 }

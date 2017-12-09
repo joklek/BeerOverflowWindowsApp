@@ -4,7 +4,7 @@ namespace WebApi.DataModels
 {
     public class UserAndBarsModel
     {
-        public string User { get; set; }
+        public User User { get; set; }
         public List<BarData> Bars { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User);
+            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User.Username);
             return Ok(result);
         }
 
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
         public IHttpActionResult GetBarRatings([FromBody]UserAndBarModel userAndBar)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetBarRatings(userAndBar.Bar, userAndBar.User);
+            var result = dbManager.GetBarRatings(userAndBar.Bar, userAndBar.User.Username);
             return Ok(result);
         }
         //TEMPORARY: i think we only need 2 methods in WebApi for now: SaveBarRating(username, rating, barId) and GetBarsByCoordinates(username?, latitude, longitude, radius?)

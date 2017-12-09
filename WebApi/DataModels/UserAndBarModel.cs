@@ -2,7 +2,7 @@
 {
     public class UserAndBarModel
     {
-        public string User { get; set; }
+        public User User { get; set; }
         public BarData Bar { get; set; }
     }
 }
