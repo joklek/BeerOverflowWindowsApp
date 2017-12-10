@@ -70,11 +70,12 @@ namespace WebApi.Controllers
         public IHttpActionResult SaveBarRating([FromBody] RatingModel barObject)
         {
             var dbManager = new DatabaseManager();
+            if (!dbManager.LogIn(barObject.User))
+                return BadRequest("User authentication failed");
             dbManager.SaveBarRating(barObject.BarID, barObject.User.Username , barObject.Rating);
             return Ok("Success");
         }
-        //TEMPORARY: should not send unneccesary data
-        //TEMPORARY: probably should save empty bars so it wouldn't be needed to send them through Api when trying to save rating
+
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
         public IHttpActionResult GetBarRatings([FromBody]UserAndBarModel userAndBar)

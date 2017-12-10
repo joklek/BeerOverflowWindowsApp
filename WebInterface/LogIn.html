@@ -27,7 +27,7 @@
                 <div class="col-sm-offset-2 col-sm-10"> <button onclick="LogIn()" button type="submit" class="btn btn-primary">Submit</button> </div>
             </div>
             <div class="col-sm-offset-2 col-sm-10">
-                <a class="btn btn-primary" href="Initial.html" role="button">Back</a>
+                <a class="btn btn-primary" href="Index.html" role="button">Home</a>
             </div>
        
     </div>
@@ -50,9 +50,9 @@
             success: function (data) {
                 if (data == true)
                 {
-                    localStorage.setItem("email", document.getElementById("email").value);
-                    localStorage.setItem("pass", document.getElementById("pass").value);
-                    window.location.href = "Index.html";
+                    sessionStorage.setItem("email", document.getElementById("email").value);
+                    sessionStorage.setItem("pass", document.getElementById("pass").value);
+                    window.location.href = "Bars.html";
                 }
                 else
                     window.alert("Incorrect email or password");
