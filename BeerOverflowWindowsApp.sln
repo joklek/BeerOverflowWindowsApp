@@ -1,15 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerOverflowWindowsApp", "BeerOverflowWindowsApp\BeerOverflowWindowsApp.csproj", "{8219DCAD-DDC8-42A7-A3BC-D1BD081BB2F2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerOverflowWindowsApp.UnitTests", "BeerOverflowWindowsApp.UnitTests\BeerOverflowWindowsApp.UnitTests.csproj", "{A2CDA18F-CEC2-4F6B-B02C-0A55A0B38A3D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{A00CDDA3-EB9B-470E-A132-EA5656CF7B97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebInterface", "WebInterface\WebInterface.csproj", "{1C64AD31-F19C-48A6-B9AA-EE10ADD97115}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.UnitTests", "WebApi.UnitTests\WebApi.UnitTests.csproj", "{E3B3BEBF-6B42-499F-8382-B5E5A33937F2}"
 EndProject
 Global
@@ -18,14 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8219DCAD-DDC8-42A7-A3BC-D1BD081BB2F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8219DCAD-DDC8-42A7-A3BC-D1BD081BB2F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8219DCAD-DDC8-42A7-A3BC-D1BD081BB2F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8219DCAD-DDC8-42A7-A3BC-D1BD081BB2F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2CDA18F-CEC2-4F6B-B02C-0A55A0B38A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2CDA18F-CEC2-4F6B-B02C-0A55A0B38A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2CDA18F-CEC2-4F6B-B02C-0A55A0B38A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2CDA18F-CEC2-4F6B-B02C-0A55A0B38A3D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A00CDDA3-EB9B-470E-A132-EA5656CF7B97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A00CDDA3-EB9B-470E-A132-EA5656CF7B97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A00CDDA3-EB9B-470E-A132-EA5656CF7B97}.Release|Any CPU.ActiveCfg = Release|Any CPU
