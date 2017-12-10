@@ -42,6 +42,7 @@
     <div id="map"></div>
 </body>
 </html>
+
 <script>
     var map = null;
     var markers = [];
@@ -70,6 +71,7 @@
         myLocation = marker;
         setMapOnAll(map);
     }
+
     function setMapOnAll(map) {
         for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(map);
@@ -78,12 +80,13 @@
             myLocation.setMap(map);
         }
     }
+
     function GetData() {
         beginLoading();
         jQuery.support.cors = true;
         var coordinates = null;
         if (myLocation != null) {
-            coordinates = { lat: myLocation.getPosition().lat(), lng: myLocation.getPosition().lng() }
+            coordinates = { lat: myLocation.getPosition().lat(), lng: myLocation.getPosition().lng() };
             $.ajax({
                 url: "http://localhost:1726/Api/Data/GetBarsByCoordinates",
                 type: "POST",
@@ -98,11 +101,11 @@
                     markers = [];
                     for (var i = 0; i < data.length; i++) {
                         var marker = new google.maps.Marker({
-                            position: { lat : data[i].Latitude, lng : data[i].Longitude },
+                            position: { lat: data[i].Latitude, lng: data[i].Longitude },
                             title: data[i].Title,
                             map: map
                         });
-                        markers.push(marker);                       
+                        markers.push(marker);
                     }
                     setMapOnAll(null);
                     setMapOnAll(map);
@@ -111,21 +114,20 @@
 
 
                     //$('#barsTable tbody tr').addClass("newclass");
-                //    $('#barsTable').DataTable().rows.forEach(function (row) {
-               //         row.addClass("clickable-row");
-                //    });
+                    //    $('#barsTable').DataTable().rows.forEach(function (row) {
+                    //         row.addClass("clickable-row");
+                    //    });
 
                     stopLoading();
                 }
             });
-        } 
+        }
         else {
             alert("Select your location");
-        } 
+        }
     }
-    
-    function initMap() {
 
+    function initMap() {
         var myLatLng = { lat: 54.684815, lng: 25.288464 };
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -138,11 +140,12 @@
                 });
                 myLocation = marker;
             });
-        }        
+        }
         else {
             LoadMap(myLatLng);
-        }     
+        }
     }
+
     function LoadMap(myLatLng) {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 14,
@@ -151,12 +154,13 @@
         google.maps.event.addListener(map, 'click', function (event) {
             addMarker(event.latLng, "My location");
         });
-    } 
+    }
 
     function beginLoading() {
         $("#loadBars").text("Loading...");
         $("#loadBars").prop('disabled', true);
     }
+
     function stopLoading() {
         $("#loadBars").text("Load bars");
         $("#loadBars").prop('disabled', false);
@@ -178,14 +182,12 @@
         }
     };
 
-
     function SaveBarRating(rating) {
-        if (value != null)
-        {
+        if (value != null) {
             beginLoading();
             $('table').find('tr.highlight').removeClass('highlight');
             jQuery.support.cors = true;
-            data = {BarID : value, Rating : rating}
+            data = { BarID: value, Rating: rating };
             $.ajax({
                 url: "http://localhost:1726/Api/Data/SaveBarRating",
                 type: "POST",
@@ -205,7 +207,6 @@
         else {
             alert("No bar selected");
         }
-
     }
 
     $('#Rate').on('click', function (e) {
@@ -217,6 +218,6 @@
     $('table').on('click', 'tr', function (e) {
         $('table').find('tr.highlight').removeClass('highlight');
         $(this).addClass('highlight');
-    })
+    });
 
 </script>

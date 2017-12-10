@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using WebApi.DataModels;
 
@@ -76,10 +75,10 @@ namespace WebApi.Database
                     return;
                 }
                 db.UserRatings.Add(new UsersRatingToBar(barInDb, currentUser, rating, DateTime.Now));
+                db.SaveChanges();
                 var avgRating = (float) db.UserRatings.Where(x => x.BarId == barInDb.BarId).Select(x => x.Rating)
                     .DefaultIfEmpty().Average();
                 barInDb.AvgRating = avgRating;
-                db.Bars.AddOrUpdate(barInDb);
                 db.SaveChanges();
             }
         }

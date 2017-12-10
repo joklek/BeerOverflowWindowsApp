@@ -134,6 +134,8 @@ namespace WebApi.Controllers
             var dbMgr = new DatabaseManager();
             result = dbMgr.GetAllBarData(names);
             dbMgr.SaveBars(result);
+            // Sending the results from databases causes an exception, as the virtual fields no longer exist.
+            // If someone knows a better solution - please tell me @joklek
             return Ok(BarDataToResponseModel(result));
         }
 
@@ -143,6 +145,8 @@ namespace WebApi.Controllers
                 {
                     BarId = bar.BarId,
                     Title = bar.Title,
+                    Latitude = bar.Latitude,
+                    Longitude = bar.Longitude,
                     AvgRating = bar.AvgRating,
                     Categories = bar.Categories,
                     City = bar.City,
