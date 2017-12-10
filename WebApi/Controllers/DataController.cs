@@ -17,20 +17,19 @@ namespace WebApi.Controllers
     {
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult Register([FromBody]string nameAndPass)
+        public IHttpActionResult Register([FromBody]User User)
         {
-            var list = nameAndPass.Split(',');
             var dbManager = new DatabaseManager();
-            var result = dbManager.Register(list[0], list[1]);
+            bool result = dbManager.Register(User);
             return Ok(result);
         }
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult Register([FromBody]User user)
+        public IHttpActionResult LogIn([FromBody]User userAttemptingToLogin)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.Register(user.Username, user.Password);
+            var result = dbManager.LogIn(userAttemptingToLogin);
             return Ok(result);
         }
 
@@ -72,13 +71,12 @@ namespace WebApi.Controllers
         public IHttpActionResult SaveBarRating([FromBody]RatingModel barObject)
         {
             var dbManager = new DatabaseManager();
-            // TODO: improve the logic of this thingie
-            var user = new User
+            if (!dbManager.LogIn(barObject.User))
             {
-                Username = "test"
-            };
-            barObject.User = user;
-            if (dbManager.UserCanVote(barObject.BarID, user, out var cooldown))
+                return BadRequest("User authentication failed");
+            }
+                
+            if (dbManager.UserCanVote(barObject.BarID, barObject.User, out var cooldown))
             {
                 try
                 {
@@ -91,20 +89,9 @@ namespace WebApi.Controllers
                 }
                 return Ok("Success");
             }
-            return BadRequest("User cannot vote for " + cooldown.Minutes + " min.");
+            return BadRequest("User cannot vote for " + cooldown.Minutes + " min. on this bar");
         }
 
-        /*[EnableCors(origins: "*", headers: "*", methods: "*")]
-        [HttpPost]
-        public IHttpActionResult GetBarRatings([FromBody]UserAndBarModel userAndBar)
-        {
-            var dbManager = new DatabaseManager();
-            var result = dbManager.GetBarRatings(userAndBar.BarId, userAndBar.User);
-            return Ok(result);
-        }*/
-
-        // TEMPORARY: i think we only need 2 methods in WebApi for now: SaveBarRating(username, rating, barId) and GetBarsByCoordinates(username?, latitude, longitude, radius?)
-        // DO NOT USE THIS
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
         public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody] Coordinate coordinate)

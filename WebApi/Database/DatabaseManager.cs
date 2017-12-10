@@ -25,7 +25,6 @@ namespace WebApi.Database
 
         public bool UserCanVote(string barId, User currentUser, out TimeSpan cooldown)
         {
-            UsersRatingToBar recentRatingByUser = null;
             using (var db = new BarsDatabase())
             {
                 var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser.Username);
@@ -39,26 +38,26 @@ namespace WebApi.Database
                 if (!TimeSpan.TryParse(ratingCooldownPeriod, out var cooldownTimeSpan))
                 {
                     var badCooldown = ratingCooldownPeriod ?? "null";
-                    throw new InvalidOperationException(string.Format("Cofiguration file not present or incorrect value of variable {0} : {1} ", nameof(ratingCooldownPeriod),  badCooldown));
+                    throw new InvalidOperationException(string.Format("Cofiguration file not present or incorrect value of variable {0} : {1} ", 
+                                                                      nameof(ratingCooldownPeriod),  badCooldown));
                 }
                 var cooldownTime = timeNow.Subtract(cooldownTimeSpan);
-                recentRatingByUser = db.UserRatings.FirstOrDefault(x => x.BarId == barId &&
-                                                                   x.Username == currentUser.Username &&
-                                                                   x.RatingDate.CompareTo(cooldownTime) >= 0);
-                cooldown = recentRatingByUser != null ? DateTime.Now.Subtract(recentRatingByUser.RatingDate) : TimeSpan.Zero;
+                var recentRatingByUser = db.UserRatings.FirstOrDefault(x => x.BarId == barId &&
+                                                                       x.Username == currentUser.Username &&
+                                                                       x.RatingDate.CompareTo(cooldownTime) >= 0);
+                cooldown = recentRatingByUser?.RatingDate.Add(cooldownTimeSpan).Subtract(timeNow) ?? TimeSpan.Zero;
                 return recentRatingByUser == null;
             }
         }
 
-        public bool Register(string username, string password)
-        {
+        public bool Register(User currentUser)
+        {         
             using (var db = new BarsDatabase())
             {
-                if (db.Users.FirstOrDefault(user => user.Username == username) != null)
+                if (db.Users.FirstOrDefault(user => user.Username == currentUser.Username) != null)
                 {
                     return false;
                 }
-                var currentUser = new User { Username = username, Password = password };
                 db.Users.Add(currentUser);
                 db.SaveChanges();
                 return true;
@@ -82,6 +81,16 @@ namespace WebApi.Database
                     .DefaultIfEmpty().Average();
                 barInDb.AvgRating = avgRating;
                 db.SaveChanges();
+            }
+        }
+
+        public bool LogIn(User userAttemptingToLogin)
+        {
+            using (var db = new BarsDatabase())
+            {
+                return db.Users.FirstOrDefault(user =>
+                           user.Username == userAttemptingToLogin.Username &&
+                           user.Password == userAttemptingToLogin.Password) != null;
             }
         }
 

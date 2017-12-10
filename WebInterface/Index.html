@@ -15,6 +15,16 @@
     <title></title>
 </head>
 <body>
+
+    <div id="nav-placeholder">
+    </div>
+
+    <script>
+        $(function () {
+            $("#nav-placeholder").load("NavBar.html");
+        });
+    </script>
+
     <button onclick="GetData()" id="loadBars">Load bars</button>
 
     <input type="button" id="Rate" value="Rate" />
@@ -53,6 +63,8 @@
 </html>
 
 <script>
+    var email;
+    var pass;
     var map = null;
     var markers = [];
     var myLocation = null;
@@ -98,18 +110,22 @@
         if (myLocation != null) {
             var e = document.getElementById("radiusBox");
             var radiusFromBox = e.value;
-            coordinates = { lat: myLocation.getPosition().lat(), lng: myLocation.getPosition().lng(), radius: parseInt(radiusFromBox) };
+            coordinates = {
+                lat: myLocation.getPosition().lat(),
+                lng: myLocation.getPosition().lng(),
+                radius: parseInt(radiusFromBox)
+            };
             $.ajax({
                 url: "http://localhost:1726/Api/Data/GetBarsByCoordinates",
                 type: "POST",
                 data: JSON.stringify(coordinates),
                 contentType: "application/json",
                 type: "POST",
-                error: function (request, status, error) {
+                error: function(request, status, error) {
                     stopLoading();
                     alert(JSON.parse(request.responseText).Message);
                 },
-                success: function (data) {
+                success: function(data) {
                     markers = [];
                     for (var i = 0; i < data.length; i++) {
                         var marker = new google.maps.Marker({
@@ -125,18 +141,10 @@
                     setMapOnAll(map);
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
-
-
-                    //$('#barsTable tbody tr').addClass("newclass");
-                    //    $('#barsTable').DataTable().rows.forEach(function (row) {
-                    //         row.addClass("clickable-row");
-                    //    });
-
                     stopLoading();
                 }
             });
-        }
-        else {
+        } else {
             alert("Select your location");
         }
     }
@@ -221,27 +229,34 @@
 
     function SaveBarRating(rating) {
         if (value != null) {
-            beginLoading();
-            $('table').find('tr.highlight').removeClass('highlight');
-            jQuery.support.cors = true;
-            data = { BarID: value, Rating: rating };
-            $.ajax({
-                url: "http://localhost:1726/Api/Data/SaveBarRating",
-                type: "POST",
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                type: "POST",
-                error: function (request, status, error) {
-                    stopLoading();
-                    alert(JSON.parse(request.responseText).Message);
-                },
-                success: function (data) {
-                    value = null;
-                    stopLoading();
+            if (sessionStorage.getItem("email") != null && sessionStorage.getItem("pass") != null) {
+                beginLoading();
+                $('table').find('tr.highlight').removeClass('highlight');
+                jQuery.support.cors = true;
+                data = {
+                    BarID: value,
+                    Rating: rating,
+                    User: { Username: sessionStorage.getItem("email"), Password: sessionStorage.getItem("pass") }
                 }
-            });
-        }
-        else {
+                $.ajax({
+                    url: "http://localhost:1726/Api/Data/SaveBarRating",
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    type: "POST",
+                    error: function(request, status, error) {
+                        stopLoading();
+                        alert(JSON.parse(request.responseText).Message);
+                    },
+                    success: function(data) {
+                        value = null;
+                        stopLoading();
+                    }
+                });
+            } else {
+                alert("You have to Login in order to rate a bar");
+            }
+        } else {
             alert("No bar selected");
         }
     }
@@ -257,4 +272,7 @@
         $(this).addClass('highlight');
     });
 
+ //   window.onbeforeunload = function () {
+ //       sessionStorage.clear();
+ //   };
 </script>
