@@ -21,12 +21,12 @@ namespace WebApi.Database
                 });
             }
         }
-        public bool Register(string username, string password)
-        {
-            User currentUser = new User { Username = username, Password = password };
+
+        public bool Register(User currentUser)
+        {         
             using (var db = new BarsDatabase())
             {
-                if (db.Users.FirstOrDefault<User>(user => user.Username == username) != null)
+                if (db.Users.FirstOrDefault<User>(user => user.Username == currentUser.Username) != null)
                 {
                     return false;
                 }
@@ -35,17 +35,25 @@ namespace WebApi.Database
                 return true;
             }
         }
+
+        public bool LogIn(User User)
+        {
+            using (var db = new BarsDatabase())
+            {
+                if (db.Users.FirstOrDefault<User>(user => user.Username == User.Username && user.Password == User.Password) != null)
+                    return true;
+            }
+            return false;
+        }
         public void SaveBarRating(string BarID, string currentUser, int rating)
         {
             using (var db = new BarsDatabase())
             {
                 var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser);
-                if (userInDb == null)
-                    userInDb = new User { Username = currentUser };
                 var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == BarID);
                 if (barInDb != null)
                 {
-                    var barRating = db.UserRatings.Find(barInDb.BarId, userInDb.Username);
+                    var barRating = barInDb.UserRatings.FirstOrDefault(userRating => userInDb.Username == userRating.Username);
                     if (barRating != null)
                     {
                         barRating.Rating = rating;
@@ -56,12 +64,6 @@ namespace WebApi.Database
                     }
                     db.SaveChanges();
                     barInDb.AvgRating = (float)barInDb.UserRatings.Select(x => x.Rating).DefaultIfEmpty().Average();
-                }
-                else
-                {
-                  //  barToRate.AvgRating = rating;
-                   // db.SaveChanges();
-                   // db.UserRatings.Add(new UsersRatingToBar(barToRate, userInDb, rating));
                 }
                 db.SaveChanges();
             }

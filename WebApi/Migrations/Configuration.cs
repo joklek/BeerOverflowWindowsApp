@@ -7,6 +7,7 @@ namespace WebApi.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(Database.BarsDatabase context)

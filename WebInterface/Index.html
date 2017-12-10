@@ -15,6 +15,16 @@
     <title></title>
 </head>
 <body>
+
+    <div id="nav-placeholder">
+    </div>
+
+    <script>
+        $(function () {
+            $("#nav-placeholder").load("NavBar.html");
+        });
+    </script>
+
     <button onclick="GetData()" id="loadBars">Load bars</button>
 
     <input type="button" id="Rate" value="Rate" />
@@ -43,6 +53,8 @@
 </body>
 </html>
 <script>
+    var email;
+    var pass;
     var map = null;
     var markers = [];
     var myLocation = null;
@@ -108,13 +120,6 @@
                     setMapOnAll(map);
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
-
-
-                    //$('#barsTable tbody tr').addClass("newclass");
-                //    $('#barsTable').DataTable().rows.forEach(function (row) {
-               //         row.addClass("clickable-row");
-                //    });
-
                     stopLoading();
                 }
             });
@@ -182,29 +187,31 @@
     function SaveBarRating(rating) {
         if (value != null)
         {
-            beginLoading();
-            $('table').find('tr.highlight').removeClass('highlight');
-            jQuery.support.cors = true;
-            data = {BarID : value, Rating : rating}
-            $.ajax({
-                url: "http://localhost:1726/Api/Data/SaveBarRating",
-                type: "POST",
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                type: "POST",
-                error: function (request, status, error) {
-                    stopLoading();
-                    alert(request.responseText);
-                },
-                success: function (data) {
-                    value = null;
-                    stopLoading();
-                }
-            });
+            if (sessionStorage.getItem("email") != null && sessionStorage.getItem("pass") != null) {
+                beginLoading();
+                $('table').find('tr.highlight').removeClass('highlight');
+                jQuery.support.cors = true;
+                data = { BarID: value, Rating: rating, User: { Username: sessionStorage.getItem("email"), Password: sessionStorage.getItem("pass") } }
+                $.ajax({
+                    url: "http://localhost:1726/Api/Data/SaveBarRating",
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    type: "POST",
+                    error: function (request, status, error) {
+                        stopLoading();
+                        alert(request.responseText);
+                    },
+                    success: function (data) {
+                        value = null;
+                        stopLoading();
+                    }
+                });
+            } else
+                alert("you have to LogIn in order to rate a bar");
         }
-        else {
+        else
             alert("No bar selected");
-        }
 
     }
 
@@ -219,4 +226,7 @@
         $(this).addClass('highlight');
     })
 
+ //   window.onbeforeunload = function () {
+ //       sessionStorage.clear();
+ //   };
 </script>

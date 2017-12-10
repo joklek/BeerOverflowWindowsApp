@@ -16,11 +16,19 @@ namespace WebApi.Controllers
     {
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult Register([FromBody]String nameAndPass)
+        public IHttpActionResult Register([FromBody]User User)
         {
-            var list = nameAndPass.Split(',');
             var dbManager = new DatabaseManager();
-            bool result = dbManager.Register(list[0], list[1]);
+            bool result = dbManager.Register(User);
+            return Ok(result);
+        }
+
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        [HttpPost]
+        public IHttpActionResult logIn([FromBody]User User)
+        {
+            var dbManager = new DatabaseManager();
+            bool result = dbManager.LogIn(User);
             return Ok(result);
         }
 
@@ -58,11 +66,12 @@ namespace WebApi.Controllers
         public IHttpActionResult SaveBarRating([FromBody] RatingModel barObject)
         {
             var dbManager = new DatabaseManager();
-            dbManager.SaveBarRating(barObject.BarID, "test" , barObject.Rating);
+            if (!dbManager.LogIn(barObject.User))
+                return BadRequest("User authentication failed");
+            dbManager.SaveBarRating(barObject.BarID, barObject.User.Username , barObject.Rating);
             return Ok("Success");
         }
-        //TEMPORARY: should not send unneccesary data
-        //TEMPORARY: probably should save empty bars so it wouldn't be needed to send them through Api when trying to save rating
+
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
         public IHttpActionResult GetBarRatings([FromBody]UserAndBarModel userAndBar)
