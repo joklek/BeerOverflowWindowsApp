@@ -19,15 +19,24 @@
 
     <input type="button" id="Rate" value="Rate" />
 
-    <select id="ratings">
-        <option value="1" selected="selected">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
+<select id="ratings">
+    <option value="1" selected="selected">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+</select>
+    
+    <p>Radius
+        <input type="number"
+               id="radiusBox"
+               min="0"
+               max="150"
+               step="5"
+               value="15">
+    </p>
 
-    <table class="table table-bordered table-condensed table-hover" id="barsTable">
+<table class="table table-bordered table-condensed table-hover" id="barsTable">
         <thead>
             <tr>
                 <th>Id</th>
@@ -87,7 +96,9 @@
         jQuery.support.cors = true;
         var coordinates = null;
         if (myLocation != null) {
-            coordinates = { lat: myLocation.getPosition().lat(), lng: myLocation.getPosition().lng() };
+            var e = document.getElementById("radiusBox");
+            var radiusFromBox = e.value;
+            coordinates = { lat: myLocation.getPosition().lat(), lng: myLocation.getPosition().lng(), radius: parseInt(radiusFromBox) };
             $.ajax({
                 url: "http://localhost:1726/Api/Data/GetBarsByCoordinates",
                 type: "POST",
@@ -161,6 +172,7 @@
                 var marker = new google.maps.Marker({
                     position: myLatLng,
                     map: map,
+                    label : "Me",
                     title: 'My location'
                 });
                 myLocation = marker;

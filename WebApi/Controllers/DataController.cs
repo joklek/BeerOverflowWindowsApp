@@ -113,7 +113,7 @@ namespace WebApi.Controllers
             {
                 Latitude = coordinate.lat,
                 Longitude = coordinate.lng,
-                Radius = 150,
+                Radius = coordinate.radius,
                 User = "test"
             };
             try
