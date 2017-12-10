@@ -9,10 +9,6 @@ using System.Threading.Tasks;
 using WebApi.DataModels;
 using WebApi.Exceptions;
 using WebApi.Utilities;
-using BarData = WebApi.DataModels.BarData;
-using RatingModel = WebApi.DataModels.RatingModel;
-using UserAndBarModel = WebApi.DataModels.UserAndBarModel;
-using UserAndBarsModel = WebApi.DataModels.UserAndBarsModel;
 
 namespace WebApi.Controllers
 {

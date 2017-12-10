@@ -164,6 +164,10 @@
     <Compile Include="Migrations\201711202252009_InitialCreate.Designer.cs">
       <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712091151551_AddAddress.cs" />
+    <Compile Include="Migrations\201712091151551_AddAddress.Designer.cs">
+      <DependentUpon>201712091151551_AddAddress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -195,6 +199,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711202252009_InitialCreate.resx">
       <DependentUpon>201711202252009_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712091151551_AddAddress.resx">
+      <DependentUpon>201712091151551_AddAddress.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

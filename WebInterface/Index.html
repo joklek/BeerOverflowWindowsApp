@@ -44,6 +44,7 @@
                 <th>Title</th>
                 <th>Category</th>
                 <th>Rating</th>
+                <th>Address</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -63,10 +64,11 @@
                 { data: 'BarId' },
                 { data: 'Title' },
                 { data: 'Categories' },
-                { data: 'AvgRating' }
+                { data: 'AvgRating' },
+                { data: 'StreetAddress' }
             ]
         });
-        initMap();        
+        initMap();
     });
     function addMarker(position, label) {
 
@@ -124,8 +126,7 @@
         } 
         else {
             alert("Select your location");
-        }
-        
+        } 
     }
     
     function initMap() {

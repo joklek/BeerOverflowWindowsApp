@@ -46,6 +46,7 @@ namespace WebApi.Utilities
                 }
                 catch (WebException)
                 {
+                    Console.Write("Provider \"{0}\" is down\n", provider.ProviderName);
                     // Provider is down, lets just ignore it
                 }
             }
