@@ -14,6 +14,16 @@
 </head>
 
 <body>
+
+    <div id="nav-placeholder">
+    </div>
+
+    <script>
+        $(function () {
+            $("#nav-placeholder").load("NavBar.html");
+        });
+    </script>
+
     <div class="container">
         <h2>BeerOverflow Register</h2>
         
@@ -30,10 +40,6 @@
                     <button onclick="Register()" type="submit" class="btn btn-primary">Submit</button> 
                 </div>
             </div>
-            <div class="col-sm-offset-2 col-sm-10"> 
-                <a class="btn btn-primary" href="Initial.html" role="button">Home</a> 
-            </div>
-         
     </div>
 </body>
 
