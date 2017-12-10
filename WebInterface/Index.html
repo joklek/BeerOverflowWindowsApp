@@ -59,6 +59,7 @@
         });
         initMap();
     });
+
     function addMarker(position, label) {
 
         var marker = new google.maps.Marker({
@@ -95,7 +96,7 @@
                 type: "POST",
                 error: function (request, status, error) {
                     stopLoading();
-                    alert(request.responseText);
+                    alert(JSON.parse(request.responseText).Message);
                 },
                 success: function (data) {
                     markers = [];
@@ -106,6 +107,8 @@
                             map: map
                         });
                         markers.push(marker);
+                        //data[i].AvgRating = Math.round(AvgRating * 10) / 10;
+                        data[i].Categories = enumToText(data[i].Categories);
                     }
                     setMapOnAll(null);
                     setMapOnAll(map);
@@ -125,6 +128,28 @@
         else {
             alert("Select your location");
         }
+    }
+
+    var CategoryTypes = [ "None", "Bar", "Restaurant", "Club" ];
+
+    function enumToText(myEnum) {
+        var categoryString = "";
+        if (myEnum === 0) {
+            categoryString = CategoryTypes[0];
+        } else {
+            for (var i = 1; i < CategoryTypes.length; i++) {
+                if ((myEnum & Math.pow(2,i-1)) !== 0) {
+                    if(categoryString !== "") {
+                        categoryString += " | ";
+                    }
+                    categoryString += CategoryTypes[i];
+                }
+            }
+            if (categoryString === "") {
+                categoryString = CategoryTypes[0];
+            }
+        }
+        return categoryString;
     }
 
     function initMap() {
@@ -196,7 +221,7 @@
                 type: "POST",
                 error: function (request, status, error) {
                     stopLoading();
-                    alert(request.responseText);
+                    alert(JSON.parse(request.responseText).Message);
                 },
                 success: function (data) {
                     value = null;
