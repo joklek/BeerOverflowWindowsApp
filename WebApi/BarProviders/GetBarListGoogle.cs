@@ -75,7 +75,7 @@ namespace WebApi.BarProviders
 
         private static BarData PlaceToBar(Place place)
         {
-            var vicinitySplit = place.Vicinity.Split(',');
+            var vicinitySplit = place.Vicinity?.Split(',') ?? new string[]{};
             var newBar = new BarData
             {
                 Title = place.Name,

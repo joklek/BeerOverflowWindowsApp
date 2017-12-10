@@ -20,13 +20,12 @@ namespace WebApi.Utilities
             new GetBarListTripAdvisor(new JsonFetcher())
         };
 
-
         public static async Task<BarDataModel> RequestBarsAroundCoords(LocationRequestModel locationRequest)
         {
             return await RequestBarsAroundCoords(locationRequest.Latitude, locationRequest.Longitude, locationRequest.Radius, locationRequest.User);
         }
 
-        public static async Task<BarDataModel> RequestBarsAroundCoords(double latitude, double longitude, double radius, string user)
+        public static async Task<BarDataModel> RequestBarsAroundCoords(double latitude, double longitude, double radius, User user)
         {
             var result = new BarDataModel();
             var failedToConnectCounter = 0;

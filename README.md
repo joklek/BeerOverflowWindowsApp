@@ -8,26 +8,20 @@ Made in Visual Studio with C#.
 
 _ _ _
 ## How to setup
-After cloning the project and restoring NuGet packages, click on the solution>Set StartUp Projects...>Multiple startup projects. Choose BeerOverflow and WebApi
+After cloning the project and restoring NuGet packages, click on the solution>Set StartUp Projects...>Multiple startup projects. Choose WebInterface and WebApi
 
 _ _ _
 ## What's already done:
 - Place fetching from Google Places, Foursquare, Facebook, TripAdvisor.
 - Place rating.
-- Place sorting by distance, rating, name.
-- Two UI components for bar rating. Currently using one.
 - Moderately cute UI.
-- Use databases.
-- WebAPI project.
-- Show map.
+- WebAPI project and fronted.
+- Show bars on the map.
 
 _ _ _
 ## To Be Done
-- Show bars on the map.
-- Beer amount recognition from camera input.
 - ???
 
 _ _ _
 ## Screenshots
 
- ![Screenshot](https://i.imgur.com/h0CFwQd.png)

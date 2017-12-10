@@ -82,7 +82,6 @@
     });
 
     function addMarker(position, label) {
-
         var marker = new google.maps.Marker({
             position: position,
             title: label,
@@ -106,19 +105,19 @@
     function GetData() {
         beginLoading();
         jQuery.support.cors = true;
-        var coordinates = null;
         if (myLocation != null) {
             var e = document.getElementById("radiusBox");
             var radiusFromBox = e.value;
-            coordinates = {
-                lat: myLocation.getPosition().lat(),
-                lng: myLocation.getPosition().lng(),
-                radius: parseInt(radiusFromBox)
-            };
+            var requestBody = {
+                Latitude: myLocation.getPosition().lat(),
+                Longitude: myLocation.getPosition().lng(),
+                Radius: parseInt(radiusFromBox),
+                User: { Username: sessionStorage.getItem("email"), Password: sessionStorage.getItem("pass") }
+        };
             $.ajax({
-                url: "http://localhost:1726/Api/Data/GetBarsByCoordinates",
+                url: "http://localhost:1726/Api/Data/GetBarsAround",
                 type: "POST",
-                data: JSON.stringify(coordinates),
+                data: JSON.stringify(requestBody),
                 contentType: "application/json",
                 type: "POST",
                 error: function(request, status, error) {
@@ -271,8 +270,4 @@
         $('table').find('tr.highlight').removeClass('highlight');
         $(this).addClass('highlight');
     });
-
- //   window.onbeforeunload = function () {
- //       sessionStorage.clear();
- //   };
 </script>
