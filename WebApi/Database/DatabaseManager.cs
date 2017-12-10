@@ -23,7 +23,7 @@ namespace WebApi.Database
             }
         }
 
-        public bool UserCanVote(string barId, User currentUser)
+        public bool UserCanVote(string barId, User currentUser, out TimeSpan cooldown)
         {
             UsersRatingToBar recentRatingByUser = null;
             using (var db = new BarsDatabase())
@@ -31,6 +31,7 @@ namespace WebApi.Database
                 var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser.Username);
                 if (userInDb == null || barId == null)
                 {
+                    cooldown = TimeSpan.Zero;
                     return false;
                 }
 
@@ -44,6 +45,7 @@ namespace WebApi.Database
                 recentRatingByUser = db.UserRatings.FirstOrDefault(x => x.BarId == barId &&
                                                                    x.Username == currentUser.Username &&
                                                                    x.RatingDate.CompareTo(cooldownTime) >= 0);
+                cooldown = recentRatingByUser != null ? DateTime.Now.Subtract(recentRatingByUser.RatingDate) : TimeSpan.Zero;
                 return recentRatingByUser == null;
             }
         }
@@ -67,7 +69,7 @@ namespace WebApi.Database
         {
             using (var db = new BarsDatabase())
             {
-                if (!UserCanVote(barId, currentUser)) return;
+                if (!UserCanVote(barId, currentUser, out var cooldown)) return;
                 var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == barId);
                 if (barInDb == null)
                 {

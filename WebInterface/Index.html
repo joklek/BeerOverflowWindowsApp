@@ -107,7 +107,7 @@
                             map: map
                         });
                         markers.push(marker);
-                        //data[i].AvgRating = Math.round(AvgRating * 10) / 10;
+                        data[i].AvgRating = Math.round(data[i].AvgRating * 100) / 100;
                         data[i].Categories = enumToText(data[i].Categories);
                     }
                     setMapOnAll(null);

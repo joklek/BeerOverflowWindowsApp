@@ -78,7 +78,7 @@ namespace WebApi.Controllers
                 Username = "test"
             };
             barObject.User = user;
-            if (dbManager.UserCanVote(barObject.BarID, user))
+            if (dbManager.UserCanVote(barObject.BarID, user, out var cooldown))
             {
                 try
                 {
@@ -91,7 +91,7 @@ namespace WebApi.Controllers
                 }
                 return Ok("Success");
             }
-            return BadRequest("Cannot vote");
+            return BadRequest("User cannot vote for " + cooldown.Minutes + " min.");
         }
 
         /*[EnableCors(origins: "*", headers: "*", methods: "*")]
