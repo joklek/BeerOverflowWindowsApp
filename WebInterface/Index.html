@@ -89,7 +89,10 @@
     function CreateMapAndCenter(myLatLng, radius) {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: radius,
-            disableDefaultUI: true
+            disableDefaultUI: true,
+            styles: [
+                { featureType: "poi", stylers: [{ visibility: "off" }] }
+            ]
         });
         CenterMapOn(myLatLng, radius);
         for (var i = 0; i < markers.length; i++) {
