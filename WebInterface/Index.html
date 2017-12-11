@@ -174,9 +174,10 @@
                     clearBarMarkers();
                     for (var i = 0; i < data.length; i++) {
                         var marker = CreateNewMarker({ lat: data[i].Latitude, lng: data[i].Longitude }, data[i].Title);
+                        addInfoWindow(marker, data[i]);
                         markers.push(marker);
                         data[i].AvgRating = Math.round(data[i].AvgRating * 100) / 100;
-                        data[i].Categories = enumToText(data[i].Categories);
+                        data[i].Categories = enumToText(data[i].Categories, CategoryTypes);
                     }
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
@@ -188,23 +189,40 @@
         }
     }
 
+    function addInfoWindow(marker, barInfo) {
+        var infowindow = new google.maps.InfoWindow({
+            content: createBarDescription(barInfo)
+        });
+        marker.addListener('click', function () {
+            infowindow.open(map, marker);
+        });
+    }
+
+    function createBarDescription(barInfo) {
+        var description = "<p>Place name: " + barInfo.Title + "<\p>" +
+            "<p>Average rating: " + barInfo.AvgRating + "<\p>" +
+            "<p>Categories: " + enumToText(barInfo.Categories, CategoryTypes) + "<\p>" +
+            "<p>Place address: " + barInfo.StreetAddress + "<\p>";
+        return description;
+    }
+
     var CategoryTypes = ["None", "Bar", "Restaurant", "Club"];
 
-    function enumToText(myEnum) {
+    function enumToText(myEnum, enumText) {
         var categoryString = "";
         if (myEnum === 0) {
-            categoryString = CategoryTypes[0];
+            categoryString = enumText[0];
         } else {
-            for (var i = 1; i < CategoryTypes.length; i++) {
+            for (var i = 1; i < enumText.length; i++) {
                 if ((myEnum & Math.pow(2, i - 1)) !== 0) {
                     if (categoryString !== "") {
                         categoryString += " | ";
                     }
-                    categoryString += CategoryTypes[i];
+                    categoryString += enumText[i];
                 }
             }
             if (categoryString === "") {
-                categoryString = CategoryTypes[0];
+                categoryString = enumText[0];
             }
         }
         return categoryString;
