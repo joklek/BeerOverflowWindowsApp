@@ -12,7 +12,7 @@
     <script src="Scripts/DataTables/media/js/jquery.dataTables.min.js"></script>
     <script src="Scripts/DataTables/media/js/dataTables.bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyABC7_vGTsEEEvHlUAcBom9JYvJ5q2tooc" type="text/javascript"></script>
-    <title></title>
+    <title>BeerOverflow</title>
 </head>
 <body>
 
@@ -69,6 +69,9 @@
     var map = null;
     var markers = [];
     var myLocation = null;
+    var beerIconUnchecked = "https://chart.googleapis.com/chart?chst=d_simple_text_icon_left&chld=|0|0|beer|24|DF0|FFF";
+    var beerIconChecked = "https://chart.googleapis.com/chart?chst=d_simple_text_icon_left&chld=|0|0|beer|24|F00|FFF";
+
     $(document).ready(function () {
         $('#barsTable').DataTable({
             columns: [
@@ -136,17 +139,18 @@
         clearBarMarkers();
     }
 
-    function CreateNewMarker(position, title) {
+    function CreateNewMarker(position, title, icon) {
         return new google.maps.Marker({
             position: position,
             title: title,
-            map: map
+            map: map,
+            icon: icon
         });
     }
 
     function CreateUserMarker(myLatLng) {
-        myLocation = CreateNewMarker(myLatLng, "My Location");
-        myLocation.setLabel("Me");
+        myLocation = CreateNewMarker(myLatLng, "My Location", null);
+        //myLocation.setLabel("Me"); // Looks ugly
         return myLocation;
     }
 
@@ -179,7 +183,7 @@
                 success: function (data) {
                     clearBarMarkers();
                     for (var i = 0; i < data.length; i++) {
-                        var marker = CreateNewMarker({ lat: data[i].Latitude, lng: data[i].Longitude }, data[i].Title);
+                        var marker = CreateNewMarker({ lat: data[i].Latitude, lng: data[i].Longitude }, data[i].Title, beerIconUnchecked);
                         addInfoWindow(marker, data[i]);
                         markers.push(marker);
                         data[i].AvgRating = Math.round(data[i].AvgRating * 100) / 100;
@@ -305,12 +309,24 @@
         if (table.dataTable().fnSettings().aoData.length !== 0) {
             var barName = this.cells[1].innerText;
             var marker = getMapMarker(barName);
+            uncheckAllBars();
+            checkOneBar(marker);
             var coords = { lat: marker.__gm.Xd.ga.x, lng: marker.__gm.Xd.ga.y };
             createAndCenter(coords, 18);
             table.find('tr.highlight').removeClass('highlight');
             $(this).addClass('highlight');
         }
     });
+
+    function checkOneBar(marker) {
+        marker.setIcon = beerIconChecked;
+    }
+
+    function uncheckAllBars () {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setIcon = beerIconUnchecked;
+        }
+    }
 
     function getMapMarker(placeName) {
         for (var marker in markers) {
