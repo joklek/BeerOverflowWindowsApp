@@ -111,9 +111,8 @@
             var requestBody = {
                 Latitude: myLocation.getPosition().lat(),
                 Longitude: myLocation.getPosition().lng(),
-                Radius: parseInt(radiusFromBox),
-                User: { Username: sessionStorage.getItem("email"), Password: sessionStorage.getItem("pass") }
-        };
+                Radius: parseInt(radiusFromBox)
+            };
             $.ajax({
                 url: "http://localhost:1726/Api/Data/GetBarsAround",
                 type: "POST",

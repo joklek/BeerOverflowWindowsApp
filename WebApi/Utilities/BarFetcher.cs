@@ -22,10 +22,10 @@ namespace WebApi.Utilities
 
         public static async Task<BarDataModel> RequestBarsAroundCoords(LocationRequestModel locationRequest)
         {
-            return await RequestBarsAroundCoords(locationRequest.Latitude, locationRequest.Longitude, locationRequest.Radius, locationRequest.User);
+            return await RequestBarsAroundCoords(locationRequest.Latitude, locationRequest.Longitude, locationRequest.Radius);
         }
 
-        public static async Task<BarDataModel> RequestBarsAroundCoords(double latitude, double longitude, double radius, User user)
+        public static async Task<BarDataModel> RequestBarsAroundCoords(double latitude, double longitude, double radius)
         {
             var result = new BarDataModel();
             var failedToConnectCounter = 0;
