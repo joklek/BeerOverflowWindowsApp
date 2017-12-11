@@ -78,12 +78,12 @@ namespace WebApi.Controllers
             {
                 return BadRequest("User authentication failed");
             }
-                
+
             if (dbManager.UserCanVote(barObject.BarID, barObject.User, out var cooldown))
             {
                 try
                 {
-                    dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);                   
+                    dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);
                 }
                 catch (InvalidOperationException e)
                 {
@@ -98,16 +98,16 @@ namespace WebApi.Controllers
         private static List<BarResponseModel> BarDataToResponseModel(IEnumerable<BarData> barList)
         {
             var responseModelList = barList.Select(bar => new BarResponseModel
-                {
-                    BarId = bar.BarId,
-                    Title = bar.Title,
-                    Latitude = bar.Latitude,
-                    Longitude = bar.Longitude,
-                    AvgRating = bar.AvgRating,
-                    Categories = bar.Categories,
-                    City = bar.City,
-                    StreetAddress = bar.StreetAddress
-                }).ToList();
+            {
+                BarId = bar.BarId,
+                Title = bar.Title,
+                Latitude = bar.Latitude,
+                Longitude = bar.Longitude,
+                AvgRating = bar.AvgRating,
+                Categories = bar.Categories,
+                City = bar.City,
+                StreetAddress = bar.StreetAddress
+            }).ToList();
             return responseModelList;
         }
     }

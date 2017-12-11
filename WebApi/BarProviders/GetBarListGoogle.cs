@@ -23,7 +23,6 @@ namespace WebApi.BarProviders
             _fetcher = fetcher;
         }
 
-
         public List<BarData> GetBarsAround(double latitude, double longitude, double radius)
         {
             InputDataValidator.LocationDataIsCorrect(latitude, longitude, radius);
@@ -38,7 +37,13 @@ namespace WebApi.BarProviders
             var placeList = new List<Place>();
             foreach (var category in categoryList)
             {
-                var link = string.Format(_apiLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), category, _apiKey, CultureInfo.InvariantCulture);
+                var link = string.Format(_apiLink, 
+                                        latitude.ToString(CultureInfo.InvariantCulture), 
+                                        longitude.ToString(CultureInfo.InvariantCulture), 
+                                        radius.ToString(CultureInfo.InvariantCulture), 
+                                        category, 
+                                        _apiKey, 
+                                        CultureInfo.InvariantCulture);
                 var deserialized = FetcherAndDeserializer.FetchAndDeserialize<PlacesApiQueryResponse>(link, _fetcher).Results;
                 deserialized.ForEach(x => x.Category = category);
                 placeList.AddRange(deserialized);
@@ -60,7 +65,13 @@ namespace WebApi.BarProviders
             var placeList = new List<Place>();
             foreach (var category in categoryList)
             {
-                var link = string.Format(_apiLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), category, _apiKey, CultureInfo.InvariantCulture);
+                var link = string.Format(_apiLink, 
+                                        latitude.ToString(CultureInfo.InvariantCulture), 
+                                        longitude.ToString(CultureInfo.InvariantCulture), 
+                                        radius.ToString(CultureInfo.InvariantCulture), 
+                                        category, 
+                                        _apiKey, 
+                                        CultureInfo.InvariantCulture);
                 var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesApiQueryResponse>(link, _fetcher);
                 deserializedResponse.Results.ForEach(x => x.Category = category);
                 placeList.AddRange(deserializedResponse.Results);
@@ -93,7 +104,6 @@ namespace WebApi.BarProviders
             {
                 newBar.StreetAddress = place.Vicinity?.Trim();
             }
-
             return newBar;
         }
 
@@ -104,7 +114,6 @@ namespace WebApi.BarProviders
                 (category => category.Split('|')).Select
                 (splitCategory => new CategoryUnconverted { NameFromProvider = splitCategory[0], NameNormalized = splitCategory[1] })
                 .ToList();
-
             var foundCategory = listOfCategories.FirstOrDefault(x => x.NameFromProvider == place.Category);
             if (foundCategory != null && Enum.TryParse(foundCategory.NameNormalized, true, out CategoryTypes foundCategoryEnum))
             {

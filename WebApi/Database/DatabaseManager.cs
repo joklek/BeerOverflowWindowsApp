@@ -33,7 +33,6 @@ namespace WebApi.Database
                     cooldown = TimeSpan.Zero;
                     return false;
                 }
-
                 var timeNow = DateTime.Now;
                 if (!TimeSpan.TryParse(ratingCooldownPeriod, out var cooldownTimeSpan))
                 {
