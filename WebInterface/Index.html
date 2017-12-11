@@ -69,7 +69,7 @@
     var map = null;
     var markers = [];
     var myLocation = null;
-    var CategoryTypes = ["None", "Bar", "Restaurant", "Club"];
+    var categoryTypes = ["None", "Bar", "Restaurant", "Club"];
     var beerIconUnchecked = "https://chart.googleapis.com/chart?chst=d_simple_text_icon_left&chld=|0|0|beer|24|DF0|333";
     var beerIconChecked = "https://chart.googleapis.com/chart?chst=d_simple_text_icon_left&chld=|0|0|beer|24|F00|333";
 
@@ -83,10 +83,10 @@
                 { data: 'StreetAddress' }
             ]
         });
-        initMap();
+        InitMap();
     });
 
-    function createAndCenter(myLatLng, radius) {
+    function CreateMapAndCenter(myLatLng, radius) {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: radius,
             disableDefaultUI: true
@@ -100,18 +100,18 @@
         }
     }
 
-    function initMap() {
+    function InitMap() {
         var myLatLng = { lat: 54.684815, lng: 25.288464 };
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 myLatLng = { lat: position.coords.latitude, lng: position.coords.longitude };
-                createAndCenter(myLatLng, 15);
+                CreateMapAndCenter(myLatLng, 15);
                 LoadMap();
                 myLocation = CreateUserMarker(myLatLng);
             });
         }
         else {
-            createAndCenter(myLatLng, 15);
+            CreateMapAndCenter(myLatLng, 15);
             LoadMap();
             myLocation = CreateUserMarker(myLatLng);
         }
@@ -119,26 +119,21 @@
 
     function LoadMap() {
         google.maps.event.addListener(map, 'click', function (event) {
-            clearUserMarkers();
+            ClearUserMarkers();
             CreateUserMarker(event.latLng);
         });
     }
 
-    function clearUserMarkers() {
+    function ClearUserMarkers() {
         myLocation.setMap(null);
         myLocation = null;
     }
 
-    function clearBarMarkers() {
+    function ClearBarMarkers() {
         for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(null);
         }
         markers = [];
-    }
-
-    function clearAllMarkers() {
-        clearUserMarkers();
-        clearBarMarkers();
     }
 
     function CreateNewMarker(position, title, icon) {
@@ -161,7 +156,7 @@
     }
 
     function GetData() {
-        beginLoading();
+        BeginLoading();
         jQuery.support.cors = true;
         if (myLocation != null) {
             var e = document.getElementById("radiusBox");
@@ -178,24 +173,24 @@
                 contentType: "application/json",
                 type: "POST",
                 error: function (request, status, error) {
-                    stopLoading();
+                    StopLoading();
                     alert(JSON.parse(request.responseText).Message);
                 },
                 success: function (data) {
-                    clearBarMarkers();
+                    ClearBarMarkers();
                     for (var i = 0; i < data.length; i++) {
                         var marker = CreateNewMarker({ lat: data[i].Latitude, lng: data[i].Longitude }, data[i].Title, beerIconUnchecked);
                         data[i].AvgRating = Math.round(data[i].AvgRating * 100) / 100;
-                        data[i].Categories = enumToText(data[i].Categories, CategoryTypes);
+                        data[i].Categories = EnumToText(data[i].Categories, categoryTypes);
                         if (data[i].StreetAddress == null) {
                             data[i].StreetAddress = "Address is not available";
                         }
-                        addInfoWindow(marker, data[i]);
+                        AddInfoWindow(marker, data[i]);
                         markers.push(marker);
                     }
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
-                    stopLoading();
+                    StopLoading();
                 }
             });
         } else {
@@ -203,24 +198,24 @@
         }
     }
 
-    function addInfoWindow(marker, barInfo) {
+    function AddInfoWindow(marker, barInfo) {
         var infoWindow = new google.maps.InfoWindow({
-            content: createBarDescription(barInfo)
+            content: CreateBarDescription(barInfo)
         });
         marker.addListener('click', function () {
             infoWindow.open(map, marker);
         });
     }
 
-    function createBarDescription(barInfo) {
+    function CreateBarDescription(barInfo) {
         var description = "<p>Place name: <b>" + barInfo.Title + "</b><\p>" +
                           "<p>Average rating: <b>" + barInfo.AvgRating + "</b><\p>" +
-                          "<p>Categories: <b>" + enumToText(barInfo.Categories, CategoryTypes) + "</b><\p>" +
+                          "<p>Categories: <b>" + EnumToText(barInfo.Categories, categoryTypes) + "</b><\p>" +
                           "<p>Place address: <b>" + barInfo.StreetAddress + "</b><\p>";
         return description;
     }
 
-    function enumToText(myEnum, enumText) {
+    function EnumToText(myEnum, enumText) {
         var categoryString = "";
         if (myEnum === 0) {
             categoryString = enumText[0];
@@ -240,14 +235,14 @@
         return categoryString;
     }
 
-    function beginLoading() {
+    function BeginLoading() {
         $("#loadBars").text("Loading...");
         $("#loadBars").prop('disabled', true);
         $("#Rate").text("Loading...");
         $("#Rate").prop('disabled', true);
     }
 
-    function stopLoading() {
+    function StopLoading() {
         $("#loadBars").text("Load bars");
         $("#loadBars").prop('disabled', false);
         $("#Rate").text("Rate");
@@ -273,7 +268,7 @@
     function SaveBarRating(rating) {
         if (selectedbar != null) {
             if (sessionStorage.getItem("email") != null && sessionStorage.getItem("pass") != null) {
-                beginLoading();
+                BeginLoading();
                 $('table').find('tr.highlight').removeClass('highlight');
                 jQuery.support.cors = true;
                 data = {
@@ -288,7 +283,7 @@
                     contentType: "application/json",
                     type: "POST",
                     error: function (request, status, error) {
-                        stopLoading();
+                        StopLoading();
                         alert(JSON.parse(request.responseText).Message);
                     },
                     success: function (data) {   
@@ -302,7 +297,7 @@
                             }
                         }
                         selectedbar = null;
-                        stopLoading();
+                        StopLoading();
                     }
                 });
             } else {
@@ -323,27 +318,27 @@
         var table = $('table');
         if (table.dataTable().fnSettings().aoData.length !== 0) {
             var barName = this.cells[0].innerText;
-            var marker = getMapMarker(barName);
-            uncheckAllBars();
-            checkOneBar(marker);
+            var marker = GetMapMarker(barName);
+            UncheckAllBars();
+            CheckOneBar(marker);
             var coords = { lat: marker.__gm.Xd.ga.x, lng: marker.__gm.Xd.ga.y };
-            createAndCenter(coords, 18);
+            CreateMapAndCenter(coords, 18);
             table.find('tr.highlight').removeClass('highlight');
             $(this).addClass('highlight');
         }
     });
 
-    function checkOneBar(marker) {
+    function CheckOneBar(marker) {
         marker.setIcon = beerIconChecked;
     }
 
-    function uncheckAllBars () {
+    function UncheckAllBars () {
         for (var i = 0; i < markers.length; i++) {
             markers[i].setIcon = beerIconUnchecked;
         }
     }
 
-    function getMapMarker(placeName) {
+    function GetMapMarker(placeName) {
         for (var marker in markers) {
             if (markers.hasOwnProperty(marker)) {
                 if (markers[marker].title === placeName) {
