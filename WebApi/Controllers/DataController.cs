@@ -83,14 +83,14 @@ namespace WebApi.Controllers
             {
                 try
                 {
-                    dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);
+                    dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);                   
                 }
                 catch (InvalidOperationException e)
                 {
                     Console.WriteLine(e);
                     return InternalServerError();
                 }
-                return Ok("Success");
+                return Ok(dbManager.GetBarRating(barObject.BarID));
             }
             return BadRequest("User cannot vote for " + cooldown.Minutes + " min. on this bar");
         }
