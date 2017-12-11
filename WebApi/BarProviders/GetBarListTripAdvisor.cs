@@ -30,10 +30,10 @@ namespace WebApi.BarProviders
         {
             InputDataValidator.LocationDataIsCorrect(latitude, longitude, radius);
             var placeList = GetBarData(latitude, longitude);
-            var barList = PlaceListToBarList(placeList);
             RemovePlacesOutsideRadius(placeList, radius);
             FetchLocations(placeList);
             RemoveUnneededPlaces(placeList);
+            var barList = PlaceListToBarList(placeList);
             return barList;
         }
 
