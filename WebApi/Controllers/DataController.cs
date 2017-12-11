@@ -17,6 +17,7 @@ namespace WebApi.Controllers
     {
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
+
         public IHttpActionResult Register([FromBody]User userToRegister)
         {
             var dbManager = new DatabaseManager();
@@ -26,6 +27,7 @@ namespace WebApi.Controllers
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
+
         public IHttpActionResult LogIn([FromBody]User userAttemptingToLogin)
         {
             var dbManager = new DatabaseManager();
@@ -35,6 +37,7 @@ namespace WebApi.Controllers
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
+
         public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
@@ -44,6 +47,7 @@ namespace WebApi.Controllers
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
+
         public async Task<IHttpActionResult> GetBarsAround([FromBody]LocationRequestModel locationRequest)
         {
             try
@@ -59,7 +63,6 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
-
             var names = result.Select(x => x.BarId).ToList();
             var dbMgr = new DatabaseManager();
             result = dbMgr.GetAllBarData(names);
@@ -71,6 +74,7 @@ namespace WebApi.Controllers
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
+
         public IHttpActionResult SaveBarRating([FromBody]RatingModel barObject)
         {
             var dbManager = new DatabaseManager();
@@ -78,21 +82,18 @@ namespace WebApi.Controllers
             {
                 return BadRequest("User authentication failed");
             }
-                
-            if (dbManager.UserCanVote(barObject.BarID, barObject.User, out var cooldown))
+            if (!dbManager.UserCanVote(barObject.BarID, barObject.User, out var cooldown))
+                return BadRequest("User cannot vote for " + cooldown.Minutes + " min. on this bar");
+            try
             {
-                try
-                {
-                    dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);
-                }
-                catch (InvalidOperationException e)
-                {
-                    Console.WriteLine(e);
-                    return InternalServerError();
-                }
-                return Ok("Success");
+                dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);
             }
-            return BadRequest("User cannot vote for " + cooldown.Minutes + " min. on this bar");
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e);
+                return InternalServerError();
+            }
+            return Ok("Success");
         }
 
         private static List<BarResponseModel> BarDataToResponseModel(IEnumerable<BarData> barList)

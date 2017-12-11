@@ -181,7 +181,6 @@
     <Compile Include="Utilities\IHttpFetcher.cs" />
     <Compile Include="Utilities\InputDataValidator.cs" />
     <Compile Include="Utilities\JsonFetcher.cs" />
-    <Compile Include="Utilities\RegexTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

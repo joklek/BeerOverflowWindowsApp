@@ -30,10 +30,10 @@ namespace WebApi.BarProviders
         {
             InputDataValidator.LocationDataIsCorrect(latitude, longitude, radius);
             var placeList = GetBarData(latitude, longitude);
+            var barList = PlaceListToBarList(placeList);
             RemovePlacesOutsideRadius(placeList, radius);
             FetchLocations(placeList);
             RemoveUnneededPlaces(placeList);
-            var barList = PlaceListToBarList(placeList);
             return barList;
         }
 
@@ -43,7 +43,11 @@ namespace WebApi.BarProviders
             var placeList =  new List<PlaceInfo>();
             foreach (var category in categories)
             {
-                var link = string.Format(_mapperLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), _accessKey, category);
+                var link = string.Format(_mapperLink, 
+                                        latitude.ToString(CultureInfo.InvariantCulture), 
+                                        longitude.ToString(CultureInfo.InvariantCulture), 
+                                        _accessKey, 
+                                        category);
                 placeList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<PlacesResponse>(link, _fetcher).data);
             }
             return placeList;
@@ -81,7 +85,11 @@ namespace WebApi.BarProviders
             var placeList = new List<PlaceInfo>();
             foreach (var category in categories)
             {
-                var link = string.Format(_mapperLink, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), _accessKey, category);
+                var link = string.Format(_mapperLink, 
+                                        latitude.ToString(CultureInfo.InvariantCulture), 
+                                        longitude.ToString(CultureInfo.InvariantCulture), 
+                                        _accessKey, 
+                                        category);
                 var deserializedResponse = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesResponse>(link, _fetcher);
                 placeList.AddRange(deserializedResponse.data);
             }
@@ -110,8 +118,7 @@ namespace WebApi.BarProviders
 
         private void RemovePlacesOutsideRadius(List<PlaceInfo> placeList, double radius)
         {
-            placeList.RemoveAll(x =>
-                ConvertMilesToMeters(x.distance) > radius);
+            placeList.RemoveAll(x => ConvertMilesToMeters(x.distance) > radius);
         }
 
         private void RemoveUnneededPlaces(List<PlaceInfo> placeList)
@@ -136,13 +143,9 @@ namespace WebApi.BarProviders
         private static CategoryTypes CollectCategories(PlaceInfo place)
         {
             var placeCategories = CategoryTypes.None;
-            
             if (IsAValidAttraction(place))
             {
                 var placeCategoryList = place.locationResponse.groups.SelectMany(group => group.categories);
-                // strings are formated like this "VendorCatName1|catName1,VendorCatName2|catName2,..."
-                // So first split at the ',': "VendorCatName1|catName1" , "VendorCatName2|catName2", ...
-                // then split at '|': "VendorCatName1", "catName1", "VendorCatName2", "catName2", ...
                 var listOfCategories = _applicableGroupCategories.Split(',').Select
                     (category => category.Split('|')).Select
                     (splitCategory => new CategoryUnconverted { NameFromProvider = splitCategory[0], NameNormalized = splitCategory[1] })
@@ -167,7 +170,6 @@ namespace WebApi.BarProviders
         {
             var allowedGroupList = _applicableGroupsString.Split(',').ToList();
             var allowedGroupCategoryList = _applicableGroupCategories.Split(',').ToList();
-
             return place.locationResponse.groups != null &&
                    place.locationResponse.groups.Exists(x => allowedGroupList.Contains(x.name)) &&
                    place.locationResponse.groups.Any(group => group.categories.Exists(x => allowedGroupCategoryList.Contains(x.name)));
