@@ -82,11 +82,17 @@
         initMap();
     });
 
-    function createAndCenter(myLatLng) {
+    function createAndCenter(myLatLng, radius) {
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 0
+            zoom: radius
         });
-        CenterMapOn(myLatLng, 15);
+        CenterMapOn(myLatLng, radius);
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+        if (myLocation != null) {
+            myLocation.setMap(map);
+        }
     }
 
     function initMap() {
@@ -94,13 +100,13 @@
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 myLatLng = { lat: position.coords.latitude, lng: position.coords.longitude };
-                createAndCenter(myLatLng);
+                createAndCenter(myLatLng, 15);
                 LoadMap();
                 myLocation = CreateUserMarker(myLatLng);
             });
         }
         else {
-            createAndCenter(myLatLng);
+            createAndCenter(myLatLng, 15);
             LoadMap();
             myLocation = CreateUserMarker(myLatLng);
         }
@@ -199,10 +205,10 @@
     }
 
     function createBarDescription(barInfo) {
-        var description = "<p>Place name: " + barInfo.Title + "<\p>" +
-            "<p>Average rating: " + barInfo.AvgRating + "<\p>" +
-            "<p>Categories: " + enumToText(barInfo.Categories, CategoryTypes) + "<\p>" +
-            "<p>Place address: " + barInfo.StreetAddress + "<\p>";
+        var description = "<p>Place name: <b>" + barInfo.Title + "</b><\p>" +
+                          "<p>Average rating: <b>" + barInfo.AvgRating + "</b><\p>" +
+                          "<p>Categories: <b>" + enumToText(barInfo.Categories, CategoryTypes) + "</b><\p>" +
+                          "<p>Place address: <b>" + barInfo.StreetAddress + "</b><\p>";
         return description;
     }
 
@@ -300,7 +306,7 @@
             var barName = this.cells[1].innerText;
             var marker = getMapMarker(barName);
             var coords = { lat: marker.__gm.Xd.ga.x, lng: marker.__gm.Xd.ga.y };
-            CenterMapOn(coords, 15);
+            createAndCenter(coords, 18);
             table.find('tr.highlight').removeClass('highlight');
             $(this).addClass('highlight');
         }
