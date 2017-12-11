@@ -82,18 +82,20 @@ namespace WebApi.Controllers
             {
                 return BadRequest("User authentication failed");
             }
-            if (!dbManager.UserCanVote(barObject.BarID, barObject.User, out var cooldown))
-                return BadRequest("User cannot vote for " + cooldown.Minutes + " min. on this bar");
-            try
+            if (dbManager.UserCanVote(barObject.BarID, barObject.User, out var cooldown))
             {
-                dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);
+                try
+                {
+                    dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);
+                }
+                catch (InvalidOperationException e)
+                {
+                    Console.WriteLine(e);
+                    return InternalServerError();
+                }
+                return Ok("Success");
             }
-            catch (InvalidOperationException e)
-            {
-                Console.WriteLine(e);
-                return InternalServerError();
-            }
-            return Ok("Success");
+            return BadRequest("User cannot vote for " + cooldown.Minutes + " min. on this bar");
         }
 
         private static List<BarResponseModel> BarDataToResponseModel(IEnumerable<BarData> barList)
