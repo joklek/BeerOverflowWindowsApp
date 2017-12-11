@@ -93,7 +93,6 @@
     <Compile Include="BarComparers\ComparerByTitle.cs" />
     <Compile Include="BarComparers\CompareType.cs" />
     <Compile Include="BarRating.cs" />
-    <Compile Include="DataModels\BarSynonym .cs" />
     <Compile Include="DataModels\LocationRequestModel.cs" />
     <Compile Include="DataModels\UserAndBarModel.cs" />
     <Compile Include="DataModels\UserAndBarsModel.cs" />

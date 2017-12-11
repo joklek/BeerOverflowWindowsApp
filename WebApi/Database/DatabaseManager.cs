@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using WebApi.DataModels;
 
@@ -6,6 +8,7 @@ namespace WebApi.Database
 {
     public class DatabaseManager
     {
+        private static readonly string ratingCooldownPeriod = ConfigurationManager.AppSettings["ratingCooldownPeriod"];
 
         public void SaveBars(List<BarData> barsToSave)
         {
@@ -13,12 +16,37 @@ namespace WebApi.Database
             {
                 barsToSave.ForEach(barToSave =>
                 {
-                    if (db.Bars.FirstOrDefault<BarData>(barInDB => barInDB.BarId == barToSave.BarId) == null)
-                    {
-                        db.Bars.Add(barToSave);
-                        db.SaveChanges();
-                    }
+                    if (db.Bars.FirstOrDefault(barInDb => barInDb.BarId == barToSave.BarId) != null) return;
+                    db.Bars.Add(barToSave);
+                    db.SaveChanges();
                 });
+            }
+        }
+
+        public bool UserCanVote(string barId, User currentUser, out TimeSpan cooldown)
+        {
+            using (var db = new BarsDatabase())
+            {
+                var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser.Username);
+                if (userInDb == null || barId == null)
+                {
+                    cooldown = TimeSpan.Zero;
+                    return false;
+                }
+
+                var timeNow = DateTime.Now;
+                if (!TimeSpan.TryParse(ratingCooldownPeriod, out var cooldownTimeSpan))
+                {
+                    var badCooldown = ratingCooldownPeriod ?? "null";
+                    throw new InvalidOperationException(string.Format("Cofiguration file not present or incorrect value of variable {0} : {1} ", 
+                                                                      nameof(ratingCooldownPeriod),  badCooldown));
+                }
+                var cooldownTime = timeNow.Subtract(cooldownTimeSpan);
+                var recentRatingByUser = db.UserRatings.FirstOrDefault(x => x.BarId == barId &&
+                                                                       x.Username == currentUser.Username &&
+                                                                       x.RatingDate.CompareTo(cooldownTime) >= 0);
+                cooldown = recentRatingByUser?.RatingDate.Add(cooldownTimeSpan).Subtract(timeNow) ?? TimeSpan.Zero;
+                return recentRatingByUser == null;
             }
         }
 
@@ -26,7 +54,7 @@ namespace WebApi.Database
         {         
             using (var db = new BarsDatabase())
             {
-                if (db.Users.FirstOrDefault<User>(user => user.Username == currentUser.Username) != null)
+                if (db.Users.FirstOrDefault(user => user.Username == currentUser.Username) != null)
                 {
                     return false;
                 }
@@ -36,62 +64,52 @@ namespace WebApi.Database
             }
         }
 
-        public bool LogIn(User User)
+        public void SaveBarRating(string barId, User currentUser, int rating)
         {
             using (var db = new BarsDatabase())
             {
-                if (db.Users.FirstOrDefault<User>(user => user.Username == User.Username && user.Password == User.Password) != null)
-                    return true;
-            }
-            return false;
-        }
-        public void SaveBarRating(string BarID, string currentUser, int rating)
-        {
-            using (var db = new BarsDatabase())
-            {
-                var userInDb = db.Users.FirstOrDefault(user => user.Username == currentUser);
-                var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == BarID);
-                if (barInDb != null)
+                if (!UserCanVote(barId, currentUser, out var cooldown)) return;
+                var barInDb = db.Bars.FirstOrDefault(bar => bar.BarId == barId);
+                if (barInDb == null)
                 {
-                    var barRating = barInDb.UserRatings.FirstOrDefault(userRating => userInDb.Username == userRating.Username);
-                    if (barRating != null)
-                    {
-                        barRating.Rating = rating;
-                    }
-                    else
-                    {
-                        db.UserRatings.Add(new UsersRatingToBar(barInDb, userInDb, rating));
-                    }
-                    db.SaveChanges();
-                    barInDb.AvgRating = (float)barInDb.UserRatings.Select(x => x.Rating).DefaultIfEmpty().Average();
+                    Console.Write("This should not happen. Asking to rate non-existent bar");
+                    return;
                 }
+                db.UserRatings.Add(new UsersRatingToBar(barInDb, currentUser, rating, DateTime.Now));
+                db.SaveChanges();
+                var avgRating = (float) db.UserRatings.Where(x => x.BarId == barInDb.BarId).Select(x => x.Rating)
+                    .DefaultIfEmpty().Average();
+                barInDb.AvgRating = avgRating;
                 db.SaveChanges();
             }
         }
 
-        public List<BarData> GetAllBarData(List<BarData> localBars, string username)
+        public bool LogIn(User userAttemptingToLogin)
         {
             using (var db = new BarsDatabase())
             {
-                localBars.ForEach(bar =>
-                {
-                    var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
-                    bar.AvgRating = barInDb?.AvgRating ?? 0;
-                    var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == username);
-                    bar.UserRating = barRating?.Rating ?? 0;
-                });
+                return db.Users.FirstOrDefault(user =>
+                           user.Username == userAttemptingToLogin.Username &&
+                           user.Password == userAttemptingToLogin.Password) != null;
+            }
+        }
+
+        public List<BarData> GetAllBarData(IEnumerable<string> localBarIds)
+        {
+            var localBars = new List<BarData>();
+            using (var db = new BarsDatabase())
+            {
+                localBars.AddRange(localBarIds.Select(localBarId => db.Bars.FirstOrDefault(dbBar => dbBar.BarId == localBarId)).Where(localBar => localBar != null));
             }
             return localBars;
         }
 
-        public BarData GetBarRatings(BarData bar, string user)
+        public BarData GetBarData(string barId, User user)
         {
+            BarData bar;
             using (var db = new BarsDatabase())
             {
-                var barInDb = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == bar.BarId);
-                bar.AvgRating = barInDb?.AvgRating ?? 0;
-                var barRating = db.UserRatings.FirstOrDefault(userRating => userRating.BarId == bar.BarId && userRating.Username == user);
-                bar.UserRating = barRating?.Rating ?? 0;
+                bar = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == barId);
             }
             return bar;
         }

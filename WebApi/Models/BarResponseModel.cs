@@ -1,6 +1,8 @@
-﻿namespace BeerOverflowWindowsApp.DataModels
+﻿using WebApi.DataModels;
+
+namespace WebApi.Models
 {
-    public class BarData
+    public class BarResponseModel
     {
         public string BarId { get; set; }
         public string Title { get; set; }
@@ -10,7 +12,5 @@
         public CategoryTypes Categories { get; set; }
         public string City { get; set; }
         public string StreetAddress { get; set; }
-        public double DistanceToCurrentLocation { get; set; }
-        public int UserRating { get; set; }
     }
 }

@@ -3,6 +3,6 @@
     public class UserAndBarModel
     {
         public User User { get; set; }
-        public BarData Bar { get; set; }
+        public string BarId { get; set; }
     }
 }

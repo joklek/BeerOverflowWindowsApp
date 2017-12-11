@@ -128,8 +128,8 @@ namespace WebApi.BarProviders
                 Categories = CollectCategories(place),
                 Latitude = double.Parse(place.locationResponse.latitude, CultureInfo.InvariantCulture),
                 Longitude = double.Parse(place.locationResponse.longitude, CultureInfo.InvariantCulture),
-                StreetAddress = place.address_obj.street1?.Trim(),
-                City = place.address_obj.city?.Trim()
+                StreetAddress = place.address_obj?.street1?.Trim(),
+                City = place.address_obj?.city?.Trim()
             };
         }
 

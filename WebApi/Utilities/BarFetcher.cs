@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,13 +20,12 @@ namespace WebApi.Utilities
             new GetBarListTripAdvisor(new JsonFetcher())
         };
 
-
         public static async Task<BarDataModel> RequestBarsAroundCoords(LocationRequestModel locationRequest)
         {
-            return await RequestBarsAroundCoords(locationRequest.Latitude, locationRequest.Longitude, locationRequest.Radius, locationRequest.User);
+            return await RequestBarsAroundCoords(locationRequest.Latitude, locationRequest.Longitude, locationRequest.Radius);
         }
 
-        public static async Task<BarDataModel> RequestBarsAroundCoords(double latitude, double longitude, double radius, string user)
+        public static async Task<BarDataModel> RequestBarsAroundCoords(double latitude, double longitude, double radius)
         {
             var result = new BarDataModel();
             var failedToConnectCounter = 0;
@@ -50,10 +50,11 @@ namespace WebApi.Utilities
                     // Provider is down, lets just ignore it
                 }
             }
-            result.RemoveDuplicates();
-            result.RemoveBarsOutsideRadius(radius);
             var dbManager = new DatabaseManager();
-            result = (BarDataModel) dbManager.GetAllBarData(result, user);
+            dbManager.SaveBars(result);
+            result.AddRange(dbManager.GetAllBarData(result.Select(x => x.BarId)));
+            result.RemoveBarsOutsideRadius(radius);
+            result.RemoveDuplicates();
             return result;
         }
 

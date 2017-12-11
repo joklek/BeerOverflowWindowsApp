@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using WebApi.Database;
@@ -16,19 +17,19 @@ namespace WebApi.Controllers
     {
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult Register([FromBody]User User)
+        public IHttpActionResult Register([FromBody]User userToRegister)
         {
             var dbManager = new DatabaseManager();
-            bool result = dbManager.Register(User);
+            var result = dbManager.Register(userToRegister);
             return Ok(result);
         }
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult logIn([FromBody]User User)
+        public IHttpActionResult LogIn([FromBody]User userAttemptingToLogin)
         {
             var dbManager = new DatabaseManager();
-            bool result = dbManager.LogIn(User);
+            var result = dbManager.LogIn(userAttemptingToLogin);
             return Ok(result);
         }
 
@@ -37,7 +38,7 @@ namespace WebApi.Controllers
         public IHttpActionResult GetAllBarData([FromBody]UserAndBarsModel userAndBars)
         {
             var dbManager = new DatabaseManager();
-            var result = dbManager.GetAllBarData(userAndBars.Bars, userAndBars.User.Username);
+            var result = dbManager.GetAllBarData(userAndBars.BarIds);
             return Ok(result);
         }
 
@@ -58,51 +59,56 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
-            return Ok(result);
+
+            var names = result.Select(x => x.BarId).ToList();
+            var dbMgr = new DatabaseManager();
+            result = dbMgr.GetAllBarData(names);
+            dbMgr.SaveBars(result);
+            // Sending the results from databases causes an exception, as the virtual fields no longer exist.
+            // If someone knows a better solution - please tell me @joklek
+            return Ok(BarDataToResponseModel(result));
         }
 
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpPost]
-        public IHttpActionResult SaveBarRating([FromBody] RatingModel barObject)
+        public IHttpActionResult SaveBarRating([FromBody]RatingModel barObject)
         {
             var dbManager = new DatabaseManager();
             if (!dbManager.LogIn(barObject.User))
+            {
                 return BadRequest("User authentication failed");
-            dbManager.SaveBarRating(barObject.BarID, barObject.User.Username , barObject.Rating);
-            return Ok("Success");
+            }
+                
+            if (dbManager.UserCanVote(barObject.BarID, barObject.User, out var cooldown))
+            {
+                try
+                {
+                    dbManager.SaveBarRating(barObject.BarID, barObject.User, barObject.Rating);
+                }
+                catch (InvalidOperationException e)
+                {
+                    Console.WriteLine(e);
+                    return InternalServerError();
+                }
+                return Ok("Success");
+            }
+            return BadRequest("User cannot vote for " + cooldown.Minutes + " min. on this bar");
         }
 
-        [EnableCors(origins: "*", headers: "*", methods: "*")]
-        [HttpPost]
-        public IHttpActionResult GetBarRatings([FromBody]UserAndBarModel userAndBar)
+        private static List<BarResponseModel> BarDataToResponseModel(IEnumerable<BarData> barList)
         {
-            var dbManager = new DatabaseManager();
-            var result = dbManager.GetBarRatings(userAndBar.Bar, userAndBar.User.Username);
-            return Ok(result);
-        }
-        //TEMPORARY: i think we only need 2 methods in WebApi for now: SaveBarRating(username, rating, barId) and GetBarsByCoordinates(username?, latitude, longitude, radius?)
-        [EnableCors(origins: "*", headers: "*", methods: "*")]
-        [HttpPost]
-        public async Task<IHttpActionResult> GetBarsByCoordinates([FromBody]Coordinate coordinate)
-        {
-            var locationRequest = new LocationRequestModel { Latitude = coordinate.lat, Longitude = coordinate.lng, Radius = 150, User =  "test"  };
-            try
-            {
-                InputDataValidator.LocationDataIsCorrect(locationRequest);
-            }
-            catch (ArgumentsForProvidersException e)
-            {
-                return BadRequest("Invalid arguments:" + e.InvalidArguments);
-            }
-            catch (HttpRequestException)
-            {
-                return NotFound();
-            }
-            List<BarData> result = await BarFetcher.RequestBarsAroundCoords(locationRequest);
-            result = new DatabaseManager().GetAllBarData(result, "Jonas");
-            new DatabaseManager().SaveBars(result);
-            return Ok(result);
-
+            var responseModelList = barList.Select(bar => new BarResponseModel
+                {
+                    BarId = bar.BarId,
+                    Title = bar.Title,
+                    Latitude = bar.Latitude,
+                    Longitude = bar.Longitude,
+                    AvgRating = bar.AvgRating,
+                    Categories = bar.Categories,
+                    City = bar.City,
+                    StreetAddress = bar.StreetAddress
+                }).ToList();
+            return responseModelList;
         }
     }
 }

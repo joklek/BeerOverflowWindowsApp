@@ -16,9 +16,6 @@ namespace WebApi.DataModels
 
         public float AvgRating { get; set; }
 
-        [NotMapped]
-        public int UserRating { get; set; }
-
         [Required]
         public double Latitude { get; set; }
 
@@ -46,15 +43,12 @@ namespace WebApi.DataModels
             if (this.GetType() != y.GetType()) return false;
             return string.Equals(this.Title, y.Title) && 
                    string.Equals(this.BarId, y.BarId) && 
-                   this.AvgRating.Equals(y.AvgRating) && 
-                   this.UserRating == y.UserRating && 
+                   this.AvgRating.Equals(y.AvgRating) &&
                    this.Latitude.Equals(y.Latitude) && 
                    this.Longitude.Equals(y.Longitude) && 
                    string.Equals(this.StreetAddress, y.StreetAddress) && 
                    string.Equals(this.City, y.City) && 
                    this.Categories == y.Categories && 
-                   Equals(this.UserRatings, y.UserRatings) && 
-                   Equals(this.Synonyms, y.Synonyms) && 
                    this.DistanceToCurrentLocation.Equals(y.DistanceToCurrentLocation);
         }
 
@@ -65,14 +59,11 @@ namespace WebApi.DataModels
                 var hashCode = (obj.Title != null ? obj.Title.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (obj.BarId != null ? obj.BarId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ obj.AvgRating.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.UserRating;
                 hashCode = (hashCode * 397) ^ obj.Latitude.GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.Longitude.GetHashCode();
                 hashCode = (hashCode * 397) ^ (obj.StreetAddress != null ? obj.StreetAddress.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (obj.City != null ? obj.City.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (int) obj.Categories;
-                hashCode = (hashCode * 397) ^ (obj.UserRatings != null ? obj.UserRatings.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (obj.Synonyms != null ? obj.Synonyms.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ obj.DistanceToCurrentLocation.GetHashCode();
                 return hashCode;
             }

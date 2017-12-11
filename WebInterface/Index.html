@@ -29,15 +29,24 @@
 
     <input type="button" id="Rate" value="Rate" />
 
-    <select id="ratings">
-        <option value="1" selected="selected">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
+<select id="ratings">
+    <option value="1" selected="selected">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+</select>
+    
+    <p>Radius
+        <input type="number"
+               id="radiusBox"
+               min="0"
+               max="150"
+               step="5"
+               value="15">
+    </p>
 
-    <table class="table table-bordered table-condensed table-hover" id="barsTable">
+<table class="table table-bordered table-condensed table-hover" id="barsTable">
         <thead>
             <tr>
                 <th>Id</th>
@@ -52,6 +61,7 @@
     <div id="map"></div>
 </body>
 </html>
+
 <script>
     var email;
     var pass;
@@ -70,8 +80,8 @@
         });
         initMap();
     });
-    function addMarker(position, label) {
 
+    function addMarker(position, label) {
         var marker = new google.maps.Marker({
             position: position,
             title: label,
@@ -82,6 +92,7 @@
         myLocation = marker;
         setMapOnAll(map);
     }
+
     function setMapOnAll(map) {
         for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(map);
@@ -90,31 +101,39 @@
             myLocation.setMap(map);
         }
     }
+
     function GetData() {
         beginLoading();
         jQuery.support.cors = true;
-        var coordinates = null;
         if (myLocation != null) {
-            coordinates = { lat: myLocation.getPosition().lat(), lng: myLocation.getPosition().lng() }
+            var e = document.getElementById("radiusBox");
+            var radiusFromBox = e.value;
+            var requestBody = {
+                Latitude: myLocation.getPosition().lat(),
+                Longitude: myLocation.getPosition().lng(),
+                Radius: parseInt(radiusFromBox)
+            };
             $.ajax({
-                url: "http://localhost:1726/Api/Data/GetBarsByCoordinates",
+                url: "http://localhost:1726/Api/Data/GetBarsAround",
                 type: "POST",
-                data: JSON.stringify(coordinates),
+                data: JSON.stringify(requestBody),
                 contentType: "application/json",
                 type: "POST",
-                error: function (request, status, error) {
+                error: function(request, status, error) {
                     stopLoading();
-                    alert(request.responseText);
+                    alert(JSON.parse(request.responseText).Message);
                 },
-                success: function (data) {
+                success: function(data) {
                     markers = [];
                     for (var i = 0; i < data.length; i++) {
                         var marker = new google.maps.Marker({
-                            position: { lat : data[i].Latitude, lng : data[i].Longitude },
+                            position: { lat: data[i].Latitude, lng: data[i].Longitude },
                             title: data[i].Title,
                             map: map
                         });
-                        markers.push(marker);                       
+                        markers.push(marker);
+                        data[i].AvgRating = Math.round(data[i].AvgRating * 100) / 100;
+                        data[i].Categories = enumToText(data[i].Categories);
                     }
                     setMapOnAll(null);
                     setMapOnAll(map);
@@ -123,14 +142,34 @@
                     stopLoading();
                 }
             });
-        } 
-        else {
+        } else {
             alert("Select your location");
-        } 
+        }
     }
-    
-    function initMap() {
 
+    var CategoryTypes = [ "None", "Bar", "Restaurant", "Club" ];
+
+    function enumToText(myEnum) {
+        var categoryString = "";
+        if (myEnum === 0) {
+            categoryString = CategoryTypes[0];
+        } else {
+            for (var i = 1; i < CategoryTypes.length; i++) {
+                if ((myEnum & Math.pow(2,i-1)) !== 0) {
+                    if(categoryString !== "") {
+                        categoryString += " | ";
+                    }
+                    categoryString += CategoryTypes[i];
+                }
+            }
+            if (categoryString === "") {
+                categoryString = CategoryTypes[0];
+            }
+        }
+        return categoryString;
+    }
+
+    function initMap() {
         var myLatLng = { lat: 54.684815, lng: 25.288464 };
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -139,15 +178,17 @@
                 var marker = new google.maps.Marker({
                     position: myLatLng,
                     map: map,
+                    label : "Me",
                     title: 'My location'
                 });
                 myLocation = marker;
             });
-        }        
+        }
         else {
             LoadMap(myLatLng);
-        }     
+        }
     }
+
     function LoadMap(myLatLng) {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 14,
@@ -156,12 +197,13 @@
         google.maps.event.addListener(map, 'click', function (event) {
             addMarker(event.latLng, "My location");
         });
-    } 
+    }
 
     function beginLoading() {
         $("#loadBars").text("Loading...");
         $("#loadBars").prop('disabled', true);
     }
+
     function stopLoading() {
         $("#loadBars").text("Load bars");
         $("#loadBars").prop('disabled', false);
@@ -183,36 +225,38 @@
         }
     };
 
-
     function SaveBarRating(rating) {
-        if (value != null)
-        {
+        if (value != null) {
             if (sessionStorage.getItem("email") != null && sessionStorage.getItem("pass") != null) {
                 beginLoading();
                 $('table').find('tr.highlight').removeClass('highlight');
                 jQuery.support.cors = true;
-                data = { BarID: value, Rating: rating, User: { Username: sessionStorage.getItem("email"), Password: sessionStorage.getItem("pass") } }
+                data = {
+                    BarID: value,
+                    Rating: rating,
+                    User: { Username: sessionStorage.getItem("email"), Password: sessionStorage.getItem("pass") }
+                }
                 $.ajax({
                     url: "http://localhost:1726/Api/Data/SaveBarRating",
                     type: "POST",
                     data: JSON.stringify(data),
                     contentType: "application/json",
                     type: "POST",
-                    error: function (request, status, error) {
+                    error: function(request, status, error) {
                         stopLoading();
-                        alert(request.responseText);
+                        alert(JSON.parse(request.responseText).Message);
                     },
-                    success: function (data) {
+                    success: function(data) {
                         value = null;
                         stopLoading();
                     }
                 });
-            } else
-                alert("you have to LogIn in order to rate a bar");
-        }
-        else
+            } else {
+                alert("You have to Login in order to rate a bar");
+            }
+        } else {
             alert("No bar selected");
-
+        }
     }
 
     $('#Rate').on('click', function (e) {
@@ -224,9 +268,5 @@
     $('table').on('click', 'tr', function (e) {
         $('table').find('tr.highlight').removeClass('highlight');
         $(this).addClass('highlight');
-    })
-
- //   window.onbeforeunload = function () {
- //       sessionStorage.clear();
- //   };
+    });
 </script>

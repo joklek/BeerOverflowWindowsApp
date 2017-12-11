@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApi.DataModels
@@ -6,11 +7,12 @@ namespace WebApi.DataModels
     [Table("UserRatings")]
     public class UsersRatingToBar
     {
-        public UsersRatingToBar(BarData bar, User user, int rating)
+        public UsersRatingToBar(BarData bar, User user, int rating, DateTime ratingDate)
         {
-            this.Bar = bar;
-            this.User = user;
+            this.BarId = bar.BarId;
+            this.Username = user.Username;
             this.Rating = rating;
+            this.RatingDate = ratingDate;
         }
         public UsersRatingToBar() { }
 
@@ -27,5 +29,8 @@ namespace WebApi.DataModels
 
         [MaxLength(400)]
         public string Comment { get; set; }
+
+        [Key, Column(Order = 2), DataType(DataType.DateTime)]
+        public DateTime RatingDate { get; set; }
     }
 }

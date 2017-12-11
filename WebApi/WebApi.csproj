@@ -168,7 +168,12 @@
     <Compile Include="Migrations\201712091151551_AddAddress.Designer.cs">
       <DependentUpon>201712091151551_AddAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712092049326_Add-Date.cs" />
+    <Compile Include="Migrations\201712092049326_Add-Date.Designer.cs">
+      <DependentUpon>201712092049326_Add-Date.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BarResponseModel.cs" />
     <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\BarFetcher.cs" />
@@ -202,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712091151551_AddAddress.resx">
       <DependentUpon>201712091151551_AddAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712092049326_Add-Date.resx">
+      <DependentUpon>201712092049326_Add-Date.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
