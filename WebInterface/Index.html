@@ -69,13 +69,14 @@
     var map = null;
     var markers = [];
     var myLocation = null;
-    var beerIconUnchecked = "https://chart.googleapis.com/chart?chst=d_simple_text_icon_left&chld=|0|0|beer|24|DF0|FFF";
-    var beerIconChecked = "https://chart.googleapis.com/chart?chst=d_simple_text_icon_left&chld=|0|0|beer|24|F00|FFF";
+    var CategoryTypes = ["None", "Bar", "Restaurant", "Club"];
+    var beerIconUnchecked = "https://chart.googleapis.com/chart?chst=d_simple_text_icon_left&chld=|0|0|beer|24|DF0|333";
+    var beerIconChecked = "https://chart.googleapis.com/chart?chst=d_simple_text_icon_left&chld=|0|0|beer|24|F00|333";
 
     $(document).ready(function () {
         $('#barsTable').DataTable({
             columns: [
-                { data: 'BarId' },
+                { data: 'BarId', visible: false },
                 { data: 'Title' },
                 { data: 'Categories' },
                 { data: 'AvgRating' },
@@ -87,7 +88,8 @@
 
     function createAndCenter(myLatLng, radius) {
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: radius
+            zoom: radius,
+            disableDefaultUI: true
         });
         CenterMapOn(myLatLng, radius);
         for (var i = 0; i < markers.length; i++) {
@@ -150,7 +152,6 @@
 
     function CreateUserMarker(myLatLng) {
         myLocation = CreateNewMarker(myLatLng, "My Location", null);
-        //myLocation.setLabel("Me"); // Looks ugly
         return myLocation;
     }
 
@@ -184,10 +185,13 @@
                     clearBarMarkers();
                     for (var i = 0; i < data.length; i++) {
                         var marker = CreateNewMarker({ lat: data[i].Latitude, lng: data[i].Longitude }, data[i].Title, beerIconUnchecked);
-                        addInfoWindow(marker, data[i]);
-                        markers.push(marker);
                         data[i].AvgRating = Math.round(data[i].AvgRating * 100) / 100;
                         data[i].Categories = enumToText(data[i].Categories, CategoryTypes);
+                        if (data[i].StreetAddress == null) {
+                            data[i].StreetAddress = "Address is not available";
+                        }
+                        addInfoWindow(marker, data[i]);
+                        markers.push(marker);
                     }
                     $('#barsTable').DataTable().clear();
                     $('#barsTable').DataTable().rows.add(data).draw();
@@ -215,8 +219,6 @@
                           "<p>Place address: <b>" + barInfo.StreetAddress + "</b><\p>";
         return description;
     }
-
-    var CategoryTypes = ["None", "Bar", "Restaurant", "Club"];
 
     function enumToText(myEnum, enumText) {
         var categoryString = "";
@@ -307,7 +309,7 @@
     $('table').on('click', 'tr', function (e) {
         var table = $('table');
         if (table.dataTable().fnSettings().aoData.length !== 0) {
-            var barName = this.cells[1].innerText;
+            var barName = this.cells[0].innerText;
             var marker = getMapMarker(barName);
             uncheckAllBars();
             checkOneBar(marker);
