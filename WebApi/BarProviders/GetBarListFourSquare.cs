@@ -41,7 +41,13 @@ namespace WebApi.BarProviders
             var venueList = new List<Venue>();
             foreach (var category in categoryIDs)
             {
-                var link = string.Format(_apiLink, _clientId, _clientSecret, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), category, radius.ToString(CultureInfo.InvariantCulture));
+                var link = string.Format(_apiLink, 
+                                        _clientId, 
+                                        _clientSecret, 
+                                        latitude.ToString(CultureInfo.InvariantCulture), 
+                                        longitude.ToString(CultureInfo.InvariantCulture), 
+                                        category, 
+                                        radius.ToString(CultureInfo.InvariantCulture));
                 venueList.AddRange(FetcherAndDeserializer.FetchAndDeserialize<SearchResponse>(link, _fetcher).response.venues);
             }
             return venueList;
@@ -56,7 +62,7 @@ namespace WebApi.BarProviders
             return barList;
         }
 
-        private void RemoveBannedVenues(List<Venue> venueList)
+        private static void RemoveBannedVenues(List<Venue> venueList)
         {
             var categoryIdBanned = _categoryIdBanned.Split(',').ToList();
             venueList.RemoveAll(x => x.categories.Exists(y => categoryIdBanned.Contains(y.id)));
@@ -68,7 +74,13 @@ namespace WebApi.BarProviders
             var venueList = new List<Venue>();
             foreach (var category in categoryIDs)
             {
-                var link = string.Format(_apiLink, _clientId, _clientSecret, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), category, radius.ToString(CultureInfo.InvariantCulture));
+                var link = string.Format(_apiLink,
+                                        _clientId, 
+                                        _clientSecret, 
+                                        latitude.ToString(CultureInfo.InvariantCulture), 
+                                        longitude.ToString(CultureInfo.InvariantCulture), 
+                                        category, 
+                                        radius.ToString(CultureInfo.InvariantCulture));
                 var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<SearchResponse>(link, _fetcher);
                 venueList.AddRange(deserialized.response.venues);
             }
@@ -101,7 +113,6 @@ namespace WebApi.BarProviders
                 (category => category.Split('|')).Select
                 (splitCategory => new CategoryUnconverted { NameFromProvider = splitCategory[0], NameNormalized = splitCategory[1] })
                 .ToList();
-
             foreach (var category in place.categories)
             {
                 var foundCategory = listOfCategories.FirstOrDefault(x => x.NameFromProvider == category.id);

@@ -44,18 +44,18 @@
                min="0"
                max="150"
                step="5"
-               value="15">
+               value="100">
     </p>
 
     <table class="table table-bordered table-condensed table-hover" id="barsTable">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Rating</th>
-                <th>Address</th>
-            </tr>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Rating</th>
+            <th>Address</th>
+        </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -204,11 +204,11 @@
     }
 
     function addInfoWindow(marker, barInfo) {
-        var infowindow = new google.maps.InfoWindow({
+        var infoWindow = new google.maps.InfoWindow({
             content: createBarDescription(barInfo)
         });
         marker.addListener('click', function () {
-            infowindow.open(map, marker);
+            infoWindow.open(map, marker);
         });
     }
 
@@ -243,14 +243,18 @@
     function beginLoading() {
         $("#loadBars").text("Loading...");
         $("#loadBars").prop('disabled', true);
+        $("#Rate").text("Loading...");
+        $("#Rate").prop('disabled', true);
     }
 
     function stopLoading() {
         $("#loadBars").text("Load bars");
         $("#loadBars").prop('disabled', false);
+        $("#Rate").text("Rate");
+        $("#Rate").prop('disabled', false);
     }
 
-    var value;
+    var selectedbar;
 
     var table = document.getElementsByTagName("table")[0];
     var tbody = table.getElementsByTagName("tbody")[0];
@@ -262,18 +266,18 @@
         }
         if (target) {
             var cells = target.getElementsByTagName("td");
-            value = cells[0].innerText;
+            selectedbar = cells[0].innerText;
         }
     };
 
     function SaveBarRating(rating) {
-        if (value != null) {
+        if (selectedbar != null) {
             if (sessionStorage.getItem("email") != null && sessionStorage.getItem("pass") != null) {
                 beginLoading();
                 $('table').find('tr.highlight').removeClass('highlight');
                 jQuery.support.cors = true;
                 data = {
-                    BarID: value,
+                    BarID: selectedbar,
                     Rating: rating,
                     User: { Username: sessionStorage.getItem("email"), Password: sessionStorage.getItem("pass") }
                 }
@@ -287,8 +291,17 @@
                         stopLoading();
                         alert(JSON.parse(request.responseText).Message);
                     },
-                    success: function (data) {
-                        value = null;
+                    success: function (data) {   
+                        var table = document.getElementById("barsTable");
+                        for (var i = 0, row; row = table.rows[i]; i++)
+                        {
+                            if (row.cells[0].innerHTML == selectedbar)
+                            {
+                                row.cells[2].innerHTML = Math.round(data * 100) / 100;;
+                                break;
+                            }
+                        }
+                        selectedbar = null;
                         stopLoading();
                     }
                 });

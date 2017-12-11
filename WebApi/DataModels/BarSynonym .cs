@@ -8,6 +8,7 @@ namespace WebApi.DataModels
     {
         [Key, ForeignKey("Bar"), MaxLength(50), Column(Order = 0)]
         public string BarId { get; set; }
+
         public virtual BarData Bar { get; set; }
 
         [Key, MaxLength(50), Column(Order = 1)]

@@ -51,7 +51,14 @@ namespace WebApi.BarProviders
 
         private async Task<List<Place>> GetBarDataAsync(double latitude, double longitude, double radius)
         {
-            var link = string.Format(_apiLink, _accessToken, latitude.ToString(CultureInfo.InvariantCulture), longitude.ToString(CultureInfo.InvariantCulture), radius.ToString(CultureInfo.InvariantCulture), _requestedFields, _category, CultureInfo.InvariantCulture);
+            var link = string.Format(_apiLink, 
+                                    _accessToken, 
+                                    latitude.ToString(CultureInfo.InvariantCulture), 
+                                    longitude.ToString(CultureInfo.InvariantCulture), 
+                                    radius.ToString(CultureInfo.InvariantCulture), 
+                                    _requestedFields,
+                                    _category, 
+                                    CultureInfo.InvariantCulture);
             var deserialized = await FetcherAndDeserializer.FetchAndDeserializeAsync<PlacesResponse>(link, _fetcher);
             var barList = deserialized.data;
             return barList;
@@ -65,7 +72,6 @@ namespace WebApi.BarProviders
             {
                 if (result.restaurant_specialties != null && result.restaurant_specialties.drinks != 1) continue;
                 var barCategories = result.category_list.Select(category => category.name).ToList();
-
                 if (!HasCategories(barCategories, allowedCategories)) continue;
                 if (HasCategories(barCategories, _bannedCategories)) continue;
                 var newBar = PlaceToBar(result);
@@ -92,10 +98,12 @@ namespace WebApi.BarProviders
         {
             var placeCategories = CategoryTypes.None;
             var listOfCategories = _allowedCategories.Split(',').Select
-                (category => category.Split('|')).Select
-                (splitCategory => new CategoryUnconverted { NameFromProvider = splitCategory[0], NameNormalized = splitCategory[1] })
-                .ToList();
-
+                (category => category.Split('|')).Select 
+                (splitCategory => new CategoryUnconverted
+                {
+                    NameFromProvider = splitCategory[0],
+                    NameNormalized = splitCategory[1]
+                }).ToList();
             foreach (var category in place.category_list)
             {
                 var foundCategory = listOfCategories.FirstOrDefault(x => category.name.ToLower().Contains(x.NameFromProvider.ToLower()));

@@ -78,7 +78,7 @@ namespace WebApi.Controllers
             {
                 return BadRequest("User authentication failed");
             }
-                
+
             if (dbManager.UserCanVote(barObject.BarID, barObject.User, out var cooldown))
             {
                 try
@@ -90,7 +90,7 @@ namespace WebApi.Controllers
                     Console.WriteLine(e);
                     return InternalServerError();
                 }
-                return Ok("Success");
+                return Ok(dbManager.GetBarRating(barObject.BarID));
             }
             return BadRequest("User cannot vote for " + cooldown.Minutes + " min. on this bar");
         }
@@ -98,16 +98,16 @@ namespace WebApi.Controllers
         private static List<BarResponseModel> BarDataToResponseModel(IEnumerable<BarData> barList)
         {
             var responseModelList = barList.Select(bar => new BarResponseModel
-                {
-                    BarId = bar.BarId,
-                    Title = bar.Title,
-                    Latitude = bar.Latitude,
-                    Longitude = bar.Longitude,
-                    AvgRating = bar.AvgRating,
-                    Categories = bar.Categories,
-                    City = bar.City,
-                    StreetAddress = bar.StreetAddress
-                }).ToList();
+            {
+                BarId = bar.BarId,
+                Title = bar.Title,
+                Latitude = bar.Latitude,
+                Longitude = bar.Longitude,
+                AvgRating = bar.AvgRating,
+                Categories = bar.Categories,
+                City = bar.City,
+                StreetAddress = bar.StreetAddress
+            }).ToList();
             return responseModelList;
         }
     }

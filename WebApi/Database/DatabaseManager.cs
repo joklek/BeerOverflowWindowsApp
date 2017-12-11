@@ -33,7 +33,6 @@ namespace WebApi.Database
                     cooldown = TimeSpan.Zero;
                     return false;
                 }
-
                 var timeNow = DateTime.Now;
                 if (!TimeSpan.TryParse(ratingCooldownPeriod, out var cooldownTimeSpan))
                 {
@@ -104,14 +103,14 @@ namespace WebApi.Database
             return localBars;
         }
 
-        public BarData GetBarData(string barId, User user)
+        public float GetBarRating(string barId)
         {
-            BarData bar;
+            float rating;
             using (var db = new BarsDatabase())
             {
-                bar = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == barId);
+                rating = db.Bars.FirstOrDefault(dbBar => dbBar.BarId == barId).AvgRating;
             }
-            return bar;
+            return rating;
         }
     }
 }

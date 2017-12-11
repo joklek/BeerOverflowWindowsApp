@@ -28,7 +28,7 @@ namespace WebApi.DataModels
                     if (OneNameContainsTheOther(this[i].Title, this[j].Title) ||
                         distanceBetweenBars <= _maxSameBarDistanceErrorThresholdMeters &&
                         stringSimilarity >= _barNameSimilarThreshold ||
-                        (stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck))
+                        stringSimilarity >= _barNameLikelySimilarThreshold && coordCheck)
                     {
                         if (this[i].City == null && this[j].City != null ||
                             this[i].City != null && this[j].City != null && 
@@ -68,13 +68,10 @@ namespace WebApi.DataModels
         {
             if (string.IsNullOrEmpty(source))
                 return string.IsNullOrEmpty(target) ? 1 : 0;
-
             if (string.IsNullOrEmpty(target))
                 return string.IsNullOrEmpty(source) ? 1 : 0;
-
             var asciifiedNormalizedSource = ToASCII(source.ToLower());
             var asciifiedNormalizedTarget = ToASCII(target.ToLower());
-
             double stepsToSame = ComputeLevenshteinDistance(asciifiedNormalizedSource, asciifiedNormalizedTarget);
             return 1.0 - stepsToSame / Math.Max(source.Length, target.Length);
         }
@@ -125,8 +122,8 @@ namespace WebApi.DataModels
         private static string ToASCII(string s)
         {
             return string.Join("",
-                s.Normalize(NormalizationForm.FormD)
-                    .Where(c => char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
+                              s.Normalize(NormalizationForm.FormD)
+                              .Where(c => char.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark));
         }
 
         public void RemoveBarsOutsideRadius(double radius)
