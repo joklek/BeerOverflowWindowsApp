@@ -292,8 +292,8 @@
                     },
                     success: function (data) {   
                         var table = document.getElementById("barsTable");
-                        for (var i = 0, row; row = table.rows[i]; i++)
-                        {
+                        for (var i = 0; i < table.rows.length; i++) {
+                            var row = table.rows[i];
                             if (row.cells[0].innerHTML == selectedbar)
                             {
                                 row.cells[2].innerHTML = Math.round(data * 100) / 100;;
