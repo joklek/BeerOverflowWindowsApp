@@ -29,15 +29,16 @@
 
     <input type="button" id="Rate" value="Rate" />
 
-<select id="ratings">
-    <option value="1" selected="selected">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-</select>
-    
-    <p>Radius
+    <select id="ratings">
+        <option value="1" selected="selected">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+
+    <p>
+        Radius
         <input type="number"
                id="radiusBox"
                min="0"
@@ -46,7 +47,7 @@
                value="15">
     </p>
 
-<table class="table table-bordered table-condensed table-hover" id="barsTable">
+    <table class="table table-bordered table-condensed table-hover" id="barsTable">
         <thead>
             <tr>
                 <th>Id</th>
@@ -80,6 +81,36 @@
         });
         initMap();
     });
+
+    function initMap() {
+        var myLatLng = { lat: 54.684815, lng: 25.288464 };
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                myLatLng = { lat: position.coords.latitude, lng: position.coords.longitude };
+                LoadMap(myLatLng);
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    label: "Me",
+                    title: 'My location'
+                });
+                myLocation = marker;
+            });
+        }
+        else {
+            LoadMap(myLatLng);
+        }
+    }
+
+    function LoadMap(myLatLng) {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: myLatLng
+        });
+        google.maps.event.addListener(map, 'click', function (event) {
+            addMarker(event.latLng, "My location");
+        });
+    }
 
     function addMarker(position, label) {
         var marker = new google.maps.Marker({
@@ -119,11 +150,11 @@
                 data: JSON.stringify(requestBody),
                 contentType: "application/json",
                 type: "POST",
-                error: function(request, status, error) {
+                error: function (request, status, error) {
                     stopLoading();
                     alert(JSON.parse(request.responseText).Message);
                 },
-                success: function(data) {
+                success: function (data) {
                     markers = [];
                     for (var i = 0; i < data.length; i++) {
                         var marker = new google.maps.Marker({
@@ -147,7 +178,7 @@
         }
     }
 
-    var CategoryTypes = [ "None", "Bar", "Restaurant", "Club" ];
+    var CategoryTypes = ["None", "Bar", "Restaurant", "Club"];
 
     function enumToText(myEnum) {
         var categoryString = "";
@@ -155,8 +186,8 @@
             categoryString = CategoryTypes[0];
         } else {
             for (var i = 1; i < CategoryTypes.length; i++) {
-                if ((myEnum & Math.pow(2,i-1)) !== 0) {
-                    if(categoryString !== "") {
+                if ((myEnum & Math.pow(2, i - 1)) !== 0) {
+                    if (categoryString !== "") {
                         categoryString += " | ";
                     }
                     categoryString += CategoryTypes[i];
@@ -167,36 +198,6 @@
             }
         }
         return categoryString;
-    }
-
-    function initMap() {
-        var myLatLng = { lat: 54.684815, lng: 25.288464 };
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                myLatLng = { lat: position.coords.latitude, lng: position.coords.longitude };
-                LoadMap(myLatLng);
-                var marker = new google.maps.Marker({
-                    position: myLatLng,
-                    map: map,
-                    label : "Me",
-                    title: 'My location'
-                });
-                myLocation = marker;
-            });
-        }
-        else {
-            LoadMap(myLatLng);
-        }
-    }
-
-    function LoadMap(myLatLng) {
-        map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 14,
-            center: myLatLng
-        });
-        google.maps.event.addListener(map, 'click', function (event) {
-            addMarker(event.latLng, "My location");
-        });
     }
 
     function beginLoading() {
@@ -242,11 +243,11 @@
                     data: JSON.stringify(data),
                     contentType: "application/json",
                     type: "POST",
-                    error: function(request, status, error) {
+                    error: function (request, status, error) {
                         stopLoading();
                         alert(JSON.parse(request.responseText).Message);
                     },
-                    success: function(data) {
+                    success: function (data) {
                         value = null;
                         stopLoading();
                     }
