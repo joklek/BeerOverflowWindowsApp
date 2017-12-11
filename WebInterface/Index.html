@@ -89,18 +89,12 @@
     function CreateMapAndCenter(myLatLng, radius) {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: radius,
+            center: myLatLng,
             disableDefaultUI: true,
             styles: [
                 { featureType: "poi", stylers: [{ visibility: "off" }] }
             ]
         });
-        CenterMapOn(myLatLng, radius);
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(map);
-        }
-        if (myLocation != null) {
-            myLocation.setMap(map);
-        }
     }
 
     function InitMap() {
@@ -155,7 +149,7 @@
 
     function CenterMapOn(myLatLng, zoom) {
         map.panTo(myLatLng);
-        map.zoom = zoom;
+        map.setZoom(zoom);
     }
 
     function GetData() {
@@ -207,6 +201,13 @@
         });
         marker.addListener('click', function () {
             infoWindow.open(map, marker);
+            UncheckAllBars();
+            CheckOneBar(marker);
+            // This new event closes the infoWindow when user clicks on bar
+            // Doesn't work when clicking on another marker. Need to think of something
+            google.maps.event.addListener(map, 'click', function (event) {
+                infoWindow.close(map, marker);
+            });
         });
     }
 
@@ -325,19 +326,19 @@
             UncheckAllBars();
             CheckOneBar(marker);
             var coords = { lat: marker.__gm.Xd.ga.x, lng: marker.__gm.Xd.ga.y };
-            CreateMapAndCenter(coords, 18);
+            CenterMapOn(coords, 17);
             table.find('tr.highlight').removeClass('highlight');
             $(this).addClass('highlight');
         }
     });
 
     function CheckOneBar(marker) {
-        marker.setIcon = beerIconChecked;
+        marker.setIcon(beerIconChecked);
     }
 
     function UncheckAllBars () {
         for (var i = 0; i < markers.length; i++) {
-            markers[i].setIcon = beerIconUnchecked;
+            markers[i].setIcon(beerIconUnchecked);
         }
     }
 
