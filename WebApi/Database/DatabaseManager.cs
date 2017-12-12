@@ -53,8 +53,8 @@ namespace WebApi.Database
         {         
             using (var db = new BarsDatabase())
             {
-                var result = db.Users.SqlQuery("SELECT Username FROM User WHERE User.Username = @p0", currentUser.Username);
-                if (result != null)
+                
+                if (db.Database.SqlQuery<int>("SELECT Count(Username) FROM dbo.[User] WHERE Username = @p0", currentUser.Username).FirstOrDefault() > 0)
                 {
                     return false;
                 }
