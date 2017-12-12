@@ -333,8 +333,8 @@
         SaveBarRating(rating);
     });
 
-    $('table').on('click', 'tr', function (e) {
-        var table = $('table');
+    $('#barsTable').on('click', 'tr', function (e) {
+        var table = $('#barsTable');
         if (table.dataTable().fnSettings().aoData.length !== 0) {
             var barName = this.cells[0].innerText;
             var marker = GetMapMarker(barName);
