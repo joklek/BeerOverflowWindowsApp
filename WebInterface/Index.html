@@ -15,39 +15,46 @@
     <title>BeerOverflow</title>
 </head>
 <body>
-
     <div id="nav-placeholder">
     </div>
-
     <script>
         $(function () {
             $("#nav-placeholder").load("NavBar.html");
         });
     </script>
-
-    <button onclick="GetData()" id="loadBars">Load bars</button>
-
-    <input type="button" id="Rate" value="Rate" />
-
-    <select id="ratings">
-        <option value="1" selected="selected">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
-
-    <p>
-        Radius
-        <input type="number"
-               id="radiusBox"
-               min="0"
-               max="150"
-               step="5"
-               value="100">
-    </p>
-
-    <table class="table table-bordered table-condensed table-hover" id="barsTable">
+    <table class="layoutTable">
+        <tr>
+            <td>
+                <input type="number"
+                       placeholder="Radius"
+                       id="radiusBox"
+                       min="0"
+                       max="150"
+                       step="5"
+                       value="100"
+                       class="form-control"
+                       style="width:100px">
+            </td>
+            <td>
+                <button onclick="GetData()" id="loadBars" class="btn btn-success">Load bars</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select id="ratings" class="form-control" style="width:100px">
+                    <option value="1" selected="selected">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+            <td>
+                <input type="button" id="Rate" value="Rate" class="btn btn-success" />
+            </td>
+        </tr>
+    </table>
+    <table class="table table-bordered table-condensed table-hover" id="barsTable" style="width:100%; lightgoldenrodyellow;">
         <thead>
         <tr>
             <th>ID</th>
@@ -81,7 +88,8 @@
                 { data: 'Categories' },
                 { data: 'AvgRating' },
                 { data: 'StreetAddress' }
-            ]
+            ],
+            responsive: true
         });
         InitMap();
     });
@@ -255,7 +263,7 @@
 
     var selectedbar;
 
-    var table = document.getElementsByTagName("table")[0];
+    var table = document.getElementsByTagName("table")[1];
     var tbody = table.getElementsByTagName("tbody")[0];
     tbody.onclick = function (e) {
         e = e || window.event;
@@ -318,8 +326,8 @@
         SaveBarRating(rating);
     });
 
-    $('table').on('click', 'tr', function (e) {
-        var table = $('table');
+    $('#barsTable').on('click', 'tr', function (e) {
+        var table = $('#barsTable');
         if (table.dataTable().fnSettings().aoData.length !== 0) {
             var barName = this.cells[0].innerText;
             var marker = GetMapMarker(barName);
