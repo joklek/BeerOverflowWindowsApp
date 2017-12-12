@@ -17,6 +17,8 @@ namespace WebApi.Database
                 barsToSave.ForEach(barToSave =>
                 {
                     if (db.Bars.FirstOrDefault(barInDb => barInDb.BarId == barToSave.BarId) != null) return;
+                    if(barToSave.BarId.Length > 50) { barToSave.BarId =  new string(barToSave.BarId.Take(50).ToArray()); }
+                    if (barToSave.Title.Length > 50) { barToSave.Title = new string(barToSave.Title.Take(50).ToArray()); }
                     db.Bars.Add(barToSave);
                     db.SaveChanges();
                 });
