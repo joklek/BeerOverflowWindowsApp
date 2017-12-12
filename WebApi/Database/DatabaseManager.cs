@@ -52,8 +52,7 @@ namespace WebApi.Database
         public bool Register(User currentUser)
         {         
             using (var db = new BarsDatabase())
-            {
-                
+            {               
                 if (db.Database.SqlQuery<int>("SELECT Count(Username) FROM dbo.[User] WHERE Username = @p0", currentUser.Username).FirstOrDefault() > 0)
                 {
                     return false;
