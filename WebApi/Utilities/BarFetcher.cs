@@ -35,7 +35,10 @@ namespace WebApi.Utilities
                 try
                 {
                     var barsFromProvider = await CollectBarsFromProvider(provider, latitude, longitude, radius);
-                    result.AddRange(barsFromProvider);
+                    if (barsFromProvider != null)
+                    {
+                        result.AddRange(barsFromProvider);
+                    }
                 }
                 catch (HttpRequestException)
                 {
